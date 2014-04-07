@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:keepScreenOn="true" 
+    android:background="@android:color/transparent"  >
+    
+    <com.aiworkereeg.launcher.GlassView
+      android:id="@+id/lunar"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <TextView
+          android:id="@+id/text"
+		  android:text="lunar_layout_text_text"
+		  android:visibility="visible"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:layout_alignParentBottom="true"
+          android:gravity="center_horizontal"
+          android:textColor="#88ffffff"
+          android:textSize="24sp"/>
+        
+        <TextView
+          android:id="@+id/Turn_Left"
+		  android:text="L"
+		  android:visibility="visible"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_alignParentLeft="true"
+          android:layout_above="@+id/Att_label"
+          android:gravity="center_horizontal"
+          android:textColor="#ffffff"
+          android:textSize="24sp"/>   
+                      
+        <TextView
+          android:id="@+id/Att_text"
+		  android:text="-"
+		  android:visibility="visible"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_alignParentLeft="true"
+          android:gravity="center_horizontal"
+          android:textColor="#ffffff"
+          android:textSize="24sp"/>
+ 
+        <TextView
+          android:id="@+id/ApM_text"
+		  android:text="-"
+		  android:visibility="visible"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/ApM_label"
+          android:layout_alignParentLeft="true"
+          android:gravity="center_horizontal"
+          android:textColor="#ffffff"
+          android:textSize="26sp"/>
+        
+        <TextView
+          android:id="@+id/Att_label"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:padding="1dip"
+          android:text="A"
+          android:layout_alignParentLeft="true"
+          android:layout_above="@+id/Att_text"
+          android:textColor="#ffffff"
+          android:textSize="12sp" />  
+        
+        <TextView
+          android:id="@+id/ApM_label"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:padding="1dip"
+          android:text="A+M"
+          android:layout_below="@+id/Att_text"
+          android:layout_alignParentLeft="true"
+          android:textColor="#ffffff"
+          android:textSize="12sp" /> 
+ 
+        <TextView
+          android:id="@+id/Turn_Right"
+		  android:text="R"
+		  android:visibility="visible"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_alignParentRight="true"
+          android:layout_above="@+id/Med_lable"
+          android:gravity="center_horizontal"
+          android:textColor="#ffffff"
+          android:textSize="24sp"/>
+        
+        <TextView
+          android:id="@+id/Med_text"
+		  android:text="-"
+		  android:visibility="visible"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_alignParentRight="true"
+          android:gravity="center_horizontal"
+          android:textColor="#ffffff"
+          android:textSize="24sp"/>
+        
+        <TextView
+          android:id="@+id/Med_lable"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:padding="1dip"
+          android:text="M"
+          android:layout_alignParentRight="true"
+          android:layout_above="@+id/Med_text"
+          android:textColor="#ffffff"
+          android:textSize="12sp" />
+                
+         <TextView
+          android:id="@+id/AmM_text"
+		  android:text="-"
+		  android:visibility="visible"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/AmM_lable"
+          android:layout_centerVertical="true"
+          android:layout_alignParentRight="true"
+          android:gravity="center_horizontal"
+          android:textColor="#ffffff"
+          android:textSize="24sp"/>
+            
+         <TextView
+          android:id="@+id/AmM_lable"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:padding="1dip"
+          android:text="A-M"
+          android:layout_alignParentRight="true"
+          android:layout_below="@+id/Med_text"
+          android:textColor="#ffffff"
+          android:textSize="12sp" />   
+
+                 
+
+     </RelativeLayout>
+         
+</FrameLayout>
