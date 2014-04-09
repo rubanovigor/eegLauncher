@@ -61,12 +61,13 @@ public class MainActivity extends Activity {
         setContentView(R.layout.glass_layout);
 
         // get handles to the GlassView from XML, and its GlassThread
-       // mGlassView = (GlassView) findViewById(R.id.lunar);
-        // mGlassThread = mGlassView.getThread();
+        mGlassView = (GlassView) findViewById(R.id.lunar);
+        mGlassThread = mGlassView.getThread();
 
-       /* // give the GlassView a handle to the TextView used for messages
-        mGlassView.setTextView((TextView) findViewById(R.id.text));
         // give the GlassView a handle to the TextView used for messages
+        mGlassView.setTextView((TextView) findViewById(R.id.text));
+        
+      /*  // give the GlassView a handle to the TextView used for messages
         tv_Att = (TextView) findViewById(R.id.Att_text);
         tv_Med = (TextView) findViewById(R.id.Med_text);
         
@@ -89,8 +90,8 @@ public class MainActivity extends Activity {
 		*/
 		
 		tv_T1 = (TextView) findViewById(R.id.text);
-		/*tv_A = (TextView) findViewById(R.id.A);
-		tv_M = (TextView) findViewById(R.id.M);	*/	
+		tv_A = (TextView) findViewById(R.id.Att_text);
+		tv_M = (TextView) findViewById(R.id.Med_text);	
 		
         /* Checking BT and connecting to the TG device */
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -112,8 +113,8 @@ public class MainActivity extends Activity {
     @Override
     	protected void onPause() {
         super.onPause();
-       // mGlassView.getThread().pause(); // pause game when Activity pauses
-        //mGlassView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir          
+        mGlassView.getThread().pause(); // pause game when Activity pauses
+        mGlassView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir          
     }
 	    @Override
 	    public void onDestroy() {    	
@@ -195,7 +196,7 @@ public class MainActivity extends Activity {
 	                    // First send Attention data to the backend in async way
 	                    //APIClient.postData(null, "attention", String.valueOf(msg.arg1), null);
 
-	                    At = msg.arg1;        
+	                    At = msg.arg1;         
 	                    tv_A.setText(String.valueOf(At));
 	                    mGlassThread.setAttention(At);
 	                    
