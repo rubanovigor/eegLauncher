@@ -32,26 +32,27 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
     	String s6 = "6s";
         int At = 50; int Med = 50;   int ApM = 100;    int AmM = 0;
         CharSequence TGStatus;
-        double elapsed = 0;        double V=0;        float alpha = 0;
-        float Graviton = 0f; float Grav_scale = 1f; float StarPosGrR = 3.0f; //3f for s3, 6f for tablet
+        float alpha = 0;   float CircleRadius = 350f;  float StarScale = 0.2f; float alpha1_1=0;
+        float accel_alpha = 5f;
+        double elapsed = 0;   
+        float curr_alpha_obj1 = 0; float curr_alpha_obj2 = 0; float curr_alpha_obj3 = 0; float curr_alpha_obj4 = 0;
+        float curr_alpha_obj5 = 0; float curr_alpha_obj6 = 0; float curr_alpha_obj7 = 0; float curr_alpha_obj8 = 0;
+        int[] obj1_center;
+        
+        //float Graviton = 0f; float Grav_scale = 1f; float StarPosGrR = 3.0f; //3f for s3, 6f for tablet
         //float[] ar_sigm_a = new float[] {110, 90, 70, 270, 360 }; //maximum rotation angle
         // set all values to 42
-        public ArrayList<String> bci_code = new ArrayList<String>();       
-        int GenBinLet1 = -1;        int GenBinLet2 = -1;
-        int GenBinLet1_flag = -1;        int GenBinLet2_flag = -1;
-        String ActGenSequence = "";     String GenLetSucc = "";  String ActGenSequenceBin = ""; 
-        //String[] GenomeWords = new String[] {"ATG","GCT","CGT"};
-        String[] GenomeLetters = new String[] {"A","C","T","G"}; 
- 
-        String DesGenSequence = "";  char CurrentLetter;
-        int IncorrectW = 0;   int CorrectW = 0; 
+        //public ArrayList<String> bci_code = new ArrayList<String>();       
+        int GenBinLet1 = -1;        int GenBinLet2 = -1;  String GenLetSucc = ""; 
         
         // -- new //
-        //private NaturalSkyBody Star_RT_l1;
-        private SkyBody Star_LB_l1;
-        private SkyBody Star_LT_l1;
-        private SkyBody Star_RT_l1;
-        private SkyBody Star_RB_l1;
+        //private NaturalSkyBody Object3;
+        private SkyBody Object1; 
+        private SkyBody Object1_1;  private SkyBody Object1_2;  private SkyBody Object1_3; 
+        private SkyBody Object2;
+        private SkyBody Object3;        private SkyBody Object4;
+        private SkyBody Object5;		private SkyBody Object6;
+        private SkyBody Object7;		private SkyBody Object8;
 
         private float StarR;  private float R_Gr_sphere_C;  private float R_Gr_sphere_S; 
         //float Sl1_0; float Sl1_1; float Sl1_2; float Sl1_3; float Sl1_4; float Sl1_5;
@@ -65,7 +66,6 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
         float Scale_Gr_sphere_C = 1;
         
         int Level1_flag;         int Level2_flag;         int Level3_flag;
-        float StarScale = 0.8f;
         double P_S1l1_rr; double P_S2l1_rr; 
         double P_S1l2_rr; double P_S2l2_rr;
         double P_S1l3_rr; double P_S2l3_rr;
@@ -84,44 +84,20 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
         private float BackGr_ImageScale = BackGr_ImageScaleMax;
         private int BackGr_ImageScalePi = 1; //  Pi/BackGr_ImageScalePi
                
-        /*collision block*/
-//        boolean ReachingPLanet = false;
-  //      boolean bci_code_CometFlag = true;     
-    //    boolean ReachingComet = false;
-        
-        /** Lander heading in degrees, with 0 up, 90 right. Kept in the range 0..360. */
-     //   private double PonterHeading;
-
         /** X/Y of lander center. */
         double pX;        double pY;
-        
-        /** Pixel height of lander image. */
-       // private int PointerHeight;
-        /** Pixel width of lander image. */
-        //private int PointerWidth;  
-        /** What to draw for the Lander in its normal state */
-       /* private Drawable PointerImage; private Drawable PointerImage2;
-        private Drawable Pointer_grey; private Drawable Pointer_red; private Drawable Pointer_amber;
-        private float PointerScale = 1f; // don't change!!!
-        private float PointerR; 
-        
-        private float Pointer_grey_w; private float Pointer_grey_R;*/
-        
+                
         //================================        
         /* State-tracking constants */
-        public static final int STATE_LOSE = 1;
-        public static final int STATE_PAUSE = 2;
-        public static final int STATE_READY = 3;
-        public static final int STATE_RUNNING = 4;
+        public static final int STATE_LOSE = 1;       public static final int STATE_PAUSE = 2;
+        public static final int STATE_READY = 3;      public static final int STATE_RUNNING = 4;
         public static final int STATE_WIN = 5;
 
         /** UI constants (i.e. the speed & fuel bars) */
-        private static final String KEY_X = "pX";
-        private static final String KEY_Y = "pY";
+        private static final String KEY_X = "pX";      private static final String KEY_Y = "pY";
 
         /** Current height/width of the surface/canvas. @see #setSurfaceSize        */
-        private int BackGr_H = 1;
-        private int BackGr_W = 1;
+        private int BackGr_H = 1;        private int BackGr_W = 1;
 
         /** Message handler used by thread to interact with TextView */
         private Handler mHandler;
@@ -148,22 +124,29 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             Resources res = context.getResources();           
             // -- define stars //
             	// level1
-            Star_LB_l1 = new SkyBody(res.getDrawable(R.drawable.sun3_2), 1f); // image,scale
-            //Star_LT_l1 = new SkyBody(res.getDrawable(R.drawable.sun3_3), 1f); // image,scale
-            Star_LT_l1 = new SkyBody(res.getDrawable(R.drawable.photo_grid), 1f); // image,scale
-            Star_RT_l1 = new SkyBody(res.getDrawable(R.drawable.sun3_4), 1f); // image,scale
-            Star_RB_l1 = new SkyBody(res.getDrawable(R.drawable.sun2_3), 1f); // image,scale
-
+            Object1 = new SkyBody(res.getDrawable(R.drawable.sun3_2), 1f); // image,scale
+            Object1_1 = new SkyBody(res.getDrawable(R.drawable.sun3_4), 1f); // image,scale
+            Object1_2 = new SkyBody(res.getDrawable(R.drawable.sun3_2), 1f); // image,scale
+            Object1_3 = new SkyBody(res.getDrawable(R.drawable.sun2_3), 1f); // image,scale
+            //Object2 = new SkyBody(res.getDrawable(R.drawable.sun3_3), 1f); // image,scale
+            Object2 = new SkyBody(res.getDrawable(R.drawable.photo_grid), 1f); // image,scale
+            Object3 = new SkyBody(res.getDrawable(R.drawable.sun3_4), 1f); // image,scale
+            Object4 = new SkyBody(res.getDrawable(R.drawable.sun2_3), 1f); // image,scale
+            Object5 = new SkyBody(res.getDrawable(R.drawable.ar1), 1f);
+            Object6 = new SkyBody(res.getDrawable(R.drawable.ir2), 1f);
+            Object7 = new SkyBody(res.getDrawable(R.drawable.ir3), 1f);
+            Object8 = new SkyBody(res.getDrawable(R.drawable.tz1), 1f);
             
-            StarR = Star_LB_l1.getImageWidth()/2; // all stars has the same Radius
+            
+            StarR = Object1.getImageWidth()/2; // all stars has the same Radius
             StarR = StarR * StarScale;  // adopt star size to screan using scale
-            //Star_LB_l1.setAlpha(0f);
+            //Object1.setAlpha(0f);
             
             
             
             // cache handles to our key drawables
-            BackGr_Image = context.getResources().getDrawable(R.drawable.bg_real);
-            //BackGr_Image = context.getResources().getDrawable(R.drawable.space); 
+            //BackGr_Image = context.getResources().getDrawable(R.drawable.bg_real);
+            BackGr_Image = context.getResources().getDrawable(R.drawable.mars);
            
         }
 
@@ -182,35 +165,28 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
                 //Sl1_0 = 0;  /*<-->*/ Sl1_1 = Cx_lb_l1 - StarR;  /*<-->*/ Sl1_2 = Cx_lb_l1 + StarR;
 	                //Level1 - setup initial stars position/center coordinates and scale
                 	// 1 left-bottom
-	            Cx_lb_l1 = StarR ;   // 720 -> 360
-	            Cy_lb_l1 = BackGr_H/2 + BackGr_W/2 -StarR;  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
-	            Star_LB_l1.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);
-	            Star_LB_l1.setScale(StarScale);
-	            Star_LB_l1.setAlpha(40f);
-	                //pX = Cx_lb_l1; pY = Cy_lb_l1
+	            Cx_lb_l1 = (float)(pX - CircleRadius) ;   // 720 -> 360
+	            Cy_lb_l1 = (float)pY;  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
+	            Object1.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);    Object1.setScale(StarScale);
+	            Object1_1.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);    Object1_1.setScale(StarScale);
+	            Object1_2.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);    Object1_2.setScale(StarScale);
+	            Object1_3.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);    Object1_3.setScale(StarScale);
+	                
 	                
 	            	// 2 right-top
-	            Cx_rt_l1 = BackGr_W - StarR;   // 720 -> 360
-                Cy_rt_l1 = BackGr_H/2 - BackGr_W/2 + StarR;  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
-                Star_RT_l1.setCenterCoordinates(Cx_rt_l1, Cy_rt_l1);
-                Star_RT_l1.setScale(StarScale);
-                Star_RT_l1.setAlpha(60f);
+	            Cx_rt_l1 = (float)(pX + CircleRadius);   // 720 -> 360
+                Cy_rt_l1 = (float)pY;  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
+                Object3.setCenterCoordinates(Cx_rt_l1, Cy_rt_l1); Object3.setScale(StarScale); Object3.setAlpha(0f);
                 
                 	// 3 left-top
-	            Cx_lt_l1 = StarR;   // 720 -> 360
-	            Cy_lt_l1 = BackGr_H/2 - BackGr_W/2 + StarR;  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
-                //if (GameMode.equalsIgnoreCase("4s")){Cx_lt_l1 = 3*BackGr_W / 10;   Cy_lt_l1 = 5*BackGr_H / 10;}
-	            Star_LT_l1.setCenterCoordinates(Cx_lt_l1, Cy_lt_l1);
-	            Star_LT_l1.setScale(StarScale);
-	            Star_LT_l1.setAlpha(80f);	                
+	            Cx_lt_l1 = (float)pX;   // 720 -> 360
+	            Cy_lt_l1 = (float)(pY - CircleRadius);  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
+                Object2.setCenterCoordinates(Cx_lt_l1, Cy_lt_l1); Object2.setScale(StarScale); Object2.setAlpha(0f);	                
 	                
 	            	// 4 right-bottom
-	            Cx_rb_l1 = BackGr_W - StarR;   // 720 -> 360
-                Cy_rb_l1 = BackGr_H/2 + BackGr_W/2 -StarR;  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
-                //if (GameMode.equalsIgnoreCase("4s")){Cx_rb_l1 = 7*BackGr_W / 10;   Cy_rb_l1 = 5*BackGr_H / 10;}
-                Star_RB_l1.setCenterCoordinates(Cx_rb_l1, Cy_rb_l1);
-                Star_RB_l1.setScale(StarScale);
-                Star_RB_l1.setAlpha(100f);
+	            Cx_rb_l1 = (float)pX;   // 720 -> 360
+                Cy_rb_l1 = (float)(pY + CircleRadius);  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
+                Object4.setCenterCoordinates(Cx_rb_l1, Cy_rb_l1); Object4.setScale(StarScale); Object4.setAlpha(0f);
                 
             		        		        
                 mLastTime = System.currentTimeMillis() + 100;
@@ -362,44 +338,16 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
                 if (mMode == STATE_RUNNING) {
                 	//str = "pY: " + String.valueOf(Math.round(pY));//ir mYOld
                 	str =  ""
-                	+ "ZZ = "+String.valueOf(Math.round(ZZ)) + "\n";
-                	/*+ "pX = "+String.valueOf(Math.round(pX)) + "   --  "
-                	+ "pY = "+String.valueOf(Math.round(pY)) + "\n"
-                	+ "Z_re = "+String.valueOf(Z_re) + "\n"
-                	+ "Z_im = "+String.valueOf(Z_im) + "\n"
-                	+ "Z_re_sq = " + String.valueOf(Z_re_sq) + "\n";*/
-                	/*+ "ScreenFlag "+String.valueOf(ScreenFlag)+ "\n "*/
-                	//+ "StarR "+String.valueOf(Math.round(StarR))+ "\n "
-                	//+"pX = "+ String.valueOf(Math.round(pX)) + "\n"
-                	/*+"Graviton  = " + String.valueOf(Graviton) + "\n"
-                	+"P2C_dist  = " + String.valueOf(P2C_dist) + "\n";*/
-                			/*+ "Word:  " + DesGenSequence.charAt(0)+ "-"
-                			+ DesGenSequence.charAt(1)+ "-"
-                			+ DesGenSequence.charAt(2)+ "-"
-                			+ Character.toString(DesGenSequence.charAt(0)) + "\n";*/
-                			/*+ "C2C:  " + String.valueOf(Math.round(C2C - StarR-PointerR)) + "\n"
-                			+ "C4C:  " + String.valueOf(Math.round(C4C - StarR-PointerR)) + "\n"
-                			+ "P_S1l1_rr:  " + String.valueOf(Math.round(P_S1l1_rr - StarR-PointerR)) + "\n"
-                			+ "P_S2l1_rr:  " + String.valueOf(Math.round(P_S2l1_rr - StarR-PointerR)) + "\n"
-                			+ "pY:  " + String.valueOf(Math.round(pY)) + "\n"
-                			+ "Cy_lt_l1:  " + String.valueOf(Math.round(Cy_lr_l1)) + "\n";*/
- 
+                	//+"pX = "+ String.valueOf(Math.round(pX)) + "  |  "
+                	+"alpha = "+ String.valueOf(Math.round(alpha)) + "\n"
+                	+ "accel_alpha   = " + String.valueOf(accel_alpha ) + "\n"
+                	+ "AmM  = " + String.valueOf(AmM) + "\n";
+                	//+"obj1_center[] " + String.valueOf(obj1_center[0]) + " | "+ String.valueOf(obj1_center[1]) + "\n";
                 			//TGStatus;//ir
                 	
                 } else {
                     Resources res = mContext.getResources();      str = "";
                     
-                    /*if (mMode == STATE_READY)
-                        str = res.getText(R.string.mode_ready);
-                    else if (mMode == STATE_PAUSE)
-                        str = res.getText(R.string.mode_pause);
-                    else if (mMode == STATE_LOSE)
-                        str = res.getText(R.string.mode_lose);
-                    else if (mMode == STATE_WIN)
-                        str = res.getString(R.string.mode_win_prefix)
-                                //+ mWinsInARow + " "
-                                + res.getString(R.string.mode_win_suffix);*/
-
                     if (message != null) {str = message + "\n" + str; }
                   }
                     Message msg = mHandler.obtainMessage();
@@ -441,7 +389,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             // Draw the background image. Operations on the Canvas accumulate so this is like clearing the screen.
                      
             //moving one image on background
-           /* canvas.save();
+            canvas.save();
             		//canvas.rotate(0, 0, 0);
             		//canvas.rotate(alpha, (float)BackGr_W/2, (float)BackGr_H/2);
             		//canvas.scale(BackGr_ImageScale,BackGr_ImageScale, (float)BackGr_W/2 , (float)BackGr_H/2); // scale
@@ -451,20 +399,18 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             // -- add left/right/top/down movements adjust bounds !!!!!
             BackGr_Image.setBounds(- BackGr_W/2, (int)(BackGr_H/2 - BackGr_W/2 - StarR), BackGr_W + BackGr_W/2, (int)(BackGr_H/2 + BackGr_W/2 + StarR));
             BackGr_Image.draw(canvas);        
-            canvas.restore();*/
+            canvas.restore();
             
             // draw levelel1 stars
-            Star_RT_l1.setScale(S2P_scale_rt);
-            Star_LT_l1.setScale(S2P_scale_lt);
-            Star_RB_l1.setScale(S2P_scale_rb);
-            Star_LB_l1.setScale(S2P_scale_lb);
+           /* Object3.setScale(S2P_scale_rt);
+            Object2.setScale(S2P_scale_lt);
+            Object4.setScale(S2P_scale_rb);
+            Object1.setScale(S2P_scale_lb);*/
                         
-            Star_LB_l1.drawTo(canvas);     
-            Star_RT_l1.drawTo(canvas);           	
-            Star_LT_l1.drawTo(canvas);  
-            Star_RB_l1.drawTo(canvas);
-            
-        
+            Object1.drawTo(canvas); Object1_1.drawTo(canvas); Object1_2.drawTo(canvas); Object1_3.drawTo(canvas);     
+            Object2.drawTo(canvas); Object3.drawTo(canvas); Object4.drawTo(canvas);
+            Object5.drawTo(canvas); Object6.drawTo(canvas); Object7.drawTo(canvas); Object8.drawTo(canvas);
+         
     }
 
         /**
@@ -490,141 +436,132 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             
             /* -- =========== -- */
             // -- Vertical Movement
-            float accel_V = 1.5f;
+           // float accel_V = 1.5f;
             //V = (At+Med) / V_coeff;
             ApM = At+Med;           
-            if (ApM >= 80 && ApM<=130) { pY = pY + 0; }
+            /*if (ApM >= 80 && ApM<=130) { pY = pY + 0; }
         	else { if (ApM <60){ pY = pY - accel_V; } 
         		else { if (ApM > 110){ pY = pY + accel_V;}
         		}                    
-        	}  
+        	}  */
             
             
-            // -- Horizontal Movement defined by alpha based on Att-Med
-            float accel_alpha = 1.5f;
+            // -- Rotational Movement defined by alpha based on Att-Med
             AmM = At-Med;
+            if (accel_alpha>=3) {accel_alpha = 3; StarScale = 0.2f; }  // -- limit rotational speed
+            if (accel_alpha>2.5 && accel_alpha<3) {StarScale = 0.25f; } 
+            if (accel_alpha>=2 && accel_alpha<=2.5) {StarScale = 0.3f; }
+            if (accel_alpha>=1 && accel_alpha<2.0) {StarScale = 0.35f; }
+            if (accel_alpha<=0) {accel_alpha = 0; StarScale = 0.4f; }
             
-            if (Math.abs(At-Med) <= 20) { pX = pX + 0; }
+            
+            if (Math.abs(At-Med) <= 30 && accel_alpha > 0) 
+            	{ 
+            		accel_alpha = accel_alpha - 0.07f ; 
+            		alpha = alpha + accel_alpha; 
+            	}
             else {
-                if (At-Med > 20 && alpha > -80){ pX = pX - accel_alpha; } 
+                if (At-Med > 30 ){ accel_alpha = accel_alpha + 0.07f ; alpha = alpha + accel_alpha; } 
                 else {
-                	if (At-Med < -20 && alpha < 80){ pX = pX + accel_alpha; }
-                	//if (At-Med < -2 && alpha < 80){ pX = pX + accel_alpha; }
+                	if (At-Med < -30 ){accel_alpha = accel_alpha + 0.07f ; alpha = alpha + accel_alpha; }
                 }                    
             }       
+            if (alpha >=360) {alpha = alpha-360; }
+                
+            curr_alpha_obj1 = alpha; curr_alpha_obj2 = alpha + 180;
+            curr_alpha_obj3 = alpha + 90;  curr_alpha_obj4 = alpha + 270;
+            curr_alpha_obj5 = alpha + 45;  curr_alpha_obj6 = alpha + 135;
+            curr_alpha_obj7 = alpha + 225; curr_alpha_obj8 = alpha + 315;
             
-            // -- pointer2center distance
-	        P2C_dist = Math.round(Math.sqrt( Math.pow(BackGr_H/2 - (BackGr_H - pY), 2) + Math.pow(BackGr_W/2 - pX,2) ) );
-	        	// -- calculate Gravity based on the pointer position and TAN transfer function
-		        // add coeficient to the TANH an scale it to [-1;0]
-		        //norm=((data_of each column)-min(data_of each column))/(max(data_of
-		        	//	each column)-min(data_of each column))
-		        //Graviton  = Math.tanh(Math.toRadians(P2C_dist));
-		        //Graviton  = 1f - (P2C_dist - 0)/(R_Gr_sphere_C - 0);
-	        
-	        // -- apply central sphere gravity according to the pointer position
-          /*  if (P2C_dist < R_Gr_sphere_C && pY>BackGr_H/2 && P2C_dist != 0f) 
-            	{ Graviton  = 1f - (P2C_dist - 0)/(R_Gr_sphere_C - 0); pY = pY - Graviton/Grav_scale; }
-            if (P2C_dist < R_Gr_sphere_C && pY<BackGr_H/2 && P2C_dist != 0f)
-            	{ Graviton  = 1f - (P2C_dist - 0)/(R_Gr_sphere_C - 0); pY = pY + Graviton/Grav_scale; }
-            
-            if (P2C_dist < R_Gr_sphere_C && pX>BackGr_W/2 && P2C_dist != 0f)
-            	{ Graviton  = 1f - (P2C_dist - 0)/(R_Gr_sphere_C - 0); pX = pX - Graviton/Grav_scale; }
-            if (P2C_dist < R_Gr_sphere_C && pX<BackGr_W/2 && P2C_dist != 0f) 
-            	{ Graviton  = 1f - (P2C_dist - 0)/(R_Gr_sphere_C - 0); pX = pX + Graviton/Grav_scale; }     */      
-	                        
-            
-           // pX = pX + V * (float) Math.sin(Math.toRadians(alpha))*elapsed;
-            //pY = pY + V * (float) Math.cos(Math.toRadians(alpha))*elapsed;
-            //PonterHeading = alpha;
-            
-            /* -- =========== -- */
-            // -- checking if pointer reach left/right border of the screen
-            double delatYShuttle1Border = BackGr_H/2 - (pY);
-            
-            	// -- checking if pointer is reaching the right border
-            if (pX >= BackGr_W && delatYShuttle1Border >= 0) { pX = BackGr_W/2; pY = BackGr_H/2; }
-            else {
-            	if (pX >= BackGr_W && delatYShuttle1Border < 0) {
-            		pX = BackGr_W/2;  pY = BackGr_H/2; 
-                } else 
-                // checking if pointer is reaching the left border
-		            if (pX<=0 && delatYShuttle1Border >= 0) {
-		            	pX = BackGr_W/2; pY = BackGr_H/2;
-		            } else {
-		            	if (pX<=0 && delatYShuttle1Border < 0) {
-		            		pX = BackGr_W/2; pY = BackGr_H/2;
-		                } 
-		            }
-            }
-                    
-            /* -- =========== -- */
-            // right-top star2pointer distance
-            S2P_dist_rt = Math.round(Math.sqrt( Math.pow(Cy_rt_l1 - (BackGr_H - pY), 2) + Math.pow(Cx_rt_l1 - pX,2) ) );
-            	// -- dynamic (based on star2pointer distance) scaling of right-top star
-            S2P_scale_rt = (S2P_dist_rt - 0)/(BackGr_W/2 - 0);
-	            /*if (S2P_dist_rt < StarR + PointerR){ 
-	            	S2P_scale_rt = 0; pX = BackGr_W/2; pY = BackGr_H/2; ScreenFlag = 3; doStart(); } 
-	            if (S2P_dist_rt > BackGr_W/2-StarR + PointerR){ S2P_scale_rt = StarScale; }
-	        		// -- positive gravitation to star
-	            if (S2P_dist_rt < StarPosGrR*StarR + PointerR)
-	            	{ Graviton  = 2f - (S2P_dist_rt - 0)/(R_Gr_sphere_S - 0);
-	            	  pX = pX + Graviton;  pY = pY + Graviton; } */
-	        
-	        // right-bottom star2pointer distance
-	        S2P_dist_rb = Math.round(Math.sqrt( Math.pow(Cy_rb_l1 - (BackGr_H - pY), 2) + Math.pow(Cx_rb_l1 - pX,2) ) );
-	          	// -- dynamic (based on star2pointer distance) scaling of right-top star
-	        S2P_scale_rb = (S2P_dist_rb - 0)/(BackGr_W/2 - 0);
-		        /*if (S2P_dist_rb < StarR + PointerR){ 
-		        	S2P_scale_rb = 0; pX = BackGr_W/2; pY = BackGr_H/2; ScreenFlag = 3; doStart(); } 
-		        if (S2P_dist_rb > BackGr_W/2-StarR + PointerR){ S2P_scale_rb = StarScale; }
-		        	// -- positive gravitation to star
-		        if (S2P_dist_rb < StarPosGrR*StarR + PointerR)
-		        	{  Graviton  = 2f - (S2P_dist_rb - 0)/(R_Gr_sphere_S - 0);
-		        	   pX = pX + Graviton;  pY = pY - Graviton; } */
-		        		        
-		    // left-bottom star2pointer distance
-		    S2P_dist_lb = Math.round(Math.sqrt( Math.pow(Cy_lb_l1 - (BackGr_H - pY), 2) + Math.pow(Cx_lb_l1 - pX,2) ) );
-		        // -- dynamic (based on star2pointer distance) scaling of right-top star
-		    S2P_scale_lb = (S2P_dist_lb - 0)/(BackGr_W/2 - 0);
-			  /*      if (S2P_dist_lb < StarR + PointerR){ 
-			        	S2P_scale_lb = 0; pX = BackGr_W/2; pY = BackGr_H/2; ScreenFlag = 3; doStart(); } 
-			        if (S2P_dist_lb > BackGr_W/2-StarR + PointerR){ S2P_scale_lb = StarScale; }	 
-		        	// -- positive gravitation to star
-		        if (S2P_dist_lb < StarPosGrR*StarR + PointerR)
-		        	{  Graviton  = 2f - (S2P_dist_lb - 0)/(R_Gr_sphere_S - 0);
-		        	   pX = pX - Graviton;  pY = pY - Graviton; }*/
-		        
-            // left-top star2pointer distance
-            S2P_dist_lt = Math.round(Math.sqrt( Math.pow(Cy_lt_l1 - (BackGr_H - pY), 2) + Math.pow(Cx_lt_l1 - pX,2) ) );           
-            	// -- dynamic (based on star2pointer distance) scaling of left-top star
-            S2P_scale_lt = (S2P_dist_lt - 0)/(BackGr_W/2 - 0);
-	           /* if (S2P_dist_lt < StarR + PointerR){
-	            	S2P_scale_lt = 0; pX = BackGr_W/2; pY = BackGr_H/2; ScreenFlag = 2; doStart(); } 
-	            if (S2P_dist_lt > BackGr_W/2-StarR + PointerR){ S2P_scale_lt = StarScale;}
-	        		// -- positive gravitation to star
-	            if (S2P_dist_lt < StarPosGrR*StarR + PointerR)
-	            	{  Graviton  = 2f - (S2P_dist_lt - 0)/(R_Gr_sphere_S - 0);
-	            	   pX = pX - Graviton;  pY = pY + Graviton; } */
-	         
-	            
+            if (curr_alpha_obj1 > 360) {curr_alpha_obj1=curr_alpha_obj1 - 360;}
+            if (curr_alpha_obj2 > 360) {curr_alpha_obj2=curr_alpha_obj2 - 360;}
+            if (curr_alpha_obj3 > 360) {curr_alpha_obj3=curr_alpha_obj3 - 360;}
+            if (curr_alpha_obj4 > 360) {curr_alpha_obj4=curr_alpha_obj4 - 360;}
+            if (curr_alpha_obj5 > 360) {curr_alpha_obj5=curr_alpha_obj5 - 360;}
+            if (curr_alpha_obj6 > 360) {curr_alpha_obj6=curr_alpha_obj6 - 360;}
+            if (curr_alpha_obj7 > 360) {curr_alpha_obj7=curr_alpha_obj7 - 360;}
+            if (curr_alpha_obj8 > 360) {curr_alpha_obj8=curr_alpha_obj8 - 360;}
             
             // -- SkyBody: rotate stars
-            float[] alpha_rot = new float[] {0.5f, 0.6f, 0.8f, 0.8f, 1f, 0.9f };
+            float[] alpha_rot = new float[] {0.0f, 0.5f, 0.8f, 0.8f, 1f, 0.9f };
             Random rs1 =new Random();
-            Star_LB_l1.updatePhysics(alpha_rot[rs1.nextInt(6)]);
-            Star_RT_l1.updatePhysics(alpha_rot[rs1.nextInt(6)]);
-            Star_LT_l1.updatePhysics(alpha_rot[rs1.nextInt(6)]);            
-            Star_RB_l1.updatePhysics(alpha_rot[rs1.nextInt(6)]);
-            /* -- =========== -- */
+            Object1.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY);
+            float centerX; float centerY = 0;
+        	// -- calculate new center coordinates based on radius and angle
+        	centerX  = (float) (pX + CircleRadius * Math.sin(Math.toRadians(curr_alpha_obj1)) );
+        	centerY  = (float) (pY + CircleRadius * Math.cos(Math.toRadians(curr_alpha_obj1)) );
+        	alpha1_1 = alpha1_1 + 5f;
+            float CircleR1_1 = Object1.getImageWidth()/3;
+            Object1_1.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha1_1, CircleR1_1, centerX, centerY);
+            Object1_2.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha1_1+120, CircleR1_1, centerX, centerY);
+            Object1_3.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha1_1+240, CircleR1_1, centerX, centerY);
             
-        	            
-            // -- checking if pointer reaching upper border of the working part of the screen
-            //if (pY>BackGr_H) {
-            if (pY>BackGr_H - BackGr_W/2 + StarR) { ScreenFlag = 3; doStart();   }
-            if (pY<BackGr_W/2 - StarR) { ScreenFlag = 3; doStart();   } 
+            Object2.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj2, CircleRadius, pX, pY);        
+            Object3.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY);                
+            Object4.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj4, CircleRadius, pX, pY);
+            Object5.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj5, CircleRadius, pX, pY);
+            Object6.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj6, CircleRadius, pX, pY);
+            Object7.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj7, CircleRadius, pX, pY);            
+            Object8.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj8, CircleRadius, pX, pY);
+            
+            
+            Object1.setScale(StarScale); 
+            Object1_1.setScale(0.5f*StarScale);  Object1_2.setScale(0.5f*StarScale);  Object1_3.setScale(0.5f*StarScale);
+            Object2.setScale(StarScale); 	Object3.setScale(StarScale);   	Object4.setScale(StarScale); 		
+            Object5.setScale(StarScale);		Object6.setScale(StarScale);
+            Object7.setScale(StarScale); 		Object8.setScale(StarScale);
             /* -- =========== -- */
-                     
+            int lb = 330; int rb = 30;
+            if (accel_alpha <= 0){            
+            	if (curr_alpha_obj1 >= lb || curr_alpha_obj1 <= rb){ 
+            		Object1.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha + 0, 0, pX, pY);
+            		Object1.setScale(2*StarScale);
+            	}
+            	if (curr_alpha_obj5 >= lb || curr_alpha_obj5 <= rb){ 
+            		Object5.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
+            		Object5.setScale(2*StarScale);
+            	}            	
+            	if (curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb){ 
+            		Object3.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
+            		Object3.setScale(2*StarScale);
+            	}            	
+            	if (curr_alpha_obj6 >= lb || curr_alpha_obj6 <= rb){ 
+            		Object6.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
+            		Object6.setScale(2*StarScale);
+            	}            	
+            	if (curr_alpha_obj5 >= lb || curr_alpha_obj5 <= rb){ 
+            		Object5.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
+            		Object5.setScale(2*StarScale);
+            	}            	
+            	if (curr_alpha_obj7 >= lb || curr_alpha_obj7 <= rb){ 
+            		Object7.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
+            		Object7.setScale(2*StarScale);
+            	}            	
+            	if (curr_alpha_obj4 >= lb || curr_alpha_obj4 <= rb){ 
+            		Object4.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
+            		Object4.setScale(2*StarScale);
+            	}
+            	if (curr_alpha_obj8 >= lb || curr_alpha_obj8 <= rb){ 
+            		Object8.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
+            		Object8.setScale(2*StarScale);
+            	}
+            	
+            	
+            	
+            	
+            	
+            	
+            	//Object2.setScale(4*StarScale);
+            	//Object2.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 180, 0, pX, pY);
+            } else {Object2.setScale(StarScale);}
+            
+            /* -- =========== -- */
+            if (accel_alpha <= 0){        
+            	//if (alpha)
+            
+            }
+            
+            
             setState(STATE_RUNNING);  //set game status and update and print message
             
             mLastTime = now;

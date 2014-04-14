@@ -11,6 +11,7 @@ import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.os.Handler;
@@ -67,7 +68,7 @@ public class MainActivity extends Activity {
         // give the GlassView a handle to the TextView used for messages
         mGlassView.setTextView((TextView) findViewById(R.id.text));
         
-      /*  // give the GlassView a handle to the TextView used for messages
+        // give the GlassView a handle to the TextView used for messages
         tv_Att = (TextView) findViewById(R.id.Att_text);
         tv_Med = (TextView) findViewById(R.id.Med_text);
         
@@ -87,7 +88,7 @@ public class MainActivity extends Activity {
             mGlassThread.restoreState(savedInstanceState);        	
             //Log.w(this.getClass().getName(), "SIS is nonnull");
         }
-		*/
+		
 		
 		tv_T1 = (TextView) findViewById(R.id.text);
 		tv_A = (TextView) findViewById(R.id.Att_text);
@@ -101,7 +102,7 @@ public class MainActivity extends Activity {
             return;
         } else {
             tgDevice = new TGDevice(bluetoothAdapter, handler);
-            Toast.makeText(this, "Bluetooth is available ir", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Bluetooth is available ir", Toast.LENGTH_LONG).show();
             doStuff();
         }	
               
@@ -166,7 +167,7 @@ public class MainActivity extends Activity {
 	                        tv_T1.setText("Connected");
 	                        //mGlassThread.setTGStatus("Connected");
 	                        //mGlassThread.setGameMode(GameMode_str);
-	                        //mGlassThread.doStart(); //start game
+	                        mGlassThread.doStart(); //start game
 	                        break;
 	                    case TGDevice.STATE_NOT_FOUND:
 	                    	//mGlassThread.setTGStatus("Can't find");
@@ -292,7 +293,7 @@ public class MainActivity extends Activity {
 	                    tv_M.setText(String.valueOf(Med));
 	                    mGlassThread.setMeditation(Med);
 	                    
-	                   /* tv_Med.setText(String.valueOf(Med)); // display meditation
+	                    tv_Med.setText(String.valueOf(Med)); // display meditation
 	                    // change size and color of Med text view
 	                    if (Med < 30) {
 	                    	//tv_Med.setTextColor(Color.YELLOW);
@@ -338,7 +339,7 @@ public class MainActivity extends Activity {
 	                        }                    
 	                    }
 	                    
-	                    */
+	                    
 	                    
 	                    
 	                    break;

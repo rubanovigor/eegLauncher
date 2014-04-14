@@ -124,9 +124,18 @@ class SkyBody {
         }
     }
 
-    public void updatePhysics(float rot_alpha) {
+    public void updatePhysics(float rot_alpha, double pos_alpha, float CircleRadius,
+    		double pX, double pY) {
     	//bodyAlpha += 0.6;
     	bodyAlpha += rot_alpha;
+    	
+    	float centerX; float centerY = 0;
+    	// -- calculate new center coordinates based on radius and angle
+    	centerX  = (float) (pX + CircleRadius * Math.sin(Math.toRadians(pos_alpha)) );
+    	centerY  = (float) (pY + CircleRadius * Math.cos(Math.toRadians(pos_alpha)) );
+    	    	
+    	
+        setCenterX(centerX);        setCenterY(centerY);
 
     }
     

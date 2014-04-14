@@ -132,7 +132,7 @@
           android:layout_alignParentRight="true"
           android:gravity="center_horizontal"
           android:textColor="#ffffff"
-          android:textSize="24sp"/>
+          android:textSize="30sp"/>
             
          <TextView
           android:id="@+id/AmM_lable"
