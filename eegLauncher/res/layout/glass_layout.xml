@@ -26,18 +26,6 @@
           android:textColor="#88ffffff"
           android:textSize="24sp"/>
         
-        <TextView
-          android:id="@+id/Turn_Left"
-		  android:text="L"
-		  android:visibility="visible"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerVertical="true"
-          android:layout_alignParentLeft="true"
-          android:layout_above="@+id/Att_label"
-          android:gravity="center_horizontal"
-          android:textColor="#ffffff"
-          android:textSize="24sp"/>   
                       
         <TextView
           android:id="@+id/Att_text"
@@ -85,18 +73,6 @@
           android:textColor="#ffffff"
           android:textSize="12sp" /> 
  
-        <TextView
-          android:id="@+id/Turn_Right"
-		  android:text="R"
-		  android:visibility="visible"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerVertical="true"
-          android:layout_alignParentRight="true"
-          android:layout_above="@+id/Med_lable"
-          android:gravity="center_horizontal"
-          android:textColor="#ffffff"
-          android:textSize="24sp"/>
         
         <TextView
           android:id="@+id/Med_text"

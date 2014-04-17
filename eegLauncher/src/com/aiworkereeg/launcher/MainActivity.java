@@ -44,8 +44,7 @@ public class MainActivity extends Activity {
 	
 	TextView tv_T1;	TextView tv_A;	TextView tv_M;
 	private int At = 50;     private int Med = 50;
-	TextView tv_Med;    TextView tv_Att;    TextView tv_ApM;
-    TextView tv_AmM;    TextView tv_TurnL;  TextView tv_TurnR;
+	TextView tv_Med;    TextView tv_Att;    TextView tv_ApM;    TextView tv_AmM;    
 	
     	/** A handle to the thread that's actually running the animation. */
     private GlassThread mGlassThread;
@@ -75,8 +74,6 @@ public class MainActivity extends Activity {
         tv_ApM = (TextView) findViewById(R.id.ApM_text);
         tv_AmM = (TextView) findViewById(R.id.AmM_text);
         
-        tv_TurnL = (TextView) findViewById(R.id.Turn_Left);
-        tv_TurnR = (TextView) findViewById(R.id.Turn_Right);
              
         
         if (savedInstanceState == null) {
@@ -297,47 +294,26 @@ public class MainActivity extends Activity {
 	                    // change size and color of Med text view
 	                    if (Med < 30) {
 	                    	//tv_Med.setTextColor(Color.YELLOW);
-	                    	tv_Med.setTextSize(20);
+	                    	//tv_Med.setTextSize(20);
 	                    } else {
 	                        if (Med <70){
 	                        	//tv_Med.setTextColor(Color.GREEN);
-	                        	tv_Med.setTextSize(30);
+	                        	//tv_Med.setTextSize(30);
 	                        } else {
 	                        	//tv_Med.setTextColor(Color.RED);
-	                        	tv_Med.setTextSize(40);
+	                        	//tv_Med.setTextSize(40);
 	                        }                    
 	                    }
 	 
 	                    tv_AmM.setText(String.valueOf(At-Med)); // display Att-Med
 	                    // change size and color of Att-Med text view                   
-	                    if (Math.abs(At-Med) <= 20) {
-	                    	tv_AmM.setTextSize(20);
-	                    	
-	                    	tv_TurnR.setText("<--");
-	                      	tv_TurnR.setTextColor(Color.YELLOW);
-	                    	tv_TurnR.setTextSize(20);
-	                    	tv_TurnL.setText("-->");
-	                    	tv_TurnL.setTextSize(20);
-	                    	tv_TurnL.setTextColor(Color.YELLOW);
-	                    } else {
-	                    	tv_TurnR.setText("R");
-	                    	tv_TurnL.setText("L");
-	                        if (At-Med > 20){
-	                        	tv_AmM.setTextSize(30);
-	                        	
-	                        	tv_TurnL.setTextColor(Color.GREEN);
-	                        	tv_TurnL.setTextSize(30);
-	                        	tv_TurnR.setTextSize(1);
-	                        	tv_TurnR.setTextColor(Color.GRAY);
-	                        	
-	                        } else {
-	                        	tv_AmM.setTextSize(40);
-	                          	tv_TurnR.setTextColor(Color.GREEN);
-	                        	tv_TurnR.setTextSize(30);
-	                        	tv_TurnL.setTextSize(1);
-	                        	tv_TurnL.setTextColor(Color.GRAY);
-	                        }                    
-	                    }
+	                    if (Math.abs(At-Med) <= 15)	{tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.GRAY);}
+	                    	else if (Math.abs(At-Med) <= 30) {tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.WHITE); }
+	                    
+	                    if (At-Med < -45 || At-Med > 45) {tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.GREEN);}
+	                    	else if (At-Med < -30 || At-Med > 30) {tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.YELLOW); }
+	                                       
+	                    
 	                    
 	                    
 	                    
