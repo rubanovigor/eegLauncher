@@ -139,6 +139,15 @@ class SkyBody {
 
     }
     
+    public void updateDNA(float CursorX1, double pY) {
+    	float centerX; float centerY = 0;
+    	// -- calculate new center coordinates based on radius and angle
+    	centerX  = (float) (CursorX1 );
+    	centerY  = (float) (pY/2f - 300f);  	    	
+    	
+        setCenterX(centerX);        setCenterY(centerY);
+    }
+    
     public void setImage(Drawable image) {
     	bodyImage = image;
     }
