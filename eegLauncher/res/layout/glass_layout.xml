@@ -108,7 +108,7 @@
           android:layout_alignParentRight="true"
           android:gravity="center_horizontal"
           android:textColor="#ffffff"
-          android:textSize="30sp"/>
+          android:textSize="38sp"/>
             
          <TextView
           android:id="@+id/AmM_lable"
@@ -119,7 +119,7 @@
           android:layout_alignParentRight="true"
           android:layout_below="@+id/Med_text"
           android:textColor="#ffffff"
-          android:textSize="12sp" />   
+          android:textSize="32sp" />   
 
                  
 
