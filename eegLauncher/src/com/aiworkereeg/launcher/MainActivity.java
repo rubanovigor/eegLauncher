@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
 	
 	TextView tv_T1;	TextView tv_A;	TextView tv_M;
 	private int At = 50;     private int Med = 50;
-	TextView tv_Med;    TextView tv_Att;    TextView tv_ApM;    TextView tv_AmM;    
+	TextView tv_Med;    TextView tv_Att;    TextView tv_Vel;    TextView tv_AmM;    
 	
     	/** A handle to the thread that's actually running the animation. */
     private GlassThread mGlassThread;
@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
         tv_Att = (TextView) findViewById(R.id.Att_text);
         tv_Med = (TextView) findViewById(R.id.Med_text);
         
-        tv_ApM = (TextView) findViewById(R.id.ApM_text);
+        tv_Vel = (TextView) findViewById(R.id.Vel_text);
         tv_AmM = (TextView) findViewById(R.id.AmM_text);
         
              
@@ -198,6 +198,15 @@ public class MainActivity extends Activity {
 	                    tv_A.setText(String.valueOf(At));
 	                    mGlassThread.setAttention(At);
 	                    
+	                    // -- display velosity based on accel_alpha [0..2.5]
+	                    float vel = mGlassView.getThread().accel_alpha;
+	                    if (vel>=2f) {tv_Vel.setText("4");}
+	                    if (vel>=1.5f && vel<2f) {tv_Vel.setText("3");}
+	                    if (vel>=1f && vel<1.5f) {tv_Vel.setText("2");}
+	                    if (vel>=0.5f && vel<1f) {tv_Vel.setText("1");}
+	                    if (vel<0.5f) {tv_Vel.setText("0");}                    
+	                   
+	                    
 	                   /* tv_Att.setText(String.valueOf(At)); // display meditation
 	                    // change size and color of Att text view
 	                    if (At < 30) {
@@ -213,17 +222,17 @@ public class MainActivity extends Activity {
 	                        }                    
 	                    } 
 	                    
-	                    tv_ApM.setText(String.valueOf(At+Med)); // display Att-Med
+	                    tv_Vel.setText(String.valueOf(At+Med)); // display Att-Med
 	                    // change size and color of Att+Med text view 
 	                    if (At+Med < 60) {
-	                    	tv_ApM.setTextSize(20);
+	                    	tv_Vel.setTextSize(20);
 	                    } else {
 	                        if (At+Med <140) {
-	                        	tv_ApM.setTextSize(30);
+	                        	tv_Vel.setTextSize(30);
 	                        } else {
-	                        	tv_ApM.setTextSize(40);
+	                        	tv_Vel.setTextSize(40);
 	                        }                    
-	                    }   */                  
+	                    }   */                
 	                    
 	                    //display numer of correct/incorrect words
 	                    //tv_CorrectWords.setText(String.valueOf(mGlassView.getThread().CorrectW));

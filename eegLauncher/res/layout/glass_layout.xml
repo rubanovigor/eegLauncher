@@ -24,7 +24,7 @@
           android:layout_alignParentBottom="true"
           android:gravity="center_horizontal"
           android:textColor="#88ffffff"
-          android:textSize="24sp"/>
+          android:textSize="20sp"/>
         
                       
         <TextView
@@ -40,16 +40,16 @@
           android:textSize="24sp"/>
  
         <TextView
-          android:id="@+id/ApM_text"
-		  android:text=""
+          android:id="@+id/Vel_text"
+		  android:text="-"
 		  android:visibility="visible"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_below="@+id/ApM_label"
+          android:layout_below="@+id/Vel_label"
           android:layout_alignParentLeft="true"
           android:gravity="center_horizontal"
           android:textColor="#ffffff"
-          android:textSize="26sp"/>
+          android:textSize="32sp"/>
         
         <TextView
           android:id="@+id/Att_label"
@@ -62,16 +62,16 @@
           android:textColor="#ffffff"
           android:textSize="12sp" />  
         
-      <!--  <TextView
-          android:id="@+id/ApM_label"
+      	<TextView
+          android:id="@+id/Vel_label"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="1dip"
-          android:text=""
+          android:text="VEL"
           android:layout_below="@+id/Att_text"
           android:layout_alignParentLeft="true"
           android:textColor="#ffffff"
-          android:textSize="12sp" /> -->
+          android:textSize="32sp" /> 
  
         
         <TextView
