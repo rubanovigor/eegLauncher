@@ -119,9 +119,19 @@
           android:layout_alignParentRight="true"
           android:layout_below="@+id/Med_text"
           android:textColor="#ffffff"
-          android:textSize="32sp" />   
+          android:textSize="32sp" />
 
-                 
+         <TextView
+             android:id="@+id/TimeToSel"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_centerHorizontal="true"
+             android:layout_centerVertical="true"
+             android:gravity="center_horizontal"
+             android:text=""
+             android:textColor="#ffffff"
+             android:textSize="36sp"
+             android:visibility="visible" />
 
      </RelativeLayout>
          

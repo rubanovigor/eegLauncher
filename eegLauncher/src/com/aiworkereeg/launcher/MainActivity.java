@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
 	TGDevice tgDevice;
 	private static final boolean RAW_ENABLED = false; // false by default
 	
-	TextView tv_T1;	TextView tv_A;	TextView tv_M;
+	TextView tv_T1;	TextView tv_A;	TextView tv_M; TextView tv_TimeToSel;
 	private int At = 50;     private int Med = 50;
 	TextView tv_Med;    TextView tv_Att;    TextView tv_Vel;    TextView tv_AmM;    
 	
@@ -74,6 +74,7 @@ public class MainActivity extends Activity {
         tv_Vel = (TextView) findViewById(R.id.Vel_text);
         tv_AmM = (TextView) findViewById(R.id.AmM_text);
         
+        tv_TimeToSel = (TextView) findViewById(R.id.TimeToSel);
              
         
         if (savedInstanceState == null) {
@@ -206,6 +207,11 @@ public class MainActivity extends Activity {
 	                    if (vel>=0.5f && vel<1f) {tv_Vel.setText("1");}
 	                    if (vel<0.5f) {tv_Vel.setText("0");}                    
 	                   
+	                    float tts = mGlassView.getThread().TimeToSelect;
+	                    if (tts < 3f && vel<=0 && mGlassView.getThread().flag_Cursor)
+	                    	{tv_TimeToSel.setText(String.valueOf(Math.round(tts)) ); }
+	                    else {tv_TimeToSel.setText("");}
+	                    
 	                    
 	                   /* tv_Att.setText(String.valueOf(At)); // display meditation
 	                    // change size and color of Att text view
