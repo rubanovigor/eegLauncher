@@ -33,7 +33,8 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
     	String s6 = "6s";
         int At = 50; int Med = 50;   int ApM = 100;    int AmM = 0;
         CharSequence TGStatus;
-        float alpha = 0;   float StarScale = 0.2f; float alpha1_1=0;
+        float alpha = 0;  float alpha1_1=0;
+        float scale_obj = 1f; float scale_obj_rot = 0.8f; float scale_obj_console = 0.6f;
         float CircleRadius = 280f;   // -- for android phone
       //  float CircleRadius = 120f;		// -- for google glass
         float accel_alpha = 0f;
@@ -52,7 +53,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
         
         // -- new //
         //private NaturalSkyBody Object3;
-        private SkyBody Object1; private SkyBody Object1_1;  private SkyBody Object1_2;  private SkyBody Object1_3; 
+        private SkyBody Object1; //private SkyBody Object1_1;  private SkyBody Object1_2;  private SkyBody Object1_3; 
         private SkyBody Object2; private SkyBody Object3; private SkyBody Object4;
         private SkyBody Object5; private SkyBody Object6; private SkyBody Object7; private SkyBody Object8;
         
@@ -124,42 +125,43 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
         public GlassThread(SurfaceHolder surfaceHolder, Context context, Handler handler) {
             // get handles to some important objects
             mSurfaceHolder = surfaceHolder;   mHandler = handler;      mContext = context;
-
+ 
+            
             Resources res = context.getResources();           
             // -- define graphical objects //
-            Object1 = new SkyBody(res.getDrawable(R.drawable.t_object), 1f); // image,scale
-            Object1_1 = new SkyBody(res.getDrawable(R.drawable.sun3_4), 1f); // image,scale
-            Object1_2 = new SkyBody(res.getDrawable(R.drawable.sun3_2), 1f); // image,scale
-            Object1_3 = new SkyBody(res.getDrawable(R.drawable.sun2_3), 1f); // image,scale
+            Object1 = new SkyBody(res.getDrawable(R.drawable.t_object_l), 1f); // image,scale
+          //  Object1_1 = new SkyBody(res.getDrawable(R.drawable.sun3_4), 1f); // image,scale
+          //  Object1_2 = new SkyBody(res.getDrawable(R.drawable.sun3_2), 1f); // image,scale
+          //  Object1_3 = new SkyBody(res.getDrawable(R.drawable.sun2_3), 1f); // image,scale
             //Object2 = new SkyBody(res.getDrawable(R.drawable.sun3_3), 1f); // image,scale
-            Object2 = new SkyBody(res.getDrawable(R.drawable.star_object), 1f); // image,scale
-            Object3 = new SkyBody(res.getDrawable(R.drawable.c_object), 1f); // image,scale
-            Object4 = new SkyBody(res.getDrawable(R.drawable.inf_object), 1f); // image,scale
-            Object5 = new SkyBody(res.getDrawable(R.drawable.g_object), 1f);
-            Object6 = new SkyBody(res.getDrawable(R.drawable.hash_object), 1f);
-            Object7 = new SkyBody(res.getDrawable(R.drawable.cancel_object), 1f);
-            Object8 = new SkyBody(res.getDrawable(R.drawable.a_object), 1f);
+            Object2 = new SkyBody(res.getDrawable(R.drawable.cursor_rigth_l), scale_obj); // image,scale
+            Object3 = new SkyBody(res.getDrawable(R.drawable.c_object_l), scale_obj); // image,scale
+            Object4 = new SkyBody(res.getDrawable(R.drawable.inf_object_l), scale_obj); // image,scale
+            Object5 = new SkyBody(res.getDrawable(R.drawable.g_object_l), scale_obj);
+            Object6 = new SkyBody(res.getDrawable(R.drawable.cursor_left_l), scale_obj);
+            Object7 = new SkyBody(res.getDrawable(R.drawable.cancel_object_l), scale_obj);
+            Object8 = new SkyBody(res.getDrawable(R.drawable.a_object_l), scale_obj);
             
-            ObjectA = new SkyBody(res.getDrawable(R.drawable.a_object), 1f); // image,scale
-            ObjectC = new SkyBody(res.getDrawable(R.drawable.c_object), 1f); // image,scale
-            ObjectT = new SkyBody(res.getDrawable(R.drawable.t_object), 1f); // image,scale
-            ObjectG = new SkyBody(res.getDrawable(R.drawable.g_object), 1f); // image,scale
+            ObjectA = new SkyBody(res.getDrawable(R.drawable.a_object), scale_obj_console); // image,scale
+            ObjectC = new SkyBody(res.getDrawable(R.drawable.c_object), scale_obj_console); // image,scale
+            ObjectT = new SkyBody(res.getDrawable(R.drawable.t_object), scale_obj_console); // image,scale
+            ObjectG = new SkyBody(res.getDrawable(R.drawable.g_object), scale_obj_console); // image,scale
             
-            ObjectCancel = new SkyBody(res.getDrawable(R.drawable.p_black), 0.2f); // image,scale
+            ObjectCancel = new SkyBody(res.getDrawable(R.drawable.black), scale_obj_console); // image,scale
             ObjectCursor = new SkyBody(res.getDrawable(R.drawable.p_amber_1px), 5f); // image,scale
             ObjectCursorDel = new SkyBody(res.getDrawable(R.drawable.p_black_10px), 0.8f); // image,scale
-            ObjectClear = new SkyBody(res.getDrawable(R.drawable.p_black), 1f); // image,scale 
+            ObjectClear = new SkyBody(res.getDrawable(R.drawable.black), scale_obj_console); // image,scale 
             
             StarR = Object1.getImageWidth()/2; // all stars has the same Radius
-            StarR = StarR * StarScale;  // adopt star size to screan using scale
+            StarR = StarR * scale_obj;  // adopt star size to screan using scale
             //Object1.setAlpha(0f);
             
             
             
             // cache handles to our key drawables
-            BackGr_Image = context.getResources().getDrawable(R.drawable.tor2);
-            BackGr_Image1 = context.getResources().getDrawable(R.drawable.bg1);
-            BackGr_Image2 = context.getResources().getDrawable(R.drawable.bg2);
+            BackGr_Image = context.getResources().getDrawable(R.drawable.torus_bcgrnd);
+           // BackGr_Image1 = context.getResources().getDrawable(R.drawable.bg1);
+           // BackGr_Image2 = context.getResources().getDrawable(R.drawable.bg2);
            
         }
 
@@ -181,31 +183,31 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
                 	// 1 left-bottom
 	            Cx_lb_l1 = (float)(pX - CircleRadius) ;   // 720 -> 360
 	            Cy_lb_l1 = (float)pY;  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
-	            Object1.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);    Object1.setScale(StarScale);
-	            Object1_1.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);    Object1_1.setScale(StarScale);
-	            Object1_2.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);    Object1_2.setScale(StarScale);
-	            Object1_3.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);    Object1_3.setScale(StarScale);
+	            Object1.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);    Object1.setScale(scale_obj);
+	          //  Object1_1.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);   // Object1_1.setScale(scale_obj);
+	          //  Object1_2.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);   // Object1_2.setScale(scale_obj);
+	          //  Object1_3.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);   // Object1_3.setScale(scale_obj);
 	                
 	                
 	            	// 2 right-top
 	            Cx_rt_l1 = (float)(pX + CircleRadius);   // 720 -> 360
                 Cy_rt_l1 = (float)pY;  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
-                Object3.setCenterCoordinates(Cx_rt_l1, Cy_rt_l1); Object3.setScale(StarScale); Object3.setAlpha(0f);
+                Object3.setCenterCoordinates(Cx_rt_l1, Cy_rt_l1); Object3.setScale(scale_obj); Object3.setAlpha(0f);
                 
                 	// 3 left-top
 	            Cx_lt_l1 = (float)pX;   // 720 -> 360
 	            Cy_lt_l1 = (float)(pY - CircleRadius);  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
-                Object2.setCenterCoordinates(Cx_lt_l1, Cy_lt_l1); Object2.setScale(StarScale); Object2.setAlpha(0f);	                
+                Object2.setCenterCoordinates(Cx_lt_l1, Cy_lt_l1); Object2.setScale(scale_obj); Object2.setAlpha(0f);	                
 	                
 	            	// 4 right-bottom
 	            Cx_rb_l1 = (float)pX;   // 720 -> 360
                 Cy_rb_l1 = (float)(pY + CircleRadius);  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
-                Object4.setCenterCoordinates(Cx_rb_l1, Cy_rb_l1); Object4.setScale(StarScale); Object4.setAlpha(0f);
+                Object4.setCenterCoordinates(Cx_rb_l1, Cy_rb_l1); Object4.setScale(scale_obj); Object4.setAlpha(0f);
                 
-                ObjectA.setCenterCoordinates(CursorX, (float)pY*2f); ObjectA.setScale(0.15f);
-                ObjectC.setCenterCoordinates(CursorX, (float)pY*2f); ObjectC.setScale(0.15f);
-                ObjectT.setCenterCoordinates(CursorX, (float)pY*2f); ObjectT.setScale(0.15f);
-                ObjectG.setCenterCoordinates(CursorX, (float)pY*2f); ObjectG.setScale(0.15f);
+                ObjectA.setCenterCoordinates(CursorX, (float)pY*2f); ObjectA.setScale(scale_obj_console);
+                ObjectC.setCenterCoordinates(CursorX, (float)pY*2f); ObjectC.setScale(scale_obj_console);
+                ObjectT.setCenterCoordinates(CursorX, (float)pY*2f); ObjectT.setScale(scale_obj_console);
+                ObjectG.setCenterCoordinates(CursorX, (float)pY*2f); ObjectG.setScale(scale_obj_console);
                 
                 ObjectCursor.setCenterCoordinates(CursorX, (float)pY*2f+CursorY_delta);
                 ObjectCursorDel.setCenterCoordinates(CursorX, (float)pY*2f+CursorY_delta);
@@ -500,11 +502,11 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             // -- Rotational Movement defined by alpha based on Att-Med
             AmM = At-Med;
             
-            if (accel_alpha>=2.5f) {accel_alpha = 2.5f; StarScale = 0.3f; }  // -- limit rotational speed
-            if (accel_alpha>=2f && accel_alpha<=2.5f) {StarScale = 0.3f; }
-            if (accel_alpha>=1.5f && accel_alpha<2.0f) {StarScale = 0.3f; }
-            if (accel_alpha>=1f && accel_alpha<1.5f) {StarScale = 0.3f; }          
-            if (accel_alpha<=0f){ accel_alpha = 0f; StarScale = 0.3f;  }
+            if (accel_alpha>=2.5f) {accel_alpha = 2.5f; scale_obj = scale_obj_rot; }  // -- limit rotational speed
+            if (accel_alpha>=2f && accel_alpha<=2.5f) {scale_obj = scale_obj_rot; }
+            if (accel_alpha>=1.5f && accel_alpha<2.0f) {scale_obj = scale_obj_rot; }
+            if (accel_alpha>=1f && accel_alpha<1.5f) {scale_obj = scale_obj_rot; }          
+            if (accel_alpha<=0f){ accel_alpha = 0f; scale_obj = scale_obj_rot;  }
             
             if (accel_alpha<=0f && CursorI != 0){ TimeToSelect = TimeToSelect - 0.015f;}
             	else {TimeToSelect = 3f;}
@@ -565,9 +567,9 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
         	centerY  = (float) (pY + CircleRadius * Math.cos(Math.toRadians(curr_alpha_obj1)) );
         	alpha1_1 = alpha1_1 + 5f;
             float CircleR1_1 = Object1.getImageWidth()/3;
-            Object1_1.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha1_1, CircleR1_1, centerX, centerY);
-            Object1_2.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha1_1+120, CircleR1_1, centerX, centerY);
-            Object1_3.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha1_1+240, CircleR1_1, centerX, centerY);
+            //Object1_1.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha1_1, CircleR1_1, centerX, centerY);
+            //Object1_2.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha1_1+120, CircleR1_1, centerX, centerY);
+            //Object1_3.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha1_1+240, CircleR1_1, centerX, centerY);
             
             Object2.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj2, CircleRadius, pX, pY);        
             Object3.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY);                
@@ -578,11 +580,11 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             Object8.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj8, CircleRadius, pX, pY);
             
             
-            Object1.setScale(StarScale); 
-            Object1_1.setScale(0.5f*StarScale);  Object1_2.setScale(0.5f*StarScale);  Object1_3.setScale(0.5f*StarScale);
-            Object2.setScale(StarScale); 	Object3.setScale(StarScale);   	Object4.setScale(StarScale); 		
-            Object5.setScale(StarScale);		Object6.setScale(StarScale);
-            Object7.setScale(StarScale); 		Object8.setScale(StarScale);
+            Object1.setScale(scale_obj); 
+           // Object1_1.setScale(0.5f*scale_obj);  Object1_2.setScale(0.5f*scale_obj);  Object1_3.setScale(0.5f*scale_obj);
+            Object2.setScale(scale_obj); 	Object3.setScale(scale_obj);   	Object4.setScale(scale_obj); 		
+            Object5.setScale(scale_obj);		Object6.setScale(scale_obj);
+            Object7.setScale(scale_obj); 		Object8.setScale(scale_obj);
             /* -- =========== -- */
             float lb = 337.5f; float rb = 22.5f; float scale_k = 1; 
             if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
@@ -590,7 +592,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             	
             	if (curr_alpha_obj1 >= lb || curr_alpha_obj1 <= rb){ // -- T
             		Object1.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha + 0, 0, pX, pY);
-            		Object1.setScale(scale_k * StarScale); 
+            		Object1.setScale(scale_k * scale_obj); 
             		if(CursorI!=7){
 	            		sel_action_i = 1;  flag_Cursor = false; ObjectT.updateDNA(CursorX, pY+CursorY_delta);
 	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
@@ -598,7 +600,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             	}
             	if (curr_alpha_obj5 >= lb || curr_alpha_obj5 <= rb){ // -- G
             		Object5.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-            		Object5.setScale(scale_k * StarScale); 
+            		Object5.setScale(scale_k * scale_obj); 
             		if(CursorI!=7){
 	            		sel_action_i = 2; flag_Cursor = false; ObjectG.updateDNA(CursorX, pY+CursorY_delta);
 	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
@@ -606,7 +608,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             	}            	
             	if (curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb){  // -- C
             		Object3.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-            		Object3.setScale(scale_k *  StarScale); 
+            		Object3.setScale(scale_k *  scale_obj); 
             		if(CursorI!=7){
 	            		sel_action_i = 3; flag_Cursor = false; ObjectC.updateDNA(CursorX, pY+CursorY_delta);
 	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
@@ -614,7 +616,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             	}            	
             	if (curr_alpha_obj8 >= lb || curr_alpha_obj8 <= rb){  // -- A
             		Object8.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-            		Object8.setScale(scale_k * StarScale); 
+            		Object8.setScale(scale_k * scale_obj); 
             		if(CursorI!=7){
 	            		sel_action_i = 4; flag_Cursor = false; ObjectA.updateDNA(CursorX, pY+CursorY_delta);
 	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
@@ -627,7 +629,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
 	             		CursorX=CursorX-CursorX_delta;
 	             		
 	            		Object6.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-	            		Object6.setScale(scale_k * StarScale);
+	            		Object6.setScale(scale_k * scale_obj);
             		}
             	}            	
             	if (curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb){ // -- star - move cursor right
@@ -636,12 +638,12 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
 	            		CursorX=CursorX+CursorX_delta; 
 	            		
 	            		Object2.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-	            		Object2.setScale(scale_k * StarScale);
+	            		Object2.setScale(scale_k * scale_obj);
 	            	}
             	}            	
             	if (curr_alpha_obj7 >= lb || curr_alpha_obj7 <= rb){ // -- cancel button
             		Object7.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-            		Object7.setScale(scale_k * StarScale);
+            		Object7.setScale(scale_k * scale_obj);
             		if(CursorI>=2){  // -- cancel not working if cursor at 1st position
 	             		sel_action_i = 5;
 	             		CursorX=CursorX-CursorX_delta; CursorI=CursorI-1;
@@ -655,7 +657,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
 	             		ObjectClear.updateDNA(CursorX, pY+CursorY_delta);
 	             		
 	             		Object4.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-	            		Object4.setScale(scale_k * StarScale);
+	            		Object4.setScale(scale_k * scale_obj);
             		}
             	}            	
             	
@@ -663,9 +665,9 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
                         
             	flag_Cursor = false;
             	
-            	//Object2.setScale(4*StarScale);
+            	//Object2.setScale(4*scale_obj);
             	//Object2.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 180, 0, pX, pY);
-            } else {Object2.setScale(StarScale);}
+            } else {Object2.setScale(scale_obj);}
             
             /* -- =========== -- */
             
