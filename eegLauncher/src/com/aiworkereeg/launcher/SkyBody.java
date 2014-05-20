@@ -143,7 +143,7 @@ class SkyBody {
     	float centerX; float centerY = 0;
     	// -- calculate new center coordinates based on radius and angle
     	centerX  = (float) (CursorX1 );
-    	centerY  = (float) (pY/2f - 300f);  	    	
+    	centerY  = (float) (pY);  	    	
     	
         setCenterX(centerX);        setCenterY(centerY);
     }

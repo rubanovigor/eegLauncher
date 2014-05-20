@@ -34,8 +34,8 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
         int At = 50; int Med = 50;   int ApM = 100;    int AmM = 0;
         CharSequence TGStatus;
         float alpha = 0;  float alpha1_1=0;
-        float scale_obj = 1f; float scale_obj_rot = 0.8f; float scale_obj_console = 0.6f;
-        float CircleRadius = 280f;   // -- for android phone
+        float scale_obj = 0.8f; float scale_obj_rot = 0.8f; float scale_obj_console = 0.8f;
+        float CircleRadius = 1f; //280f;   // -- for android phone
       //  float CircleRadius = 120f;		// -- for google glass
         float accel_alpha = 0f;
         double elapsed = 0;   
@@ -43,7 +43,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
         float curr_alpha_obj5 = 0; float curr_alpha_obj6 = 0; float curr_alpha_obj7 = 0; float curr_alpha_obj8 = 0;
         int[] obj1_center; int sel_action_i; float CursorX;
         boolean flag_Cursor = false;  int CursorI = 0; int CursorJ=1;
-        float CursorX_delta = 100f; float CursorY_delta = 300f; float TimeToSelect = 3f;
+        float CursorX_delta = 1f; float CursorY_delta = 1f;      float TimeToSelect = 3f;
         
         //float Graviton = 0f; float Grav_scale = 1f; float StarPosGrR = 3.0f; //3f for s3, 6f for tablet
         //float[] ar_sigm_a = new float[] {110, 90, 70, 270, 360 }; //maximum rotation angle
@@ -62,7 +62,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
         private SkyBody ObjectCancel; private SkyBody ObjectCursor; private SkyBody ObjectCursorDel; 
         private SkyBody ObjectClear; 
         
-        private float StarR;  private float R_Gr_sphere_C;  private float R_Gr_sphere_S; 
+        private float StarR; private float CursorR;  private float R_Gr_sphere_C;  private float R_Gr_sphere_S; 
         //float Sl1_0; float Sl1_1; float Sl1_2; float Sl1_3; float Sl1_4; float Sl1_5;
         float Cx_lb_l1; float Cx_lt_l1; float Cx_rt_l1; float Cx_rb_l1;
         float Cy_lb_l1; float Cy_lt_l1; float Cy_rt_l1; float Cy_rb_l1;
@@ -154,6 +154,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             
             StarR = Object1.getImageWidth()/2; // all stars has the same Radius
             StarR = StarR * scale_obj;  // adopt star size to screan using scale
+            CursorR = ObjectCursor.getImageWidth()/2f;
             //Object1.setAlpha(0f);
             
             
@@ -176,7 +177,9 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
                 pY = BackGr_H/2;   
                 pX = BackGr_W/2;
                 CursorX = BackGr_W/4;
-                CursorY_delta = BackGr_W/2;
+                CursorY_delta = BackGr_ImageScale*BackGr_W/2;
+                CircleRadius = BackGr_ImageScale*BackGr_W / 2.7f;
+                CursorX_delta = StarR*2f;
               //==========SkyBody===========
                 //Sl1_0 = 0;  /*<-->*/ Sl1_1 = Cx_lb_l1 - StarR;  /*<-->*/ Sl1_2 = Cx_lb_l1 + StarR;
 	                //Level1 - setup initial stars position/center coordinates and scale
@@ -209,8 +212,8 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
                 ObjectT.setCenterCoordinates(CursorX, (float)pY*2f); ObjectT.setScale(scale_obj_console);
                 ObjectG.setCenterCoordinates(CursorX, (float)pY*2f); ObjectG.setScale(scale_obj_console);
                 
-                ObjectCursor.setCenterCoordinates(CursorX, (float)pY*2f+CursorY_delta);
-                ObjectCursorDel.setCenterCoordinates(CursorX, (float)pY*2f+CursorY_delta);
+                ObjectCursor.setCenterCoordinates((float)(4*pX), (float)pY );
+                ObjectCursorDel.setCenterCoordinates((float)(4*pX), (float)pY );
                 
                 mLastTime = System.currentTimeMillis() + 100;
                 setState(STATE_RUNNING);
@@ -361,10 +364,10 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
                 if (mMode == STATE_RUNNING) {
                 	//str = "pY: " + String.valueOf(Math.round(pY));//ir mYOld
                 	str =  "";
-                	//+"accel_alpha = "+ String.valueOf(accel_alpha) + "  \n  "
-                	//+"BackGr_H = "+ String.valueOf(BackGr_H) + " | "
-                	//+ "BackGr_W: " + String.valueOf(Math.round(BackGr_W) ) ;
-                	//+ "TimeToSelect  = " + String.valueOf(Math.round(TimeToSelect) ) + "\n";
+                	//+"pY + BackGr_W/2f : "+ String.valueOf(pY + BackGr_W/2f) + "  \n  "
+                	//+ "pY+CursorY_delta  "+ String.valueOf(pY+CursorY_delta) + "\n"
+                	//+ "BackGr_H/2f: " + String.valueOf(BackGr_H/2f ) + "\n"
+                	//+ "pY " + String.valueOf(pY ) + "\n";
                 	//+"obj1_center[] " + String.valueOf(obj1_center[0]) + " | "+ String.valueOf(obj1_center[1]) + "\n";
                 			//TGStatus;//ir
                 	
@@ -588,13 +591,13 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             /* -- =========== -- */
             float lb = 337.5f; float rb = 22.5f; float scale_k = 1; 
             if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
-            	ObjectCursorDel.updateDNA(CursorX, pY+CursorY_delta+150f);  // -- delete old cursor position
+            	ObjectCursorDel.updateDNA(CursorX, pY-CursorY_delta-2*CursorR);  // -- delete old cursor position
             	
             	if (curr_alpha_obj1 >= lb || curr_alpha_obj1 <= rb){ // -- T
             		Object1.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha + 0, 0, pX, pY);
             		Object1.setScale(scale_k * scale_obj); 
             		if(CursorI!=7){
-	            		sel_action_i = 1;  flag_Cursor = false; ObjectT.updateDNA(CursorX, pY+CursorY_delta);
+	            		sel_action_i = 1;  flag_Cursor = false; ObjectT.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
 	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
             		}
             	}
@@ -602,7 +605,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             		Object5.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
             		Object5.setScale(scale_k * scale_obj); 
             		if(CursorI!=7){
-	            		sel_action_i = 2; flag_Cursor = false; ObjectG.updateDNA(CursorX, pY+CursorY_delta);
+	            		sel_action_i = 2; flag_Cursor = false; ObjectG.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
 	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
             		}
             	}            	
@@ -610,7 +613,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             		Object3.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
             		Object3.setScale(scale_k *  scale_obj); 
             		if(CursorI!=7){
-	            		sel_action_i = 3; flag_Cursor = false; ObjectC.updateDNA(CursorX, pY+CursorY_delta);
+	            		sel_action_i = 3; flag_Cursor = false; ObjectC.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
 	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
             		}
             	}            	
@@ -618,7 +621,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             		Object8.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
             		Object8.setScale(scale_k * scale_obj); 
             		if(CursorI!=7){
-	            		sel_action_i = 4; flag_Cursor = false; ObjectA.updateDNA(CursorX, pY+CursorY_delta);
+	            		sel_action_i = 4; flag_Cursor = false; ObjectA.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
 	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 	            	}
             	}
@@ -647,7 +650,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             		if(CursorI>=2){  // -- cancel not working if cursor at 1st position
 	             		sel_action_i = 5;
 	             		CursorX=CursorX-CursorX_delta; CursorI=CursorI-1;
-	            		flag_Cursor = false; ObjectCancel.updateDNA(CursorX, pY+CursorY_delta);
+	            		flag_Cursor = false; ObjectCancel.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
             		}
             	}            	
             	if (curr_alpha_obj4 >= lb || curr_alpha_obj4 <= rb){ // --inf - submit and clear if cursor at position 7
@@ -661,8 +664,9 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             		}
             	}            	
             	
-            	ObjectCursor.updateDNA(CursorX, pY+CursorY_delta+150f);     // -- draw new cursor position
-                        
+            	//ObjectCursor.updateDNA(CursorX, pY+CursorY_delta );     // -- draw new cursor position
+            	ObjectCursor.updateDNA(CursorX, pY - CursorY_delta -2*CursorR);         
+            	
             	flag_Cursor = false;
             	
             	//Object2.setScale(4*scale_obj);
