@@ -30,6 +30,8 @@ import android.widget.Toast;
 
 import com.aiworkereeg.launcher.GlassView;
 import com.aiworkereeg.launcher.GlassView.GlassThread;
+import com.aiworkereeg.launcher.MusicPlayerView;
+import com.aiworkereeg.launcher.MusicPlayerView.MusicPlayerThread;
 import com.aiworkereeg.launcher.R;
 import com.neurosky.thinkgear.TGDevice;
 import com.neurosky.thinkgear.TGEegPower;
@@ -47,9 +49,11 @@ public class MainActivity extends Activity {
 	TextView tv_Med;    TextView tv_Att;    TextView tv_Vel;    TextView tv_AmM;    
 	
     	/** A handle to the thread that's actually running the animation. */
-    private GlassThread mGlassThread;
+    //private GlassThread mGlassThread;
+    private MusicPlayerThread mGlassThread;
     	/** A handle to the View in which the game is running. */
-    private GlassView mGlassView;
+    //private GlassView mGlassView;
+    private MusicPlayerView mGlassView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +62,14 @@ public class MainActivity extends Activity {
 		//setContentView(R.layout.fragment_main);
 		   
         // tell system to use the layout defined in our XML file
-        setContentView(R.layout.glass_layout);
+        //setContentView(R.layout.glass_layout);
+        setContentView(R.layout.musicplayer_layout);
 
         // get handles to the GlassView from XML, and its GlassThread
-        mGlassView = (GlassView) findViewById(R.id.lunar);
+        //mGlassView = (GlassView) findViewById(R.id.lunar);
+        //mGlassThread = mGlassView.getThread();
+        
+        mGlassView = (MusicPlayerView) findViewById(R.id.lunar);
         mGlassThread = mGlassView.getThread();
 
         // give the GlassView a handle to the TextView used for messages
@@ -79,7 +87,8 @@ public class MainActivity extends Activity {
         
         if (savedInstanceState == null) {
             // we were just launched: set up a new game
-            mGlassThread.setState(GlassThread.STATE_READY);
+           // mGlassThread.setState(GlassThread.STATE_READY);
+            mGlassThread.setState(MusicPlayerThread.STATE_READY);
             //Log.w(this.getClass().getName(), "SIS is null");
         } else {
             // we are being restored: resume a previous game
@@ -90,7 +99,7 @@ public class MainActivity extends Activity {
 		
 		tv_T1 = (TextView) findViewById(R.id.text);
 		tv_A = (TextView) findViewById(R.id.Att_text);
-		tv_M = (TextView) findViewById(R.id.Med_text);	
+        tv_M = (TextView) findViewById(R.id.Med_text);
 		
         /* Checking BT and connecting to the TG device */
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

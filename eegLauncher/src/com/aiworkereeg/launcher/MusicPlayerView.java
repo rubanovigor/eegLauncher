@@ -1,6 +1,6 @@
 package com.aiworkereeg.launcher;
 
-//public class GlassView {}
+//public class MusicPlayerView {}
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,8 +25,8 @@ import android.widget.TextView;
 /**
  * GlassView - main game screen
  */
-class GlassView extends SurfaceView implements SurfaceHolder.Callback {
-    class GlassThread extends Thread {
+class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
+    class MusicPlayerThread extends Thread {
     	float RR; float ZZ;
     	String GameMode="b"; //1 - 2 levels of stars; 2 - 3 levels of stars
     	String flag;
@@ -44,11 +44,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
         int[] obj1_center; int sel_action_i; float CursorX;
         boolean flag_Cursor = false;  int CursorI = 0; int CursorJ=1;
         float CursorX_delta = 1f; float CursorY_delta = 1f;      float TimeToSelect = 3f;
-        
-        //float Graviton = 0f; float Grav_scale = 1f; float StarPosGrR = 3.0f; //3f for s3, 6f for tablet
-        //float[] ar_sigm_a = new float[] {110, 90, 70, 270, 360 }; //maximum rotation angle
-        // set all values to 42
-        //public ArrayList<String> bci_code = new ArrayList<String>();       
+              
         int GenBinLet1 = -1;        int GenBinLet2 = -1;  String GenLetSucc = ""; 
         
         // -- new //
@@ -122,25 +118,21 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
         private SurfaceHolder mSurfaceHolder;
 
 
-        public GlassThread(SurfaceHolder surfaceHolder, Context context, Handler handler) {
+        public MusicPlayerThread(SurfaceHolder surfaceHolder, Context context, Handler handler) {
             // get handles to some important objects
             mSurfaceHolder = surfaceHolder;   mHandler = handler;      mContext = context;
  
             
             Resources res = context.getResources();           
             // -- define graphical objects //
-            Object1 = new SkyBody(res.getDrawable(R.drawable.t_object_l), scale_obj); // image,scale
-          //  Object1_1 = new SkyBody(res.getDrawable(R.drawable.sun3_4), 1f); // image,scale
-          //  Object1_2 = new SkyBody(res.getDrawable(R.drawable.sun3_2), 1f); // image,scale
-          //  Object1_3 = new SkyBody(res.getDrawable(R.drawable.sun2_3), 1f); // image,scale
-            //Object2 = new SkyBody(res.getDrawable(R.drawable.sun3_3), 1f); // image,scale
-            Object2 = new SkyBody(res.getDrawable(R.drawable.cursor_rigth_l), scale_obj); // image,scale
-            Object3 = new SkyBody(res.getDrawable(R.drawable.c_object_l), scale_obj); // image,scale
-            Object4 = new SkyBody(res.getDrawable(R.drawable.inf_object_l), scale_obj); // image,scale
-            Object5 = new SkyBody(res.getDrawable(R.drawable.g_object_l), scale_obj);
-            Object6 = new SkyBody(res.getDrawable(R.drawable.cursor_left_l), scale_obj);
-            Object7 = new SkyBody(res.getDrawable(R.drawable.cancel_object_l), scale_obj);
-            Object8 = new SkyBody(res.getDrawable(R.drawable.a_object_l), scale_obj);
+            Object1 = new SkyBody(res.getDrawable(R.drawable.icon_back), scale_obj); // image,scale
+            Object2 = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj); // image,scale
+            Object3 = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj); // image,scale
+            Object4 = new SkyBody(res.getDrawable(R.drawable.icon_next), scale_obj); // image,scale
+            Object5 = new SkyBody(res.getDrawable(R.drawable.marker), scale_obj);
+            Object6 = new SkyBody(res.getDrawable(R.drawable.marker), scale_obj);
+            Object7 = new SkyBody(res.getDrawable(R.drawable.marker), scale_obj);
+            Object8 = new SkyBody(res.getDrawable(R.drawable.marker), scale_obj);
             
             ObjectA = new SkyBody(res.getDrawable(R.drawable.a_object), scale_obj_console); // image,scale
             ObjectC = new SkyBody(res.getDrawable(R.drawable.c_object), scale_obj_console); // image,scale
@@ -154,15 +146,11 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             
             StarR = Object1.getImageWidth()/2; // all stars has the same Radius
             StarR = StarR * scale_obj;  // adopt star size to screan using scale
-            CursorR = ObjectCursor.getImageWidth()/2f;
-            //Object1.setAlpha(0f);
-            
+            CursorR = ObjectCursor.getImageWidth()/2f;           
             
             
             // cache handles to our key drawables
-            BackGr_Image = context.getResources().getDrawable(R.drawable.torus_bcgrnd);
-           // BackGr_Image1 = context.getResources().getDrawable(R.drawable.bg1);
-           // BackGr_Image2 = context.getResources().getDrawable(R.drawable.bg2);
+            BackGr_Image = context.getResources().getDrawable(R.drawable.music_player_bcgrnd);
            
         }
 
@@ -186,11 +174,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
                 	// 1 left-bottom
 	            Cx_lb_l1 = (float)(pX - CircleRadius) ;   // 720 -> 360
 	            Cy_lb_l1 = (float)pY;  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
-	            Object1.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);    Object1.setScale(scale_obj);
-	          //  Object1_1.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);   // Object1_1.setScale(scale_obj);
-	          //  Object1_2.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);   // Object1_2.setScale(scale_obj);
-	          //  Object1_3.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);   // Object1_3.setScale(scale_obj);
-	                
+	            Object1.setCenterCoordinates(Cx_lb_l1, Cy_lb_l1);    Object1.setScale(scale_obj);	                
 	                
 	            	// 2 right-top
 	            Cx_rt_l1 = (float)(pX + CircleRadius);   // 720 -> 360
@@ -416,41 +400,11 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
                      
             //moving one image on background
             canvas.save();
-            		//canvas.rotate(0, 0, 0);
-            //canvas.rotate(alpha, (float)BackGr_W/2, (float)BackGr_H/2);
             canvas.scale(BackGr_ImageScale,BackGr_ImageScale, (float)BackGr_W/2 , (float)BackGr_H/2); // scale
-            	//BackGr_Image.setBounds(0, (int)pY - BackGr_H, BackGr_W, (int)pY + BackGr_H);
-            //BackGr_Image.setBounds(0, 0, BackGr_W, BackGr_H);
-            //BackGr_Image.setBounds(0, (int)(BackGr_H/2 - BackGr_W/2 - StarR), BackGr_W, (int)(BackGr_H/2 + BackGr_W/2 + StarR))
-            // -- add left/right/top/down movements adjust bounds !!!!!
-            
-            //BackGr_Image.setBounds(- BackGr_W/2, (int)(BackGr_H/2 - BackGr_W/2 - StarR), BackGr_W + BackGr_W/2, (int)(BackGr_H/2 + BackGr_W/2 + StarR));
-            //BackGr_Image.setBounds(- BackGr_W/2, (int)(BackGr_H/2f - BackGr_W/2), BackGr_W + BackGr_W/2, (int)(BackGr_H/2f + BackGr_W/2));
             BackGr_Image.setBounds(0, (int)(BackGr_H/2f - BackGr_W/2), BackGr_W, (int)(BackGr_H/2f + BackGr_W/2));
             BackGr_Image.draw(canvas);        
             canvas.restore();   
-            
-          /*  canvas.save();
-            canvas.scale(BackGr_ImageScale,BackGr_ImageScale, (float)BackGr_W/2 , (float)BackGr_H/2); // scale
-            
-            if (accel_alpha >= 1f){  
-               BackGr_Image.setBounds(0, (int)(BackGr_H/2f - BackGr_W/2), BackGr_W, (int)(BackGr_H/2f + BackGr_W/2));
-               BackGr_Image.draw(canvas);   
-            }
-            if (accel_alpha >=0.5f && accel_alpha < 1f){ 
-                BackGr_Image1.setBounds(0, (int)(BackGr_H/2f - BackGr_W/2), BackGr_W, (int)(BackGr_H/2f + BackGr_W/2));
-                BackGr_Image1.draw(canvas);   
-             }
-            if (accel_alpha < 0.5f){ 
-                BackGr_Image2.setBounds(0, (int)(BackGr_H/2f - BackGr_W/2), BackGr_W, (int)(BackGr_H/2f + BackGr_W/2));
-                BackGr_Image2.draw(canvas);   
-             }   
-		    		    
-		    canvas.restore(); */
-            
-            // draw levelel1 stars
-           /* Object3.setScale(S2P_scale_rt);Object2.setScale(S2P_scale_lt);Object4.setScale(S2P_scale_rb);Object1.setScale(S2P_scale_lb);*/
-                        
+                    
             Object1.drawTo(canvas);
             //Object1_1.drawTo(canvas); Object1_2.drawTo(canvas); Object1_3.drawTo(canvas);     
             Object2.drawTo(canvas); Object3.drawTo(canvas); Object4.drawTo(canvas);
@@ -466,7 +420,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
 	            
             }
             ObjectCursorDel.drawTo(canvas);
-            ObjectCursor.drawTo(canvas);
+            ObjectCursor.drawTo(canvas); 
     }
 
         /**
@@ -690,9 +644,9 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
     private TextView mStatusText;
 
     /** The thread that actually draws the animation */
-    private GlassThread thread;
+    private MusicPlayerThread thread;
 
-    public GlassView(Context context, AttributeSet attrs) {
+    public MusicPlayerView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         // register our interest in hearing about changes to our surface
@@ -700,7 +654,7 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
         holder.addCallback(this);
 
         // create thread only; it's started in surfaceCreated()
-        thread = new GlassThread(holder, context, new Handler() {
+        thread = new MusicPlayerThread(holder, context, new Handler() {
             @Override
             public void handleMessage(Message m) {
                 mStatusText.setVisibility(m.getData().getInt("viz"));
@@ -712,11 +666,11 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
-     * Fetches the animation thread corresponding to this GlassView.
+     * Fetches the animation thread corresponding to this MusicPlayerView.
      *
      * @return the animation thread
      */
-    public GlassThread getThread() {
+    public MusicPlayerThread getThread() {
         return thread;
     }
 
