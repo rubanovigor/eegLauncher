@@ -20,6 +20,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aiworkereeg.launcher.MusicService;
 import com.aiworkereeg.launcher.GlassView;
 import com.aiworkereeg.launcher.GlassView.GlassThread;
 import com.aiworkereeg.launcher.MusicPlayerView;
@@ -154,6 +156,16 @@ public class MainActivity extends Activity {
 	        }
 	    }
 	    
+	    @Override
+	    public boolean onKeyDown(int keyCode, KeyEvent event) {
+	        switch (keyCode) {
+	            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+	            case KeyEvent.KEYCODE_HEADSETHOOK:
+	                startService(new Intent(MusicService.ACTION_TOGGLE_PLAYBACK));
+	                return true;
+	        }
+	        return super.onKeyDown(keyCode, event);
+	    }
 	    
 	    /* Handles messages from TGDevice */
 	    private final Handler handler = new Handler() {
@@ -207,6 +219,11 @@ public class MainActivity extends Activity {
 	                    At = msg.arg1;         
 	                    tv_A.setText(String.valueOf(At));
 	                    mGlassThread.setAttention(At);
+	                    
+	                    if (mGlassView.getThread().play_flag == true)
+                    		{ startService(new Intent(MusicService.ACTION_PLAY));  }
+	                    if (mGlassView.getThread().stop_flag == true)
+                			{ startService(new Intent(MusicService.ACTION_STOP));  }
 	                    
 	                    // -- display velosity based on accel_alpha [0..2.5]
 	                    float vel = mGlassView.getThread().accel_alpha;

@@ -6,7 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import com.aiworkereeg.launcher.MusicService;
+
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -29,7 +32,8 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     class MusicPlayerThread extends Thread {
     	float RR; float ZZ;
     	String GameMode="b"; //1 - 2 levels of stars; 2 - 3 levels of stars
-    	String flag;
+    	String flag; 
+    	boolean play_flag = false; boolean stop_flag = false; boolean next_flag = false;
     	String s6 = "6s";
         int At = 50; int Med = 50;   int ApM = 100;    int AmM = 0;
         CharSequence TGStatus;
@@ -563,13 +567,14 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
             		}
             	}            	
-            	if (curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb){  // -- C
-            		Object3.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
+            	if ((curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb) && play_flag==true){  // -- stop/C
+            		/*Object3.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
             		Object3.setScale(scale_k *  scale_obj); 
             		if(CursorI!=7){
 	            		sel_action_i = 3; flag_Cursor = false; ObjectC.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
 	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
-            		}
+            		}*/
+            		stop_flag = true; play_flag = false;
             	}            	
             	if (curr_alpha_obj8 >= lb || curr_alpha_obj8 <= rb){  // -- A
             		Object8.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
@@ -589,14 +594,16 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            		Object6.setScale(scale_k * scale_obj);
             		}
             	}            	
-            	if (curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb){ // -- star - move cursor right
-            		if(CursorI!=7){
+            	if ((curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb) && play_flag == false){ // -- Play/star - move cursor right
+            		/*if(CursorI!=7){
 	            		sel_action_i = 0; flag_Cursor = false; CursorI=CursorI+1;
 	            		CursorX=CursorX+CursorX_delta; 
 	            		
 	            		Object2.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
 	            		Object2.setScale(scale_k * scale_obj);
-	            	}
+	            	}*/
+            		play_flag = true; stop_flag = false;
+            		
             	}            	
             	if (curr_alpha_obj7 >= lb || curr_alpha_obj7 <= rb){ // -- cancel button
             		Object7.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);

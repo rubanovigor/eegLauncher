@@ -11,12 +11,14 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
   	<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme" 
+        android:screenOrientation="portrait"  >
         <activity
             android:name="com.aiworkereeg.launcher.MainActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
@@ -27,6 +29,31 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+         <service android:exported="false" android:name=".MusicService">
+            <intent-filter>
+                <action android:name="com.aiworkereeg.launcher.action.TOGGLE_PLAYBACK" />
+                <action android:name="com.aiworkereeg.launcher.action.PLAY" />
+                <action android:name="com.aiworkereeg.launcher.action.PAUSE" />
+                <action android:name="com.aiworkereeg.launcher.action.SKIP" />
+                <action android:name="com.aiworkereeg.launcher.action.REWIND" />                
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.aiworkereeg.launcher.action.URL" />
+                <data android:scheme="http" />
+            </intent-filter>
+        </service>
+        
+        <receiver android:name=".MusicIntentReceiver">
+            <intent-filter>
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+        
+        
     </application>
 
 </manifest>
