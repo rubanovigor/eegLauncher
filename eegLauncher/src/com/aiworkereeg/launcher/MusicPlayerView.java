@@ -33,7 +33,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	float RR; float ZZ;
     	String GameMode="b"; //1 - 2 levels of stars; 2 - 3 levels of stars
     	String flag; 
-    	boolean play_flag = false; boolean stop_flag = false; boolean next_flag = false;
+    	boolean play_flag = false; boolean stop_flag = false; boolean back_flag = false; boolean next_flag = false;
     	String s6 = "6s";
         int At = 50; int Med = 50;   int ApM = 100;    int AmM = 0;
         CharSequence TGStatus;
@@ -57,7 +57,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         private SkyBody Object2; private SkyBody Object3; private SkyBody Object4;
         private SkyBody Object5; private SkyBody Object6; private SkyBody Object7; private SkyBody Object8;
         
-        private SkyBody ObjectA; private SkyBody ObjectC; private SkyBody ObjectT; private SkyBody ObjectG;
+        private SkyBody IconPlay; private SkyBody IconStop; private SkyBody IconSkip; private SkyBody ObjectG;
         
         private SkyBody ObjectCancel; private SkyBody ObjectCursor; private SkyBody ObjectCursorDel; 
         private SkyBody ObjectClear; 
@@ -129,18 +129,18 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             
             Resources res = context.getResources();           
             // -- define graphical objects //
-            Object1 = new SkyBody(res.getDrawable(R.drawable.icon_back), scale_obj); // image,scale
+            Object1 = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj); // image,scale
             Object2 = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj); // image,scale
             Object3 = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj); // image,scale
             Object4 = new SkyBody(res.getDrawable(R.drawable.icon_next), scale_obj); // image,scale
-            Object5 = new SkyBody(res.getDrawable(R.drawable.marker), scale_obj);
-            Object6 = new SkyBody(res.getDrawable(R.drawable.marker), scale_obj);
-            Object7 = new SkyBody(res.getDrawable(R.drawable.marker), scale_obj);
-            Object8 = new SkyBody(res.getDrawable(R.drawable.marker), scale_obj);
+            Object5 = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj);
+            Object6 = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj);
+            Object7 = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj);
+            Object8 = new SkyBody(res.getDrawable(R.drawable.icon_back), scale_obj);
             
-            ObjectA = new SkyBody(res.getDrawable(R.drawable.a_object), scale_obj_console); // image,scale
-            ObjectC = new SkyBody(res.getDrawable(R.drawable.c_object), scale_obj_console); // image,scale
-            ObjectT = new SkyBody(res.getDrawable(R.drawable.t_object), scale_obj_console); // image,scale
+            IconPlay = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj_console); // image,scale
+            IconStop = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj_console); // image,scale
+            IconSkip = new SkyBody(res.getDrawable(R.drawable.icon_next), scale_obj_console); // image,scale
             ObjectG = new SkyBody(res.getDrawable(R.drawable.g_object), scale_obj_console); // image,scale
             
             ObjectCancel = new SkyBody(res.getDrawable(R.drawable.black), scale_obj_console); // image,scale
@@ -195,9 +195,9 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                 Cy_rb_l1 = (float)(pY + CircleRadius);  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
                 Object4.setCenterCoordinates(Cx_rb_l1, Cy_rb_l1); Object4.setScale(scale_obj); Object4.setAlpha(0f);
                 
-                ObjectA.setCenterCoordinates(CursorX, (float)pY*2f); ObjectA.setScale(scale_obj_console);
-                ObjectC.setCenterCoordinates(CursorX, (float)pY*2f); ObjectC.setScale(scale_obj_console);
-                ObjectT.setCenterCoordinates(CursorX, (float)pY*2f); ObjectT.setScale(scale_obj_console);
+                IconPlay.setCenterCoordinates(CursorX, (float)pY*2f); IconPlay.setScale(scale_obj_console);
+                IconStop.setCenterCoordinates(CursorX, (float)pY*2f); IconStop.setScale(scale_obj_console);
+                IconSkip.setCenterCoordinates(CursorX, (float)pY*2f); IconSkip.setScale(scale_obj_console);
                 ObjectG.setCenterCoordinates(CursorX, (float)pY*2f); ObjectG.setScale(scale_obj_console);
                 
                 ObjectCursor.setCenterCoordinates((float)(4*pX), (float)pY );
@@ -351,8 +351,9 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                 CharSequence str ="";
                 if (mMode == STATE_RUNNING) {
                 	//str = "pY: " + String.valueOf(Math.round(pY));//ir mYOld
-                	str =  "";
-                	//+"pY + BackGr_W/2f : "+ String.valueOf(pY + BackGr_W/2f) + "  \n  "
+                	str =  ""
+                	+ "play_flag: "+ String.valueOf(play_flag) + "  \n  "
+                	+ "play_stop: "+ String.valueOf(stop_flag) + "  \n  ";
                 	//+ "pY+CursorY_delta  "+ String.valueOf(pY+CursorY_delta) + "\n"
                 	//+ "BackGr_H/2f: " + String.valueOf(BackGr_H/2f ) + "\n"
                 	//+ "pY " + String.valueOf(pY ) + "\n";
@@ -415,16 +416,11 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             Object5.drawTo(canvas); Object6.drawTo(canvas); Object7.drawTo(canvas); Object8.drawTo(canvas);
          
             if (CursorI>0){
-	            if (sel_action_i==1){ObjectT.drawTo(canvas);}
-	            if (sel_action_i==2){ObjectG.drawTo(canvas);}
-	            if (sel_action_i==3){ObjectC.drawTo(canvas);}
-	            if (sel_action_i==4){ObjectA.drawTo(canvas);}
-	            if (sel_action_i==5){ObjectCancel.drawTo(canvas);}
-	            if (sel_action_i==10){ObjectClear.drawTo(canvas);}
-	            
+	            if (sel_action_i==1){IconPlay.drawTo(canvas);}
+	            if (sel_action_i==2){IconStop.drawTo(canvas);}
+	            if (sel_action_i==3){IconSkip.drawTo(canvas);}	            
             }
-            ObjectCursorDel.drawTo(canvas);
-            ObjectCursor.drawTo(canvas); 
+          //  ObjectCursorDel.drawTo(canvas);   ObjectCursor.drawTo(canvas); 
     }
 
         /**
@@ -489,21 +485,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             if (accel_alpha>1f && CursorI<=7) {flag_Cursor=true; }
             	
             if (CursorI == 0 && accel_alpha>0.5f) {CursorI = 1; }
-            
-           /* if (flag_Cursor==true && accel_alpha>1f && CursorI<7)
-            	{flag_Cursor=false; 
-            	 if (sel_action_i == 5 && CursorI!=0 ) 
-            	 	{CursorX=CursorX-CursorX_delta; CursorI=CursorI-1;} 
-            	 if (sel_action_i < 5)
-            	 	{CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;}  
-            	 }*/
-            
-            /*if (CursorI > 6 && CursorJ==1)
-            	{CursorX = BackGr_W/4 + 0f; // -- new line
-            	 CursorY_delta = CursorY_delta + 200f; // -- new line
-            	 CursorJ=CursorJ+1; 
-            	 	if (CursorJ==1){CursorI=1;} } */
-            
+                        
             curr_alpha_obj1 = alpha; curr_alpha_obj2 = alpha + 180;
             curr_alpha_obj3 = alpha + 90;  curr_alpha_obj4 = alpha + 270;
             curr_alpha_obj5 = alpha + 45;  curr_alpha_obj6 = alpha + 135;
@@ -547,88 +529,56 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             Object5.setScale(scale_obj);		Object6.setScale(scale_obj);
             Object7.setScale(scale_obj); 		Object8.setScale(scale_obj);
             /* -- =========== -- */
-            float lb = 337.5f; float rb = 22.5f; float scale_k = 1; 
+            float lb = 337.5f; float rb = 22.5f;  
             if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
-            	ObjectCursorDel.updateDNA(CursorX, pY-CursorY_delta-2*CursorR);  // -- delete old cursor position
+            	//ObjectCursorDel.updateDNA(CursorX, pY-CursorY_delta-2*CursorR);  // -- delete old cursor position
             	
-            	if (curr_alpha_obj1 >= lb || curr_alpha_obj1 <= rb){ // -- T
-            		Object1.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha + 0, 0, pX, pY);
-            		Object1.setScale(scale_k * scale_obj); 
-            		if(CursorI!=7){
-	            		sel_action_i = 1;  flag_Cursor = false; ObjectT.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
-	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
-            		}
+            	if (curr_alpha_obj1 >= lb || curr_alpha_obj1 <= rb){ // -- stop
+            		sel_action_i = 2; flag_Cursor = false; 
+	            	IconStop.updateDNA(CursorX, (int)(BackGr_H/2f - BackGr_W/2)-2*CursorR);
+            		stop_flag = true; play_flag = false;
             	}
-            	if (curr_alpha_obj5 >= lb || curr_alpha_obj5 <= rb){ // -- G
-            		Object5.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-            		Object5.setScale(scale_k * scale_obj); 
-            		if(CursorI!=7){
-	            		sel_action_i = 2; flag_Cursor = false; ObjectG.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
-	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
-            		}
-            	}            	
-            	if ((curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb) && play_flag==true){  // -- stop/C
-            		/*Object3.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-            		Object3.setScale(scale_k *  scale_obj); 
-            		if(CursorI!=7){
-	            		sel_action_i = 3; flag_Cursor = false; ObjectC.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
-	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
-            		}*/
+            	if (curr_alpha_obj5 >= lb || curr_alpha_obj5 <= rb){ // -- stop
+            		sel_action_i = 2; flag_Cursor = false; 
+	            	IconStop.updateDNA(CursorX, (int)(BackGr_H/2f - BackGr_W/2)-2*CursorR);
             		stop_flag = true; play_flag = false;
             	}            	
-            	if (curr_alpha_obj8 >= lb || curr_alpha_obj8 <= rb){  // -- A
-            		Object8.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-            		Object8.setScale(scale_k * scale_obj); 
-            		if(CursorI!=7){
-	            		sel_action_i = 4; flag_Cursor = false; ObjectA.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
-	            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
-	            	}
+            	if (curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb){  // -- stop
+            		sel_action_i = 2; flag_Cursor = false; 
+	            	IconStop.updateDNA(CursorX, (int)(BackGr_H/2f - BackGr_W/2)-2*CursorR);
+            		stop_flag = true; play_flag = false;
+            	}            	
+            	if (curr_alpha_obj8 >= lb || curr_alpha_obj8 <= rb){  // -- back
+	            	back_flag = true;
             	}
             	
-            	if (curr_alpha_obj6 >= lb || curr_alpha_obj6 <= rb){ // -- hash - move cursor left
-            		if(CursorI>=2){  // -- moving cursor left not working if cursor at 1st position
-	             		sel_action_i = 0;   flag_Cursor = false; CursorI=CursorI-1;
-	             		CursorX=CursorX-CursorX_delta;
-	             		
-	            		Object6.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-	            		Object6.setScale(scale_k * scale_obj);
-            		}
+            	if ((curr_alpha_obj6 >= lb || curr_alpha_obj6 <= rb) && play_flag == false){ // -- play
+            		sel_action_i = 1; flag_Cursor = false; 
+	            	IconPlay.updateDNA(CursorX, (int)(BackGr_H/2f - BackGr_W/2)-2*CursorR);
+            		play_flag = true; stop_flag = false;
             	}            	
-            	if ((curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb) && play_flag == false){ // -- Play/star - move cursor right
-            		/*if(CursorI!=7){
-	            		sel_action_i = 0; flag_Cursor = false; CursorI=CursorI+1;
-	            		CursorX=CursorX+CursorX_delta; 
-	            		
-	            		Object2.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-	            		Object2.setScale(scale_k * scale_obj);
-	            	}*/
+            	if ((curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb) && play_flag == false){ // -- play
+            		sel_action_i = 1; flag_Cursor = false; 
+	            	IconPlay.updateDNA(CursorX, (int)(BackGr_H/2f - BackGr_W/2)-2*CursorR);
             		play_flag = true; stop_flag = false;
             		
             	}            	
-            	if (curr_alpha_obj7 >= lb || curr_alpha_obj7 <= rb){ // -- cancel button
-            		Object7.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-            		Object7.setScale(scale_k * scale_obj);
-            		if(CursorI>=2){  // -- cancel not working if cursor at 1st position
-	             		sel_action_i = 5;
-	             		CursorX=CursorX-CursorX_delta; CursorI=CursorI-1;
-	            		flag_Cursor = false; ObjectCancel.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
-            		}
+            	if ((curr_alpha_obj7 >= lb || curr_alpha_obj7 <= rb) && play_flag == false){ // -- play
+            		sel_action_i = 1; flag_Cursor = false; 
+	            	IconPlay.updateDNA(CursorX, (int)(BackGr_H/2f - BackGr_W/2)-2*CursorR);
+            		play_flag = true; stop_flag = false;
             	}            	
             	if (curr_alpha_obj4 >= lb || curr_alpha_obj4 <= rb){ // --inf - submit and clear if cursor at position 7
-            		if(CursorI==7){  // -- cancel not working if cursor at 1st position
-	             		sel_action_i = 10; CursorX = BackGr_W/4; CursorI=0;
-	             		flag_Cursor = false;
-	             		ObjectClear.updateDNA(CursorX, pY+CursorY_delta);
-	             		
-	             		Object4.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-	            		Object4.setScale(scale_k * scale_obj);
-            		}
+            		sel_action_i = 3; flag_Cursor = false; 
+	            	IconSkip.updateDNA(CursorX, (int)(BackGr_H/2f - BackGr_W/2)-2*CursorR);
+            		next_flag = true; stop_flag = false;
             	}            	
             	
             	//ObjectCursor.updateDNA(CursorX, pY+CursorY_delta );     // -- draw new cursor position
-            	ObjectCursor.updateDNA(CursorX, pY - CursorY_delta -2*CursorR);         
+            	//ObjectCursor.updateDNA(CursorX, pY - CursorY_delta -2*CursorR);         
             	
             	flag_Cursor = false;
+            	
             	
             	//Object2.setScale(4*scale_obj);
             	//Object2.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 180, 0, pX, pY);

@@ -265,7 +265,8 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
         else if (action.equals(ACTION_PLAY)) {Med_thr = 10; processPlayRequest();}
         else if (action.equals(ACTION_PAUSE)) processPauseRequest();
         else if (action.equals(ACTION_SKIP)) processSkipRequest();
-        else if (action.equals(ACTION_STOP)) {MedInUse=false; AttInUse=false; AMInUse=false; processStopRequest();}
+        //else if (action.equals(ACTION_STOP)) {MedInUse=false; AttInUse=false; AMInUse=false; processStopRequest();}
+        else if (action.equals(ACTION_STOP)) processStopRequest(true);
         else if (action.equals(ACTION_REWIND)) processRewindRequest();
         else if (action.equals(ACTION_URL)) processAddRequest(intent);
         

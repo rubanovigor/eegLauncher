@@ -166,6 +166,7 @@ public class MainActivity extends Activity {
 	        }
 	        return super.onKeyDown(keyCode, event);
 	    }
+	    	    
 	    
 	    /* Handles messages from TGDevice */
 	    private final Handler handler = new Handler() {
@@ -220,10 +221,28 @@ public class MainActivity extends Activity {
 	                    tv_A.setText(String.valueOf(At));
 	                    mGlassThread.setAttention(At);
 	                    
+	                    // -- do appropriate action
 	                    if (mGlassView.getThread().play_flag == true)
                     		{ startService(new Intent(MusicService.ACTION_PLAY));  }
 	                    if (mGlassView.getThread().stop_flag == true)
-                			{ startService(new Intent(MusicService.ACTION_STOP));  }
+                			{ 
+	                    	 startService(new Intent(MusicService.ACTION_PAUSE));
+	                    	 startService(new Intent(MusicService.ACTION_STOP));
+                			}
+	                    
+	                    if (mGlassView.getThread().next_flag == true)
+                			{ 
+	                    	 startService(new Intent(MusicService.ACTION_SKIP));
+                			 mGlassView.getThread().next_flag = false;
+                			 }
+	                    
+	                    if (mGlassView.getThread().back_flag == true)
+            				{ 
+	                    	 startService(new Intent(MusicService.ACTION_PAUSE));
+	                    	 startService(new Intent(MusicService.ACTION_STOP)); 
+            				 onBackPressed();
+            				} 
+	                    
 	                    
 	                    // -- display velosity based on accel_alpha [0..2.5]
 	                    float vel = mGlassView.getThread().accel_alpha;
