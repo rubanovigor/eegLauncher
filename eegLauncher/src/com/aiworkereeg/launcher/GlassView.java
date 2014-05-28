@@ -372,16 +372,15 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
                 			//TGStatus;//ir
                 	
                 } else {
-                    Resources res = mContext.getResources();      str = "";
-                    
-                    if (message != null) {str = message + "\n" + str; }
+                   // Resources res = mContext.getResources();      str = "";                  
+                   // if (message != null) {str = message + "\n" + str;  }
                   }
-                    Message msg = mHandler.obtainMessage();
+                  /*  Message msg = mHandler.obtainMessage();
                     Bundle b = new Bundle();
                     b.putString("text", str.toString());
                     b.putInt("viz", View.VISIBLE);
                     msg.setData(b);
-                    mHandler.sendMessage(msg);
+                    mHandler.sendMessage(msg);*/
                 //}
             }
         }

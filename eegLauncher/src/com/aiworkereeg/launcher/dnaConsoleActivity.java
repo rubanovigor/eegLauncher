@@ -26,22 +26,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aiworkereeg.launcher.MusicService;
-import com.aiworkereeg.launcher.GlassView;
 import com.aiworkereeg.launcher.GlassView.GlassThread;
-import com.aiworkereeg.launcher.MusicPlayerView;
-import com.aiworkereeg.launcher.MusicPlayerView.MusicPlayerThread;
 import com.aiworkereeg.launcher.R;
 import com.neurosky.thinkgear.TGDevice;
 import com.neurosky.thinkgear.TGEegPower;
 import com.neurosky.thinkgear.TGRawMulti;
 
 
-public class MainActivity extends Activity {
+public class dnaConsoleActivity extends Activity {
 	
 	private BluetoothAdapter bluetoothAdapter;
 	TGDevice tgDevice;
@@ -50,15 +45,15 @@ public class MainActivity extends Activity {
 	TextView tv_T1;	TextView tv_A;	TextView tv_M; TextView tv_TimeToSel;
 	private int At = 50;     private int Med = 50;
 	TextView tv_Med;    TextView tv_Att;    TextView tv_Vel;    TextView tv_AmM;    
-	Button b; 
+	
     	/** A handle to the thread that's actually running the animation. */
-   // private GlassThread mGlassThread;
-    private MusicPlayerThread mMusicPlayerThread;
+    private GlassThread mGlassThread;
+   // private MusicPlayerThread mMusicPlayerThread;
     
     	/** A handle to the View in which the game is running. */
-    //private GlassView mGlassView;
-    private MusicPlayerView mMusicPlayerView;
-    final int ActivityTwoRequestCode = 0;
+    private GlassView mGlassView;
+    //private MusicPlayerView mMusicPlayerView;
+    //final int ActivityTwoRequestCode = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,26 +62,22 @@ public class MainActivity extends Activity {
 		//setContentView(R.layout.fragment_main);
 		   
         // tell system to use the layout defined in our XML file
-        //setContentView(R.layout.glass_layout);
-        setContentView(R.layout.musicplayer_layout);
+        setContentView(R.layout.glass_layout);
+        //setContentView(R.layout.musicplayer_layout);
 
-       // Intent myIntent = new Intent(this, dnaConsoleActivity.class);
-    	//startActivity(myIntent);       
-    	
         // get handles to the GlassView from XML, and its GlassThread
-        //mGlassView = (GlassView) findViewById(R.id.lunar);
-        //mGlassThread = mGlassView.getThread();
+        mGlassView = (GlassView) findViewById(R.id.lunar);
+        mGlassThread = mGlassView.getThread();
         
-        mMusicPlayerView = (MusicPlayerView) findViewById(R.id.lunar);
-        mMusicPlayerThread = mMusicPlayerView.getThread();
+       // mMusicPlayerView = (MusicPlayerView) findViewById(R.id.lunar);
+        //mMusicPlayerThread = mMusicPlayerView.getThread();
         
      //   mGlassView = (GlassView) findViewById(R.id.lunarGlass);
        // mGlassThread = mGlassView.getThread();
 
         // give the GlassView a handle to the TextView used for messages
-        mMusicPlayerView.setTextView((TextView) findViewById(R.id.text));
+       // mMusicPlayerView.setTextView((TextView) findViewById(R.id.text));
         
-        b = (Button) findViewById(R.id.b_RunDNAconsole);
         // give the GlassView a handle to the TextView used for messages
         tv_Att = (TextView) findViewById(R.id.Att_text);
         tv_Med = (TextView) findViewById(R.id.Med_text);
@@ -99,12 +90,12 @@ public class MainActivity extends Activity {
         
         if (savedInstanceState == null) {
             // we were just launched: set up a new game
-           // mGlassThread.setState(GlassThread.STATE_READY);
-          //  mMusicPlayerThread.setState(MusicPlayerThread.STATE_READY);
+          //  mGlassThread.setState(GlassThread.STATE_READY);
+           // mMusicPlayerThread.setState(MusicPlayerThread.STATE_READY);
             //Log.w(this.getClass().getName(), "SIS is null");
         } else {
             // we are being restored: resume a previous game
-           // mMusicPlayerThread.restoreState(savedInstanceState);        	
+            //mMusicPlayerThread.restoreState(savedInstanceState);        	
             //Log.w(this.getClass().getName(), "SIS is nonnull");
         }
 		
@@ -133,8 +124,8 @@ public class MainActivity extends Activity {
     @Override
     	protected void onPause() {
         super.onPause();
-        mMusicPlayerView.getThread().pause(); // pause game when Activity pauses
-        mMusicPlayerView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir          
+       // mMusicPlayerView.getThread().pause(); // pause game when Activity pauses
+        //mMusicPlayerView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir          
     }
 	    @Override
 	    public void onDestroy() {    	
@@ -169,7 +160,7 @@ public class MainActivity extends Activity {
 	    // start dnaConsol
 	    public void start_dnaConsol(View view) {
 	    	//Toast.makeText(this, "starting space shuttle", Toast.LENGTH_SHORT).show();
-	        Intent myIntent = new Intent(view.getContext(), dnaConsoleActivity.class);
+	        Intent myIntent = new Intent(view.getContext(), GlassView.class);
 	       // myIntent.putExtra("user_name", displayName);
 	       // myIntent.putExtra("GameMode", "4s");
 	    	startActivity(myIntent);
@@ -208,8 +199,8 @@ public class MainActivity extends Activity {
 	                        tv_T1.setText("Connected");
 	                        //mGlassThread.setTGStatus("Connected");
 	                        //mGlassThread.setGameMode(GameMode_str);
-	                        mMusicPlayerThread.doStart(); //start game
-	                        //mGlassThread.doStart();
+	                       // mMusicPlayerThread.doStart(); //start game
+	                        mGlassThread.doStart();
 	                        break;
 	                    case TGDevice.STATE_NOT_FOUND:
 	                    	//mGlassThread.setTGStatus("Can't find");
@@ -241,119 +232,26 @@ public class MainActivity extends Activity {
 
 	                    At = msg.arg1;         
 	                    tv_A.setText(String.valueOf(At));
-	                    mMusicPlayerThread.setAttention(At);
+	                    //mMusicPlayerThread.setAttention(At);
 	                    
-	                    // -- do appropriate action
-	                    if (mMusicPlayerView.getThread().play_flag == true)
-                    		{ 
-	                      /*  mMusicPlayerView.getThread().pause(); // pause game when Activity pauses
-	                        mMusicPlayerView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir  
-	                    	 mGlassThread = mGlassView.getThread();
-	                         mGlassThread.doStart(); */
-	                    	// startService(new Intent(MusicService.ACTION_PLAY)); 
-	                    	tgDevice.close(); 
-	                    	 b.performClick();
-	                    	}
-	                    if (mMusicPlayerView.getThread().stop_flag == true)
-                			{ 
-	                        /*mMusicPlayerView.getThread().pause(); // pause game when Activity pauses
-	                        mMusicPlayerView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir  
-	                         mGlassThread = mGlassView.getThread();	                         
-	                    	 mGlassThread.doStart(); */
-	                    //	 startService(new Intent(MusicService.ACTION_PAUSE));
-	                    	// startService(new Intent(MusicService.ACTION_STOP));
-	                    	tgDevice.close();  
-	                    	 b.performClick();
-                			}
 	                    
-	                    if (mMusicPlayerView.getThread().next_flag == true)
-                			{ 
-	                    	 startService(new Intent(MusicService.ACTION_SKIP));
-                			 mMusicPlayerView.getThread().next_flag = false;
-                			 }
-	                    
-	                    if (mMusicPlayerView.getThread().back_flag == true)
-            				{ 
-	                    	 startService(new Intent(MusicService.ACTION_PAUSE));
-	                    	 startService(new Intent(MusicService.ACTION_STOP)); 
-            				 onBackPressed();
-            				} 
 	                    
 	                    
 	                    // -- display velosity based on accel_alpha [0..2.5]
-	                    float vel = mMusicPlayerView.getThread().accel_alpha;
+	                    float vel = mGlassView.getThread().accel_alpha;
 	                    if (vel>=2f) {tv_Vel.setText("4");}
 	                    if (vel>=1.5f && vel<2f) {tv_Vel.setText("3");}
 	                    if (vel>=1f && vel<1.5f) {tv_Vel.setText("2");}
 	                    if (vel>=0.5f && vel<1f) {tv_Vel.setText("1");}
 	                    if (vel<0.5f) {tv_Vel.setText("0");}                    
 	                   
-	                    float tts = mMusicPlayerView.getThread().TimeToSelect;
-	                    if (tts < 3f && vel<=0 && mMusicPlayerView.getThread().flag_Cursor)
+	                    float tts = mGlassView.getThread().TimeToSelect;
+	                    if (tts < 3f && vel<=0 && mGlassView.getThread().flag_Cursor)
 	                    	{tv_TimeToSel.setText(String.valueOf(Math.round(tts)) ); }
 	                    else {tv_TimeToSel.setText("");}
 	                    
 	                    
-	                   /* tv_Att.setText(String.valueOf(At)); // display meditation
-	                    // change size and color of Att text view
-	                    if (At < 30) {
-	                    	//tv_Att.setTextColor(Color.YELLOW);
-	                    	tv_Att.setTextSize(20);
-	                    } else {
-	                        if (At <70) {
-	                        	//tv_Att.setTextColor(Color.GREEN);
-	                        	tv_Att.setTextSize(30);
-	                        } else {
-	                        	//tv_Att.setTextColor(Color.RED);
-	                        	tv_Att.setTextSize(40);
-	                        }                    
-	                    } 
-	                    
-	                    tv_Vel.setText(String.valueOf(At+Med)); // display Att-Med
-	                    // change size and color of Att+Med text view 
-	                    if (At+Med < 60) {
-	                    	tv_Vel.setTextSize(20);
-	                    } else {
-	                        if (At+Med <140) {
-	                        	tv_Vel.setTextSize(30);
-	                        } else {
-	                        	tv_Vel.setTextSize(40);
-	                        }                    
-	                    }   */                
-	                    
-	                    //display numer of correct/incorrect words
-	                    //tv_CorrectWords.setText(String.valueOf(mGlassView.getThread().CorrectW));
-	                    //tv_IncorrectWords.setText(String.valueOf(mGlassView.getThread().IncorrectW));
-	                    
-	                    // -- display Genome TextViews
-	                    /*genome =mGlassView.getThread().DesGenSequence;
-	                    //tv_ActGenSeq.setText(String.valueOf(mGlassView.getThread().ScreenFlag));
-	                    if (mGlassView.getThread().ScreenFlag<9){
-	                    	genome_letter = Character.toString(genome.charAt(mGlassView.getThread().ScreenFlag-1));
-	                    }*/
-	                                        
-	                    // -- send seq to GlassThread
-	                   // tv_DesGenSeq.setText(mGlassView.getThread().DesGenSequence);
-	                   // tv_GenLet.setText(genome + "\n" + Character.toString(mGlassView.getThread().CurrentLetter));
-	                    //tv_GenLet.setTextColor(Color.GREEN);
-	                    	
-	                    /*if (genome_letter.equals("A")) { 
-	                    	mGlassThread.setGenome(0,0,genome_letter); 
-	                    	tv_GenLet.setText(genome_letter + "(00)");
-	                    }                     
-	                    if (genome_letter.equals("C")){ 
-	                    	mGlassThread.setGenome(0,1,genome_letter);
-	                    	tv_GenLet.setText(genome_letter + "(01)");
-	                    }
-	                    if (genome_letter.equals("T")){ 
-	                    	mGlassThread.setGenome(1,0,genome_letter); 
-	                    	tv_GenLet.setText(genome_letter + "(10)");
-	                    }
-	                    if (genome_letter.equals("G")){ 
-	                    	mGlassThread.setGenome(1,1,genome_letter);
-	                    	tv_GenLet.setText(genome_letter + "(11)");
-	                    }*/
-	                    	
+	                   	
 	                    //tv_ActGenSeq.setText(String.valueOf(mGlassView.getThread().ActGenSequence));
 	                   // tv_ActGenSeq.setText(String.valueOf(GenLetLengthScore.length()));
 	                    //tv_ActGenSeq.setTextColor(Color.BLUE);
@@ -384,7 +282,7 @@ public class MainActivity extends Activity {
 
 	                    Med = msg.arg1;
 	                    tv_M.setText(String.valueOf(Med));
-	                    mMusicPlayerThread.setMeditation(Med);
+	                    mGlassThread.setMeditation(Med);
 	                    
 	                    tv_Med.setText(String.valueOf(Med)); // display meditation
 	                    // change size and color of Med text view

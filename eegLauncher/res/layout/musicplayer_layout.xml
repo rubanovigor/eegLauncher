@@ -10,7 +10,7 @@
       android:id="@+id/lunar"
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>
-    
+        
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -151,6 +151,18 @@
               android:layout_alignParentLeft="true"
               android:textSize="40sp"
               android:visibility="visible" />
+          
+           <Button
+		        android:id="@+id/b_RunDNAconsole"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentBottom="true"
+		        android:layout_centerHorizontal="true"
+		        android:visibility="gone"
+		        android:onClick="start_dnaConsol"
+		        android:padding="10dp"
+		        android:textSize="25sp"
+		        android:textStyle="bold" />
 
      </RelativeLayout>
          
