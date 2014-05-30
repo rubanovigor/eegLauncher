@@ -246,36 +246,24 @@ public class MainActivity extends Activity {
 	                    // -- do appropriate action
 	                    if (mMusicPlayerView.getThread().play_flag == true)
                     		{ 
-	                      /*  mMusicPlayerView.getThread().pause(); // pause game when Activity pauses
-	                        mMusicPlayerView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir  
-	                    	 mGlassThread = mGlassView.getThread();
-	                         mGlassThread.doStart(); */
-	                    	// startService(new Intent(MusicService.ACTION_PLAY)); 
-	                    	tgDevice.close(); 
-	                    	 b.performClick();
+	                    	 startService(new Intent(MusicService.ACTION_PLAY)); 
 	                    	}
 	                    if (mMusicPlayerView.getThread().stop_flag == true)
                 			{ 
-	                        /*mMusicPlayerView.getThread().pause(); // pause game when Activity pauses
-	                        mMusicPlayerView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir  
-	                         mGlassThread = mGlassView.getThread();	                         
-	                    	 mGlassThread.doStart(); */
-	                    //	 startService(new Intent(MusicService.ACTION_PAUSE));
-	                    	// startService(new Intent(MusicService.ACTION_STOP));
-	                    	tgDevice.close();  
-	                    	 b.performClick();
+	                    	 startService(new Intent(MusicService.ACTION_STOP));
                 			}
 	                    
 	                    if (mMusicPlayerView.getThread().next_flag == true)
                 			{ 
 	                    	 startService(new Intent(MusicService.ACTION_SKIP));
                 			 mMusicPlayerView.getThread().next_flag = false;
-                			 }
+                			}
 	                    
 	                    if (mMusicPlayerView.getThread().back_flag == true)
             				{ 
-	                    	 startService(new Intent(MusicService.ACTION_PAUSE));
+	                    	 //startService(new Intent(MusicService.ACTION_PAUSE));
 	                    	 startService(new Intent(MusicService.ACTION_STOP)); 
+	                    	 mMusicPlayerView.getThread().back_flag = false;
             				 onBackPressed();
             				} 
 	                    
