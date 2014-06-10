@@ -40,8 +40,8 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         CharSequence TGStatus;
         float alpha = 0;  float alpha1_1=0;
         float scale_obj = 0.8f; float scale_obj_rot = 0.8f; float scale_obj_console = 0.8f;
-        float CircleRadius = 1f; //280f;   // -- for android phone
-      //  float CircleRadius = 120f;		// -- for google glass
+      //  float CircleRadius = 1f; //280f;   // -- for android phone
+        float CircleRadius = 100f;		// -- for google glass
         float accel_alpha = 0f;
         double elapsed = 0;   
         float curr_alpha_obj1 = 0; float curr_alpha_obj2 = 0; float curr_alpha_obj3 = 0; float curr_alpha_obj4 = 0;
@@ -53,7 +53,11 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         int GenBinLet1 = -1;        int GenBinLet2 = -1;  String GenLetSucc = ""; 
         
         // -- declare objects for EEG Launcher
-        private SkyBody LauncherMusicPlayer; private SkyBody LauncherDnaConsole; private SkyBody LauncherBack;
+        private SkyBody LauncherMusicPlayer; private SkyBody LauncherDnaConsole; 
+        	private SkyBody LauncherMusicPlayerD; private SkyBody LauncherDnaConsoleD;
+        private SkyBody LauncherCamera; private SkyBody Launcher4;
+        	private SkyBody LauncherCameraD; private SkyBody Launcher4D;
+        
         
         // -- declare objects for Music Player
         private SkyBody mp_Stop1; //private SkyBody Object1_1;  private SkyBody Object1_2;  private SkyBody Object1_3; 
@@ -133,12 +137,18 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             // get handles to some important objects
             mSurfaceHolder = surfaceHolder;   mHandler = handler;      mContext = context;
  
-            
+              
             Resources res = context.getResources();  
             // -- setup objects for EEG Launcher
-            LauncherMusicPlayer = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj);
-            LauncherBack = new SkyBody(res.getDrawable(R.drawable.icon_back), scale_obj);
-            LauncherDnaConsole = new SkyBody(res.getDrawable(R.drawable.a_object), scale_obj);
+            LauncherMusicPlayer = new SkyBody(res.getDrawable(R.drawable.icon_musicplayer), scale_obj);
+            LauncherCamera = new SkyBody(res.getDrawable(R.drawable.icon_camera), scale_obj);
+            LauncherDnaConsole = new SkyBody(res.getDrawable(R.drawable.icon_console), scale_obj);
+            Launcher4 = new SkyBody(res.getDrawable(R.drawable.icon_google), scale_obj);
+            LauncherMusicPlayerD = new SkyBody(res.getDrawable(R.drawable.icon_musicplayer), scale_obj);
+            LauncherCameraD = new SkyBody(res.getDrawable(R.drawable.icon_camera), scale_obj);
+            LauncherDnaConsoleD = new SkyBody(res.getDrawable(R.drawable.icon_console), scale_obj);
+            Launcher4D = new SkyBody(res.getDrawable(R.drawable.icon_google), scale_obj);
+            
             
             // -- setup objects for MusicPlayer
             mp_Stop1 = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj); // image,scale
@@ -148,7 +158,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             mp_Stop3 = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj);
             mp_Play2 = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj);
             mp_Play3 = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj);
-            mp_Back = new SkyBody(res.getDrawable(R.drawable.icon_back), scale_obj);
+            mp_Back = new SkyBody(res.getDrawable(R.drawable.icon_launcher), scale_obj);
             
             IconPlay = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj_console); // image,scale
             IconStop = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj_console); // image,scale
@@ -181,7 +191,8 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             
             
             // cache handles to our key drawables
-            BackGr_Image = context.getResources().getDrawable(R.drawable.music_player_bcgrnd);
+            //BackGr_Image = context.getResources().getDrawable(R.drawable.music_player_bcgrnd);
+            BackGr_Image = context.getResources().getDrawable(R.drawable.blacksquare);
            
         }
 
@@ -438,7 +449,10 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             canvas.restore();   
                     
             if (EegLauncherFlag == true){
-            	LauncherMusicPlayer.drawTo(canvas); LauncherDnaConsole.drawTo(canvas); LauncherBack.drawTo(canvas);
+            	LauncherMusicPlayer.drawTo(canvas); LauncherDnaConsole.drawTo(canvas); 
+            	LauncherCamera.drawTo(canvas); Launcher4.drawTo(canvas);
+            	LauncherMusicPlayerD.drawTo(canvas); LauncherDnaConsoleD.drawTo(canvas); 
+            	LauncherCameraD.drawTo(canvas); Launcher4D.drawTo(canvas);
             }
             	
             if (MusicPlayerFlag == true){
@@ -540,28 +554,47 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	LauncherMusicPlayer.setScale(scale_obj);          
 	            LauncherDnaConsole.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj2, CircleRadius, pX, pY); 
 	            	LauncherDnaConsole.setScale(scale_obj);     
-	            LauncherBack.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY); 
-	            	LauncherBack.setScale(scale_obj);             
+	            LauncherCamera.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj6, CircleRadius, pX, pY); 
+	            	LauncherCamera.setScale(scale_obj); 
+	            Launcher4.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj5, CircleRadius, pX, pY); 
+		           	Launcher4.setScale(scale_obj); 
+		           	//---D
+		        LauncherMusicPlayerD.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj4, CircleRadius, pX, pY); 
+	            	LauncherMusicPlayerD.setScale(scale_obj);          
+	            LauncherDnaConsoleD.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj7, CircleRadius, pX, pY); 
+	            	LauncherDnaConsoleD.setScale(scale_obj);     
+	            LauncherCameraD.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY); 
+	            	LauncherCameraD.setScale(scale_obj); 
+	            Launcher4D.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY); 
+		           	Launcher4D.setScale(scale_obj); 
                              
 	           float lb = 337.5f; float rb = 22.5f;  
 	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
-	            	if ((curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb) && play_flag == false){ // -- Console
-	            		EegLauncherFlag = false; DnaConsoleFlag = true;
-	            	} 
-	            	if (curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb){  // -- Back
-		            	back_flag = true;
-		           	}            	
-	            	if (curr_alpha_obj8 >= lb || curr_alpha_obj8 <= rb){  // -- MusicPlayer
-	            		MusicPlayerFlag = true; EegLauncherFlag = false;
-	            	}
+	            	// -- Console
+	            	if (curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb){ 
+	            		EegLauncherFlag = false; DnaConsoleFlag = true;					     	} 
+	            	if (curr_alpha_obj7 >= lb || curr_alpha_obj7 <= rb){ 
+	            		EegLauncherFlag = false; DnaConsoleFlag = true;					     	} 
+	            		            	
+	            	// -- MusicPlayer
+	            	if (curr_alpha_obj8 >= lb || curr_alpha_obj8 <= rb){ 
+	            		MusicPlayerFlag = true; EegLauncherFlag = false;}
+	            	if (curr_alpha_obj4 >= lb || curr_alpha_obj4 <= rb){
+	            		MusicPlayerFlag = true; EegLauncherFlag = false; } 
 	            	
-	            		// -- not used for now
-	            	/*if (curr_alpha_obj1 >= lb || curr_alpha_obj1 <= rb){ EegLauncherFlag = false; MusicPlayerFlag = true;}
-	            	if (curr_alpha_obj4 >= lb || curr_alpha_obj4 <= rb){ EegLauncherFlag = false; MusicPlayerFlag = true;} 
-	            	if (curr_alpha_obj5 >= lb || curr_alpha_obj5 <= rb){ EegLauncherFlag = false; MusicPlayerFlag = true;}            		            		            	
-	            	if (curr_alpha_obj6 >= lb || curr_alpha_obj6 <= rb){EegLauncherFlag = false; MusicPlayerFlag = true; }            	           	
-	            	if (curr_alpha_obj7 >= lb || curr_alpha_obj7 <= rb){EegLauncherFlag = false; MusicPlayerFlag = true; }            	
-           	    	       */     	
+	            	// -- Camera
+	            	if (curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb){  		            	
+		           	}           
+	            	if (curr_alpha_obj6 >= lb || curr_alpha_obj6 <= rb){  		            	
+		           	} 
+	            	
+	            	// -- Google
+	            	if (curr_alpha_obj5 >= lb || curr_alpha_obj5 <= rb){  		            	
+		           	}           
+	            	if (curr_alpha_obj1 >= lb || curr_alpha_obj1 <= rb){  		            	
+		           	} 
+	            		
+	            	
 	            	flag_Cursor = false;            	
 	
 	            }
