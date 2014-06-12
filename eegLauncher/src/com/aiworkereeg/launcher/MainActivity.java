@@ -264,7 +264,7 @@ public class MainActivity extends Activity {
 	                    	 //startService(new Intent(MusicService.ACTION_PAUSE));
 	                    	 startService(new Intent(MusicService.ACTION_STOP)); 
 	                    	 mMusicPlayerView.getThread().back_flag = false;
-            				 onBackPressed();
+            				// onBackPressed();
             				} 
 	                    
 	                    
@@ -276,6 +276,7 @@ public class MainActivity extends Activity {
 	                    if (vel>=0.5f && vel<1f) {tv_Vel.setText("1");}
 	                    if (vel<0.5f) {tv_Vel.setText("0");}                    
 	                   
+	                    tv_TimeToSel.setTextColor(Color.WHITE);
 	                    float tts = mMusicPlayerView.getThread().TimeToSelect;
 	                    if (tts < 3f && vel<=0 && mMusicPlayerView.getThread().flag_Cursor)
 	                    	{tv_TimeToSel.setText(String.valueOf(Math.round(tts)) ); }
