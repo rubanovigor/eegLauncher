@@ -36,20 +36,24 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	boolean play_flag = false; boolean stop_flag = false; boolean back_flag = false; boolean next_flag = false;
     	boolean EegLauncherFlag = true;	boolean MusicPlayerFlag = false; boolean DnaConsoleFlag = false; 
     	String s6 = "6s";
-        int At = 50; int Med = 50;   int ApM = 100;    int AmM = 0;
+        int At = 50; int Med = 50;   int ApM = 100;    int AmM = 0; 
+        int console_length = 4;
+        String[] console_str = new String[] {"-","-","-","-"}; //maximum rotation angle
+        String console_str_action; 
+        
         CharSequence TGStatus;
         float alpha = 0;  float alpha1_1=0;
-        float scale_obj = 0.8f; float scale_obj_rot = 0.8f; float scale_obj_console = 0.8f;
+        float scale_obj = 0.8f; float scale_obj_rot = 0.8f; float scale_obj_console = 0.5f;
       //  float CircleRadius = 1f; //280f;   // -- for android phone
         float CircleRadius = 100f;		// -- for google glass
         float accel_alpha = 0f;
         double elapsed = 0;   
         float curr_alpha_obj1 = 0; float curr_alpha_obj2 = 0; float curr_alpha_obj3 = 0; float curr_alpha_obj4 = 0;
         float curr_alpha_obj5 = 0; float curr_alpha_obj6 = 0; float curr_alpha_obj7 = 0; float curr_alpha_obj8 = 0;
-        int[] obj1_center; int sel_action_i; float CursorX;
+        int[] obj1_center; int sel_action_i; float CursorX; float CursorY;
         boolean flag_Cursor = false;  int CursorI = 0; int CursorJ=1;
         float CursorX_delta = 1f; float CursorY_delta = 1f;      float TimeToSelect = 3f;
-              
+        boolean flag_submit = false;   
         int GenBinLet1 = -1;        int GenBinLet2 = -1;  String GenLetSucc = ""; 
         
         // -- declare objects for EEG Launcher
@@ -74,7 +78,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         private SkyBody DnaConsole_G; private SkyBody DnaConsole_left; private SkyBody DnaConsole_Cancel; private SkyBody DnaConsole_A;
         
         private SkyBody ObjectA; private SkyBody ObjectC; private SkyBody ObjectT; private SkyBody ObjectG;
-        private SkyBody ObjectCancel; private SkyBody ObjectCursor; private SkyBody ObjectCursorDel; private SkyBody ObjectClear; 
+        private SkyBody ObjectSubmit; private SkyBody ObjectCursor; private SkyBody ObjectCursorDel; private SkyBody ObjectClear; 
         
         
         private float StarR; private float CursorR;  private float R_Gr_sphere_C;  private float R_Gr_sphere_S; 
@@ -166,7 +170,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             mp_VolD = new SkyBody(res.getDrawable(R.drawable.icon_volume_plus), scale_obj);
             mp_Back = new SkyBody(res.getDrawable(R.drawable.icon_inf), scale_obj);
             mp_BackD = new SkyBody(res.getDrawable(R.drawable.icon_inf), scale_obj);
-            
+              
             IconPlay = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj); 
             IconStop = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj); 
             IconSkip = new SkyBody(res.getDrawable(R.drawable.icon_next), scale_obj);
@@ -174,24 +178,25 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             IconVol = new SkyBody(res.getDrawable(R.drawable.icon_volume_plus), scale_obj);
             
             // -- setup objects for DNA Console
-            DnaConsole_T = new SkyBody(res.getDrawable(R.drawable.t_object_l), scale_obj); // image,scale
-            DnaConsole_rigth = new SkyBody(res.getDrawable(R.drawable.cursor_rigth_l), scale_obj); // image,scale
-            DnaConsole_C = new SkyBody(res.getDrawable(R.drawable.c_object_l), scale_obj); // image,scale
-            DnaConsole_Back = new SkyBody(res.getDrawable(R.drawable.icon_back), scale_obj); // image,scale
-            DnaConsole_G = new SkyBody(res.getDrawable(R.drawable.g_object_l), scale_obj);
-            DnaConsole_left = new SkyBody(res.getDrawable(R.drawable.cursor_left_l), scale_obj);
-            DnaConsole_Cancel = new SkyBody(res.getDrawable(R.drawable.cancel_object_l), scale_obj);
-            DnaConsole_A = new SkyBody(res.getDrawable(R.drawable.a_object_l), scale_obj);
+            DnaConsole_T = new SkyBody(res.getDrawable(R.drawable.icon_t), scale_obj); // image,scale
+            DnaConsole_rigth = new SkyBody(res.getDrawable(R.drawable.icon_rigth), scale_obj); // image,scale
+            DnaConsole_C = new SkyBody(res.getDrawable(R.drawable.icon_c), scale_obj); // image,scale
+            DnaConsole_Back = new SkyBody(res.getDrawable(R.drawable.icon_inf), scale_obj); // image,scale
+            DnaConsole_G = new SkyBody(res.getDrawable(R.drawable.icon_g), scale_obj);
+            DnaConsole_left = new SkyBody(res.getDrawable(R.drawable.icon_left), scale_obj);
+            DnaConsole_Cancel = new SkyBody(res.getDrawable(R.drawable.icon_submit1), scale_obj);
+            DnaConsole_A = new SkyBody(res.getDrawable(R.drawable.icon_a), scale_obj);
               
-            ObjectA = new SkyBody(res.getDrawable(R.drawable.a_object), scale_obj_console); // image,scale
-            ObjectC = new SkyBody(res.getDrawable(R.drawable.c_object), scale_obj_console); // image,scale
-            ObjectT = new SkyBody(res.getDrawable(R.drawable.t_object), scale_obj_console); // image,scale
-            ObjectG = new SkyBody(res.getDrawable(R.drawable.g_object), scale_obj_console); // image,scale
+            ObjectA = new SkyBody(res.getDrawable(R.drawable.icon_a), scale_obj_console); // image,scale
+            ObjectC = new SkyBody(res.getDrawable(R.drawable.icon_c), scale_obj_console); // image,scale
+            ObjectT = new SkyBody(res.getDrawable(R.drawable.icon_t), scale_obj_console); // image,scale
+            ObjectG = new SkyBody(res.getDrawable(R.drawable.icon_g), scale_obj_console); // image,scale
               
-            ObjectCancel = new SkyBody(res.getDrawable(R.drawable.black), scale_obj_console); // image,scale
-            ObjectCursor = new SkyBody(res.getDrawable(R.drawable.p_amber_1px), 5f); // image,scale
+            ObjectSubmit = new SkyBody(res.getDrawable(R.drawable.black), scale_obj_console); // image,scale
+            //ObjectCursor = new SkyBody(res.getDrawable(R.drawable.p_amber_1px), 5f); // image,scale
+            ObjectCursor = new SkyBody(res.getDrawable(R.drawable.icon_cursor), scale_obj_console*0.5f);
             ObjectCursorDel = new SkyBody(res.getDrawable(R.drawable.p_black_10px), 0.8f); // image,scale
-            ObjectClear = new SkyBody(res.getDrawable(R.drawable.black), scale_obj_console); // image,scale 
+            ObjectClear = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj_console); // image,scale 
               
             
             StarR = mp_Stop.getImageWidth()/2; // all stars has the same Radius
@@ -215,7 +220,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                 /* ===set random initial shuttle X coordinate=== */
                 pY = BackGr_H/2;   
                 pX = BackGr_W/2;
-                CursorX = BackGr_W/4;
+                CursorX = (float) pX - CursorR;
                 CursorY_delta = BackGr_ImageScale*BackGr_W/2;
                 CircleRadius = BackGr_ImageScale*BackGr_W / 2.7f;
                 CursorX_delta = StarR*2f;
@@ -399,9 +404,9 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                 mMode = mode;
                 CharSequence str ="";
                 if (mMode == STATE_RUNNING) {
-                	//str = "pY: " + String.valueOf(Math.round(pY));//ir mYOld
                 	str =  "";
-                	//+ "flag_cursor: "+ String.valueOf(flag_Cursor) ;
+                	if (flag_submit) {str = "you have typed: " + console_str_action + " real action will setup soon";}
+                	//+ "console_str[0] = "+ console_str[0] ;
                 	//+ "play_flag: "+ String.valueOf(play_flag) + "  \n ";
                 	//+ "sel_action_i "+ String.valueOf(sel_action_i) + "\n";
                 	//+ "BackGr_H/2f: " + String.valueOf(BackGr_H/2f ) + "\n"
@@ -484,20 +489,35 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             }
          
             if (DnaConsoleFlag == true){
-	            DnaConsole_T.drawTo(canvas); DnaConsole_rigth.drawTo(canvas); DnaConsole_C.drawTo(canvas); DnaConsole_Back.drawTo(canvas);
-	            DnaConsole_G.drawTo(canvas); DnaConsole_left.drawTo(canvas); DnaConsole_Cancel.drawTo(canvas); DnaConsole_A.drawTo(canvas);
+	            DnaConsole_T.drawTo(canvas); DnaConsole_rigth.drawTo(canvas); 
+	            DnaConsole_C.drawTo(canvas); DnaConsole_Back.drawTo(canvas);
+	            DnaConsole_G.drawTo(canvas); DnaConsole_left.drawTo(canvas); 
+	            DnaConsole_Cancel.drawTo(canvas); DnaConsole_A.drawTo(canvas);
 	         
+	            float CurosrXl = (float) pX - CursorR;
 	            if (CursorI>0){
-		            if (sel_action_i==1){ObjectT.drawTo(canvas);}
-		            if (sel_action_i==2){ObjectG.drawTo(canvas);}
-		            if (sel_action_i==3){ObjectC.drawTo(canvas);}
-		            if (sel_action_i==4){ObjectA.drawTo(canvas);}
-		            if (sel_action_i==5){ObjectCancel.drawTo(canvas);}
-		            if (sel_action_i==10){ObjectClear.drawTo(canvas);}
+	            	for(int l=0; l<console_length-1; l++){	            	              	
+	            		//if (console_str[0].equalsIgnoreCase("0") ){ObjectA.drawTo(canvas);};
+	            		ObjectA.updateDNA(CurosrXl, CursorY); ObjectC.updateDNA(CurosrXl, CursorY);
+	            		ObjectT.updateDNA(CurosrXl, CursorY); ObjectG.updateDNA(CurosrXl, CursorY);
+	            		if (console_str[l].equalsIgnoreCase("A") ){ObjectA.drawTo(canvas);};
+	            		if (console_str[l].equalsIgnoreCase("C") ){ObjectC.drawTo(canvas);};
+	            		if (console_str[l].equalsIgnoreCase("T") ){ObjectT.drawTo(canvas);};
+	            		if (console_str[l].equalsIgnoreCase("G") ){ObjectG.drawTo(canvas);};
+	            		CurosrXl = CurosrXl + CursorR;
+	            	}
+		        //    if (sel_action_i==1){ObjectT.drawTo(canvas);}
+		          //  if (sel_action_i==2){ObjectG.drawTo(canvas);}
+		           // if (sel_action_i==3){ObjectC.drawTo(canvas);}
+		           // if (sel_action_i==4){ObjectA.drawTo(canvas);}
+		            //if (sel_action_i==5){ObjectSubmit.drawTo(canvas);}
+		            //if (sel_action_i==10){ObjectClear.drawTo(canvas);}
 		            
 	            }
-	            ObjectCursorDel.drawTo(canvas);
+	            //ObjectCursorDel.drawTo(canvas);
 	            ObjectCursor.drawTo(canvas);
+	            
+	            
             }
             
     }
@@ -543,7 +563,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             }       
             if (alpha >=360) {alpha = alpha-360; }
                 // -- reset flag if acceleration increase above 1 
-            if (accel_alpha>1f && CursorI<=7) {flag_Cursor=true; }
+            if (accel_alpha>1f && CursorI<=console_length) {flag_Cursor=true; }
             	
             if (CursorI == 0 && accel_alpha>0.5f) {CursorI = 1; }
               
@@ -586,6 +606,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                              
 	           float lb = 337.5f; float rb = 22.5f;  
 	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
+	            	
 	            	// -- Console
 	            	if (curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb){ 
 	            		EegLauncherFlag = false; DnaConsoleFlag = true;		
@@ -598,24 +619,32 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            		            	
 	            	// -- MusicPlayer
 	            	if (curr_alpha_obj8 >= lb || curr_alpha_obj8 <= rb){ 
-	            		MusicPlayerFlag = true; EegLauncherFlag = false;}
+	            		MusicPlayerFlag = true; EegLauncherFlag = false;
+	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
+	            	}	            	
 	            	if (curr_alpha_obj4 >= lb || curr_alpha_obj4 <= rb){
-	            		MusicPlayerFlag = true; EegLauncherFlag = false; } 
+	            		MusicPlayerFlag = true; EegLauncherFlag = false;
+	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
+	            	} 
 	            	
 	            	// -- Camera
 	            	if (curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb){  	
 	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
+	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
 		           	}           
 	            	if (curr_alpha_obj6 >= lb || curr_alpha_obj6 <= rb){  	
 	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
+	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
 		           	} 
 	            	
 	            	// -- Google
 	            	if (curr_alpha_obj5 >= lb || curr_alpha_obj5 <= rb){  	
 	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
+	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
 		           	}           
 	            	if (curr_alpha_obj1 >= lb || curr_alpha_obj1 <= rb){  
 	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
+	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
 		           	} 
 	            		
 	            	
@@ -708,11 +737,15 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            DnaConsole_left.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj6, CircleRadius, pX, pY);
 	            DnaConsole_Cancel.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj7, CircleRadius, pX, pY);            
 	            DnaConsole_A.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj8, CircleRadius, pX, pY);
+	            	            
+	            DnaConsole_T.setScale(scale_obj); DnaConsole_rigth.setScale(scale_obj);
+	            DnaConsole_C.setScale(scale_obj); DnaConsole_Back.setScale(scale_obj); 		
+	            DnaConsole_G.setScale(scale_obj); DnaConsole_left.setScale(scale_obj);
+	            DnaConsole_Cancel.setScale(scale_obj); DnaConsole_A.setScale(scale_obj);
 	            
-	            
-	            DnaConsole_T.setScale(scale_obj); DnaConsole_rigth.setScale(scale_obj); DnaConsole_C.setScale(scale_obj); DnaConsole_Back.setScale(scale_obj); 		
-	            DnaConsole_G.setScale(scale_obj); DnaConsole_left.setScale(scale_obj); DnaConsole_Cancel.setScale(scale_obj); DnaConsole_A.setScale(scale_obj);
 	            /* -- =========== -- */
+	            CursorX_delta = CursorR;
+	            CursorY = (float) (pY - CircleRadius/2f + CursorR/2f);
 	            float lb = 337.5f; float rb = 22.5f; float scale_k = 1; 
 	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
 	            	ObjectCursorDel.updateDNA(CursorX, pY-CursorY_delta-2*CursorR);  // -- delete old cursor position
@@ -720,32 +753,36 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	if (curr_alpha_obj1 >= lb || curr_alpha_obj1 <= rb){ // -- T
 	            		DnaConsole_T.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha + 0, 0, pX, pY);
 	            		DnaConsole_T.setScale(scale_k * scale_obj); 
-	            		if(CursorI!=7){
-		            		sel_action_i = 1;  flag_Cursor = false; ObjectT.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
+	            		if(CursorI!=console_length){
+		            		sel_action_i = 1;  flag_Cursor = false; ObjectT.updateDNA(CursorX, CursorY);
+		            		console_str[CursorI-1] = "T";
 		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 	            		}
 	            	}
 	            	if (curr_alpha_obj5 >= lb || curr_alpha_obj5 <= rb){ // -- G
 	            		DnaConsole_G.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
 	            		DnaConsole_G.setScale(scale_k * scale_obj); 
-	            		if(CursorI!=7){
-		            		sel_action_i = 2; flag_Cursor = false; ObjectG.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
+	            		if(CursorI!=console_length){
+		            		sel_action_i = 2; flag_Cursor = false; ObjectG.updateDNA(CursorX, CursorY);
+		            		console_str[CursorI-1] = "G";
 		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 	            		}
 	            	}            	
 	            	if (curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb){  // -- C
 	            		DnaConsole_C.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
 	            		DnaConsole_C.setScale(scale_k *  scale_obj); 
-	            		if(CursorI!=7){
-		            		sel_action_i = 3; flag_Cursor = false; ObjectC.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
+	            		if(CursorI!=console_length){
+		            		sel_action_i = 3; flag_Cursor = false; ObjectC.updateDNA(CursorX, CursorY);
+		            		console_str[CursorI-1] = "C";
 		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 	            		}
 	            	}            	
 	            	if (curr_alpha_obj8 >= lb || curr_alpha_obj8 <= rb){  // -- A
 	            		DnaConsole_A.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
 	            		DnaConsole_A.setScale(scale_k * scale_obj); 
-	            		if(CursorI!=7){
-		            		sel_action_i = 4; flag_Cursor = false; ObjectA.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
+	            		if(CursorI!=console_length){
+		            		sel_action_i = 4; flag_Cursor = false; ObjectA.updateDNA(CursorX, CursorY);
+		            		console_str[CursorI-1] = "A";
 		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 		            	}
 	            	}
@@ -753,36 +790,35 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	if (curr_alpha_obj6 >= lb || curr_alpha_obj6 <= rb){ // -- hash - move cursor left
 	            		if(CursorI>=2){  // -- moving cursor left not working if cursor at 1st position
 		             		sel_action_i = 0;   flag_Cursor = false; CursorI=CursorI-1;
-		             		CursorX=CursorX-CursorX_delta;
-		             		
+		             		CursorX=CursorX-CursorX_delta;           		
 		            		DnaConsole_left.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
 		            		DnaConsole_left.setScale(scale_k * scale_obj);
 	            		}
 	            	}            	
-	            	if (curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb){ // -- star - move cursor right
-	            		if(CursorI!=7){
+	            	if (curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb){ // -- move cursor right
+	            		if(CursorI!=console_length){
 		            		sel_action_i = 0; flag_Cursor = false; CursorI=CursorI+1;
-		            		CursorX=CursorX+CursorX_delta; 
-		            		
+		            		CursorX=CursorX+CursorX_delta; 		            		
 		            		DnaConsole_rigth.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
 		            		DnaConsole_rigth.setScale(scale_k * scale_obj);
 		            	}
 	            	}            	
-	            	if (curr_alpha_obj7 >= lb || curr_alpha_obj7 <= rb){ // -- cancel button
-	            		DnaConsole_Cancel.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-	            		DnaConsole_Cancel.setScale(scale_k * scale_obj);
-	            		if(CursorI>=2){  // -- cancel not working if cursor at 1st position
-		             		sel_action_i = 5;
-		             		CursorX=CursorX-CursorX_delta; CursorI=CursorI-1;
-		            		flag_Cursor = false; ObjectCancel.updateDNA(CursorX, pY-CursorY_delta-2*CursorR-StarR);
+	            	// -- submit button
+	            	if (curr_alpha_obj7 >= lb || curr_alpha_obj7 <= rb){ 
+	            		if(CursorI>=1){  // -- submit not working if cursor at 1st position
+		             		flag_Cursor = false;
+		             		console_str_action = console_str[0] + console_str[1] + console_str[2];
+		             		console_str[0] = "-"; console_str[1] = "-"; console_str[2] = "-"; console_str[3] = "-";
+		             		CursorX = (float) pX - CursorR; CursorI = 1;
+		             		flag_submit = true;
 	            		}
 	            	}            	
 	            	if (curr_alpha_obj4 >= lb || curr_alpha_obj4 <= rb){ // --inf - submit and clear if cursor at position 7
 	            		DnaConsoleFlag = false; EegLauncherFlag = true;
-	            		//back_flag = true;
+	            		//back_flag = true;         		
 	            	}            	
 	            	
-	            	ObjectCursor.updateDNA(CursorX, pY - CursorY_delta -2*CursorR);         
+	            	if(CursorI<console_length){ ObjectCursor.updateDNA(CursorX, CursorY + CursorR/2f);    }     
 	            	
 	            	flag_Cursor = false;
 	            	// -- for testing only

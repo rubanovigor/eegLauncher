@@ -129,23 +129,23 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
             
             Resources res = context.getResources();           
             // -- define graphical objects //
-            Object1 = new SkyBody(res.getDrawable(R.drawable.t_object_l), scale_obj); // image,scale
+            Object1 = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj); // image,scale
           //  Object1_1 = new SkyBody(res.getDrawable(R.drawable.sun3_4), 1f); // image,scale
           //  Object1_2 = new SkyBody(res.getDrawable(R.drawable.sun3_2), 1f); // image,scale
           //  Object1_3 = new SkyBody(res.getDrawable(R.drawable.sun2_3), 1f); // image,scale
             //Object2 = new SkyBody(res.getDrawable(R.drawable.sun3_3), 1f); // image,scale
-            Object2 = new SkyBody(res.getDrawable(R.drawable.cursor_rigth_l), scale_obj); // image,scale
-            Object3 = new SkyBody(res.getDrawable(R.drawable.c_object_l), scale_obj); // image,scale
-            Object4 = new SkyBody(res.getDrawable(R.drawable.inf_object_l), scale_obj); // image,scale
-            Object5 = new SkyBody(res.getDrawable(R.drawable.g_object_l), scale_obj);
-            Object6 = new SkyBody(res.getDrawable(R.drawable.cursor_left_l), scale_obj);
-            Object7 = new SkyBody(res.getDrawable(R.drawable.cancel_object_l), scale_obj);
-            Object8 = new SkyBody(res.getDrawable(R.drawable.a_object_l), scale_obj);
+            Object2 = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj); // image,scale
+            Object3 = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj); // image,scale
+            Object4 = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj); // image,scale
+            Object5 = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj);
+            Object6 = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj);
+            Object7 = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj);
+            Object8 = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj);
             
-            ObjectA = new SkyBody(res.getDrawable(R.drawable.a_object), scale_obj_console); // image,scale
-            ObjectC = new SkyBody(res.getDrawable(R.drawable.c_object), scale_obj_console); // image,scale
-            ObjectT = new SkyBody(res.getDrawable(R.drawable.t_object), scale_obj_console); // image,scale
-            ObjectG = new SkyBody(res.getDrawable(R.drawable.g_object), scale_obj_console); // image,scale
+            ObjectA = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj_console); // image,scale
+            ObjectC = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj_console); // image,scale
+            ObjectT = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj_console); // image,scale
+            ObjectG = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj_console); // image,scale
             
             ObjectCancel = new SkyBody(res.getDrawable(R.drawable.black), scale_obj_console); // image,scale
             ObjectCursor = new SkyBody(res.getDrawable(R.drawable.p_amber_1px), 5f); // image,scale
