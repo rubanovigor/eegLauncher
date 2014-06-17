@@ -34,7 +34,8 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	String GameMode="b"; //1 - 2 levels of stars; 2 - 3 levels of stars
     	String flag; 
     	boolean play_flag = false; boolean stop_flag = false; boolean back_flag = false; boolean next_flag = false;
-    	boolean EegLauncherFlag = true;	boolean MusicPlayerFlag = false; boolean DnaConsoleFlag = false; 
+    	boolean EegLauncherFlag = true;	boolean MusicPlayerFlag = false; boolean DnaConsoleFlag = false;
+    	boolean action_cancel_flag = false;
     	String s6 = "6s";
         int At = 50; int Med = 50;   int ApM = 100;    int AmM = 0; 
         int console_length = 4;
@@ -406,7 +407,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                 if (mMode == STATE_RUNNING) {
                 	str =  "";
                 	if (flag_submit) {str = "you have typed: " + console_str_action + " real action will setup soon";}
-                	//+ "console_str[0] = "+ console_str[0] ;
+                	//+ "action_cancel_flag = "+ action_cancel_flag + "  \n "
                 	//+ "play_flag: "+ String.valueOf(play_flag) + "  \n ";
                 	//+ "sel_action_i "+ String.valueOf(sel_action_i) + "\n";
                 	//+ "BackGr_H/2f: " + String.valueOf(BackGr_H/2f ) + "\n"
@@ -516,9 +517,10 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            }
 	            //ObjectCursorDel.drawTo(canvas);
 	            ObjectCursor.drawTo(canvas);
-	            
-	            
+	                        
             }
+            
+            
             
     }
 
@@ -546,10 +548,17 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             if (accel_alpha>=1f && accel_alpha<1.5f) {scale_obj = scale_obj_rot; }          
             if (accel_alpha<=0f){ accel_alpha = 0f; scale_obj = scale_obj_rot;  }
             
-            if (accel_alpha<=0f && CursorI != 0){ TimeToSelect = TimeToSelect - 0.015f;}
-            	else {TimeToSelect = 3f;}
-            	if (TimeToSelect<=0f){ TimeToSelect = 0f;}
+            	// -- time to action selection
+            if (accel_alpha<=0f && CursorI != 0){ TimeToSelect = TimeToSelect - 0.015f; action_cancel_flag = false;}
+            	else {
+            		if (TimeToSelect>0f && TimeToSelect<=2f && accel_alpha>0f && accel_alpha<=1f){ action_cancel_flag = true;}	
+            		TimeToSelect = 3f;
+            		}
+            if (TimeToSelect == 3f && accel_alpha>1f){ action_cancel_flag = false;}	
+           
+            if (TimeToSelect<=0f){ TimeToSelect = 0f;}
             
+            	// -- update accel_alpha and alpha
             if (Math.abs(At-Med) <= 30 && accel_alpha > 0) 
             	{ 
             		accel_alpha = accel_alpha - 0.015f ; 

@@ -243,7 +243,7 @@ public class MainActivity extends Activity {
 	                    tv_A.setText(String.valueOf(At));
 	                    mMusicPlayerThread.setAttention(At);
 	                    
-	                    // -- do appropriate action
+	                    // -- do appropriate action for musicplayer
 	                    if (mMusicPlayerView.getThread().play_flag == true)
                     		{ 
 	                    	 startService(new Intent(MusicService.ACTION_PLAY)); 
@@ -268,20 +268,28 @@ public class MainActivity extends Activity {
             				} 
 	                    
 	                    
-	                    // -- display velosity based on accel_alpha [0..2.5]
+	                    	// -- display velocity based on accel_alpha [0..2.5]
 	                    float vel = mMusicPlayerView.getThread().accel_alpha;
 	                    if (vel>=2f) {tv_Vel.setText("4");}
 	                    if (vel>=1.5f && vel<2f) {tv_Vel.setText("3");}
 	                    if (vel>=1f && vel<1.5f) {tv_Vel.setText("2");}
 	                    if (vel>=0.5f && vel<1f) {tv_Vel.setText("1");}
-	                    if (vel<0.5f) {tv_Vel.setText("0");}                    
-	                   
+	                    if (vel<0.5f) {tv_Vel.setText("0");}  
+	                    
+	                    	// -- display time to action selection
 	                    tv_TimeToSel.setTextColor(Color.WHITE);
 	                    float tts = mMusicPlayerView.getThread().TimeToSelect;
-	                    if (tts < 3f && vel<=0 && mMusicPlayerView.getThread().flag_Cursor)
-	                    	{tv_TimeToSel.setText(String.valueOf(Math.round(tts)) ); }
+	                    tts = tts*10f;
+	                    tts = Math.round(tts);
+	                    tts = tts/10f;
+	                    //if (tts < 3f && vel<=0 && mMusicPlayerView.getThread().flag_Cursor)
+	                    //if (mMusicPlayerView.getThread().action_cancel_flag){tv_TimeToSel.setText("cancel");}
+	                    if (tts < 3f &&  mMusicPlayerView.getThread().flag_Cursor)
+	                    	{tv_TimeToSel.setTextSize(36); tv_TimeToSel.setText(String.valueOf(Math.round(tts)) ); }
 	                    else {tv_TimeToSel.setText("");}
-	                    
+	                    if (mMusicPlayerView.getThread().action_cancel_flag){
+	                    	tv_TimeToSel.setTextSize(15);tv_TimeToSel.setText("cancel");
+	                    	}
 	                    
 	                   /* tv_Att.setText(String.valueOf(At)); // display meditation
 	                    // change size and color of Att text view
