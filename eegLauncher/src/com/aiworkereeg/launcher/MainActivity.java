@@ -1,5 +1,9 @@
 package com.aiworkereeg.launcher;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -11,9 +15,12 @@ import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Color;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
@@ -27,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +67,8 @@ public class MainActivity extends Activity {
     //private GlassView mGlassView;
     private MusicPlayerView mMusicPlayerView;
     final int ActivityTwoRequestCode = 0;
-	
+    Bitmap myBitmap;
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -166,6 +175,25 @@ public class MainActivity extends Activity {
 	        }
 	    }
 	    
+	    // -- save bitmap of screenshot
+	    public void saveBitmap(Bitmap bitmap) {
+	        String filePath = Environment.getExternalStorageDirectory()
+	                + File.separator + "Pictures/screenshot.png";
+	        File imagePath = new File(filePath);
+	        FileOutputStream fos;
+	        try {
+	            fos = new FileOutputStream(imagePath);
+	            bitmap.compress(CompressFormat.PNG, 100, fos);
+	            fos.flush();
+	            fos.close();
+	           // sendMail(filePath);
+	        } catch (FileNotFoundException e) {
+	            Log.e("GREC", e.getMessage(), e);
+	        } catch (IOException e) {
+	            Log.e("GREC", e.getMessage(), e);
+	        }
+	    }
+	    
 	    // start dnaConsol
 	    public void start_dnaConsol(View view) {
 	    	//Toast.makeText(this, "starting space shuttle", Toast.LENGTH_SHORT).show();
@@ -243,7 +271,7 @@ public class MainActivity extends Activity {
 	                    tv_A.setText(String.valueOf(At));
 	                    mMusicPlayerThread.setAttention(At);
 	                    
-	                    // -- do appropriate action for musicplayer
+	                    // -- do appropriate action for music player
 	                    if (mMusicPlayerView.getThread().play_flag == true)
                     		{ 
 	                    	 startService(new Intent(MusicService.ACTION_PLAY)); 
@@ -267,6 +295,18 @@ public class MainActivity extends Activity {
             				// onBackPressed();
             				} 
 	                    
+	                    if (mMusicPlayerView.getThread().Prtscr_flag == true)
+        				{ 
+	  	                  		
+		                    View v1 = findViewById(android.R.id.content).getRootView() ; //this works too but gives only content
+		                   // View v1 = getWindow().getDecorView().getRootView();
+	                    	v1.setDrawingCacheEnabled(true);
+		                    myBitmap = v1.getDrawingCache();
+		                    saveBitmap(myBitmap);
+                    	 mMusicPlayerView.getThread().Prtscr_flag = false;
+        				// onBackPressed();
+        				}
+
 	                    
 	                    	// -- display velocity based on accel_alpha [0..2.5]
 	                    float vel = mMusicPlayerView.getThread().accel_alpha;
@@ -284,11 +324,15 @@ public class MainActivity extends Activity {
 	                    tts = tts/10f;
 	                    //if (tts < 3f && vel<=0 && mMusicPlayerView.getThread().flag_Cursor)
 	                    //if (mMusicPlayerView.getThread().action_cancel_flag){tv_TimeToSel.setText("cancel");}
-	                    if (tts < 3f &&  mMusicPlayerView.getThread().flag_Cursor)
-	                    	{tv_TimeToSel.setTextSize(36); tv_TimeToSel.setText(String.valueOf(Math.round(tts)) ); }
-	                    else {tv_TimeToSel.setText("");}
+	                    if (tts < 3f &&  mMusicPlayerView.getThread().flag_Cursor) {
+	                    	tv_TimeToSel.setTextSize(36); tv_TimeToSel.setText(String.valueOf(Math.round(tts)) ); 
+	                    	mMusicPlayerView.getThread().msgBoard = "";}
+	                    else {
+	                    	tv_TimeToSel.setTextSize(15); tv_TimeToSel.setText(mMusicPlayerView.getThread().msgBoard);
+	                    	}
 	                    if (mMusicPlayerView.getThread().action_cancel_flag){
 	                    	tv_TimeToSel.setTextSize(15);tv_TimeToSel.setText("cancel");
+	                    	mMusicPlayerView.getThread().msgBoard = "";
 	                    	}
 	                    
 	                   /* tv_Att.setText(String.valueOf(At)); // display meditation

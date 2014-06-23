@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
     android:keepScreenOn="true" 
-    android:background="@android:color/transparent"  >
+    android:background="@android:color/transparent" 
+    android:id="@+id/screen" >
     
     <com.aiworkereeg.launcher.MusicPlayerView
       android:id="@+id/lunar"

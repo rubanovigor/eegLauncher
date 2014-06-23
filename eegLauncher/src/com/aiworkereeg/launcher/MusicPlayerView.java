@@ -31,9 +31,10 @@ import android.widget.TextView;
 class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     class MusicPlayerThread extends Thread {
     	float RR; float ZZ;
-    	String GameMode="b"; //1 - 2 levels of stars; 2 - 3 levels of stars
+    	String GameMode="b"; String msgBoard=""; int EEG_launcher_N = 3; int delta = 360/EEG_launcher_N; 
     	String flag; 
     	boolean play_flag = false; boolean stop_flag = false; boolean back_flag = false; boolean next_flag = false;
+    	boolean Prtscr_flag = false;
     	boolean EegLauncherFlag = true;	boolean MusicPlayerFlag = false; boolean DnaConsoleFlag = false;
     	boolean action_cancel_flag = false;
     	String s6 = "6s";
@@ -62,6 +63,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         	private SkyBody LauncherMusicPlayerD; private SkyBody LauncherDnaConsoleD;
         private SkyBody LauncherCamera; private SkyBody LauncherGoogle;
         	private SkyBody LauncherCameraD; private SkyBody LauncherGoogleD;
+        private SkyBody SelectedIcon;
         
         
         // -- declare objects for Music Player
@@ -141,11 +143,11 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         /** Handle to the surface manager object we interact with */
         private SurfaceHolder mSurfaceHolder;
 
-
         public MusicPlayerThread(SurfaceHolder surfaceHolder, Context context, Handler handler) {
             // get handles to some important objects
             mSurfaceHolder = surfaceHolder;   mHandler = handler;      mContext = context;
  
+            // .setSecure(true);
               
             Resources res = context.getResources();  
             // -- setup objects for EEG Launcher
@@ -158,7 +160,10 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             LauncherDnaConsoleD = new SkyBody(res.getDrawable(R.drawable.icon_console), scale_obj);
             LauncherGoogleD = new SkyBody(res.getDrawable(R.drawable.icon_google), scale_obj);
             
-            
+            SelectedIcon = new SkyBody(res.getDrawable(R.drawable.icon_selected_icon), scale_obj);
+
+   
+                       
             // -- setup objects for MusicPlayer
             mp_Stop = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj); // image,scale
             mp_Play = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj); 
@@ -302,6 +307,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                     // inconsistent state
                     if (c != null) {
                         mSurfaceHolder.unlockCanvasAndPost(c);
+                        
                     }
                 }
             }
@@ -406,7 +412,13 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                 CharSequence str ="";
                 if (mMode == STATE_RUNNING) {
                 	str =  "";
-                	if (flag_submit) {str = "you have typed: " + console_str_action + " real action will setup soon";}
+                	//+ "delta = "+ delta + "  \n "
+                	//+ "curr_alpha_obj1 = "+ String.valueOf(curr_alpha_obj1) + "  \n "
+                	//+ "curr_alpha_obj2 = "+ String.valueOf(curr_alpha_obj2) + "  \n "
+                	//+ "curr_alpha_obj3 = "+ String.valueOf(curr_alpha_obj3) + "  \n ";
+                	
+                	//if (flag_submit) {str = "you have typed: " + console_str_action + " real action will setup soon";}
+                	
                 	//+ "action_cancel_flag = "+ action_cancel_flag + "  \n "
                 	//+ "play_flag: "+ String.valueOf(play_flag) + "  \n ";
                 	//+ "sel_action_i "+ String.valueOf(sel_action_i) + "\n";
@@ -465,6 +477,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             BackGr_Image.draw(canvas);        
             canvas.restore();   
                     
+            
             if (EegLauncherFlag == true){
             	LauncherMusicPlayer.drawTo(canvas); LauncherDnaConsole.drawTo(canvas); 
             	LauncherCamera.drawTo(canvas); LauncherGoogle.drawTo(canvas);
@@ -479,7 +492,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            mp_Vol.drawTo(canvas);  mp_VolD.drawTo(canvas); 
 	            mp_Back.drawTo(canvas); mp_BackD.drawTo(canvas);
 	            
-	            // -- displey icon that was selected
+	            // -- display icon that was selected
 	            if (CursorI>0){
 	            	IconBlack.drawTo(canvas);
 		            if (sel_action_i==1){IconPlay.drawTo(canvas);}
@@ -519,6 +532,8 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            ObjectCursor.drawTo(canvas);
 	                        
             }
+            
+            SelectedIcon.drawTo(canvas);  
             
             
             
@@ -577,6 +592,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             if (CursorI == 0 && accel_alpha>0.5f) {CursorI = 1; }
               
               // -- define position of 8 objects
+            if (EegLauncherFlag == false){
             curr_alpha_obj1 = alpha; curr_alpha_obj2 = alpha + 180;
             curr_alpha_obj3 = alpha + 90;  curr_alpha_obj4 = alpha + 270;
             curr_alpha_obj5 = alpha + 45;  curr_alpha_obj6 = alpha + 135;
@@ -590,10 +606,78 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             if (curr_alpha_obj6 > 360) {curr_alpha_obj6=curr_alpha_obj6 - 360;}
             if (curr_alpha_obj7 > 360) {curr_alpha_obj7=curr_alpha_obj7 - 360;}
             if (curr_alpha_obj8 > 360) {curr_alpha_obj8=curr_alpha_obj8 - 360;}
-                     
+            }              
+            SelectedIcon.setScale(0f); 
             
             /* -- ======EEG Launcher===== -- */
             if (EegLauncherFlag == true){
+                
+                curr_alpha_obj1 = alpha; curr_alpha_obj2 = alpha + delta; curr_alpha_obj3 = alpha + 2*delta;
+                if (curr_alpha_obj1 > 360) {curr_alpha_obj1=curr_alpha_obj1 - 360;}
+                if (curr_alpha_obj2 > 360) {curr_alpha_obj2=curr_alpha_obj2 - 360;}
+                if (curr_alpha_obj3 > 360) {curr_alpha_obj3=curr_alpha_obj3 - 360;}
+                
+	            float[] alpha_rot = new float[] {0.0f, 0.0f, 0.8f, 0.8f, 1f, 0.9f };  Random rs1 =new Random();
+	            LauncherMusicPlayer.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY); LauncherMusicPlayer.setScale(scale_obj);          
+	            LauncherDnaConsole.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj1, CircleRadius, pX, pY);  LauncherDnaConsole.setScale(scale_obj);     
+	            LauncherCamera.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY);      LauncherCamera.setScale(scale_obj); 
+	            
+	            // -- set coordinates of Icon SelectedIcon  
+	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<3){ 
+	            	SelectedIcon.setScale(scale_obj*1.4f);
+	            	
+	            	// -- Console
+	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 
+	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY); 
+	            	}            		            	
+	            	// -- MusicPlayer
+	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
+	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY); 
+	            	}           	            	
+	            	// -- Camera
+	            	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
+	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY); 
+		           	}                   	
+	
+	            }
+	                             
+	            // -- manage what was selected  
+	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
+	            	
+	            	// -- Console
+	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 
+	            		EegLauncherFlag = false; DnaConsoleFlag = true;		
+	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
+	            		//Prtscr_flag = true; 
+	            		msgBoard = "console";
+	            	} 
+	            		            	
+	            	// -- MusicPlayer
+	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
+	            		MusicPlayerFlag = true; EegLauncherFlag = false;
+	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
+	            		//Prtscr_flag = true;
+	            		msgBoard = "music";
+	            	}	            	
+	            	
+	            	// -- Camera
+	            	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
+	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
+	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
+	            		Prtscr_flag = true;
+	            		msgBoard = "prtscr";
+		           	}         
+	            	            			            	
+	            	flag_Cursor = false;            	
+	
+	            }
+            }
+            /* -- ======END EEG Launcher===== -- */
+    
+            
+            
+            /* -- ======EEG Launcher===== -- */
+            /*if (EegLauncherFlag == true){
 	            float[] alpha_rot = new float[] {0.0f, 0.0f, 0.8f, 0.8f, 1f, 0.9f };  Random rs1 =new Random();
 	            LauncherMusicPlayer.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj8, CircleRadius, pX, pY); 
 	            	LauncherMusicPlayer.setScale(scale_obj);          
@@ -620,47 +704,55 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	if (curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb){ 
 	            		EegLauncherFlag = false; DnaConsoleFlag = true;		
 	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
+	            		Prtscr_flag = true;
 	            	} 
 	            	if (curr_alpha_obj7 >= lb || curr_alpha_obj7 <= rb){ 
 	            		EegLauncherFlag = false; DnaConsoleFlag = true;
 	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
+	            		Prtscr_flag = true;
 	            	} 
 	            		            	
 	            	// -- MusicPlayer
 	            	if (curr_alpha_obj8 >= lb || curr_alpha_obj8 <= rb){ 
 	            		MusicPlayerFlag = true; EegLauncherFlag = false;
 	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
+	            		Prtscr_flag = true;
 	            	}	            	
 	            	if (curr_alpha_obj4 >= lb || curr_alpha_obj4 <= rb){
 	            		MusicPlayerFlag = true; EegLauncherFlag = false;
 	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
+	            		Prtscr_flag = true;
 	            	} 
 	            	
 	            	// -- Camera
 	            	if (curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb){  	
 	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
 	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
+	            		Prtscr_flag = true;
 		           	}           
 	            	if (curr_alpha_obj6 >= lb || curr_alpha_obj6 <= rb){  	
 	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
 	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
+	            		Prtscr_flag = true;
 		           	} 
 	            	
 	            	// -- Google
 	            	if (curr_alpha_obj5 >= lb || curr_alpha_obj5 <= rb){  	
 	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
 	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
+	            		Prtscr_flag = true;
 		           	}           
 	            	if (curr_alpha_obj1 >= lb || curr_alpha_obj1 <= rb){  
 	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
 	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
+	            		Prtscr_flag = true;
 		           	} 
 	            		
 	            	
 	            	flag_Cursor = false;            	
 	
 	            }
-            }
+            }*/
             /* -- ======END EEG Launcher===== -- */
           
             
