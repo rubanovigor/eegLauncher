@@ -63,7 +63,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         	private SkyBody LauncherMusicPlayerD; private SkyBody LauncherDnaConsoleD;
         private SkyBody LauncherCamera; private SkyBody LauncherGoogle;
         	private SkyBody LauncherCameraD; private SkyBody LauncherGoogleD;
-        private SkyBody SelectedIcon;
+        private SkyBody SelectedIcon; private SkyBody LeftBoarderIcon; private SkyBody RigthBoarderIcon;
         
         
         // -- declare objects for Music Player
@@ -124,6 +124,9 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 
         /** UI constants (i.e. the speed & fuel bars) */
         private static final String KEY_X = "pX";      private static final String KEY_Y = "pY";
+        private static final String KEY_EEG = "EegLauncherFlag"; 
+        private static final String KEY_DNA = "DnaConsoleFlag";
+        private static final String KEY_MP = "MusicPlayerFlag";
 
         /** Current height/width of the surface/canvas. @see #setSurfaceSize        */
         private int BackGr_H = 1;        private int BackGr_W = 1;
@@ -161,8 +164,9 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             LauncherGoogleD = new SkyBody(res.getDrawable(R.drawable.icon_google), scale_obj);
             
             SelectedIcon = new SkyBody(res.getDrawable(R.drawable.icon_selected_icon), scale_obj);
-
-   
+            LeftBoarderIcon = new SkyBody(res.getDrawable(R.drawable.icon_boarder), scale_obj);
+            RigthBoarderIcon = new SkyBody(res.getDrawable(R.drawable.icon_boarder), scale_obj);
+  
                        
             // -- setup objects for MusicPlayer
             mp_Stop = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj); // image,scale
@@ -288,6 +292,9 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                // mRotating = 0;
                 pX = savedState.getDouble(KEY_X);
                 pY = savedState.getDouble(KEY_Y);
+                EegLauncherFlag = savedState.getBoolean(KEY_EEG);
+                DnaConsoleFlag = savedState.getBoolean(KEY_DNA);
+                MusicPlayerFlag = savedState.getBoolean(KEY_MP);
             }
         }
 
@@ -324,6 +331,9 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                 if (map != null) {
                     map.putDouble(KEY_X, Double.valueOf(pX));
                     map.putDouble(KEY_Y, Double.valueOf(pY));
+                    map.putBoolean(KEY_EEG, Boolean.valueOf(EegLauncherFlag));
+                    map.putBoolean(KEY_DNA, Boolean.valueOf(DnaConsoleFlag));
+                    map.putBoolean(KEY_MP , Boolean.valueOf(MusicPlayerFlag));
                 }
             }
             return map;
@@ -412,8 +422,8 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                 CharSequence str ="";
                 if (mMode == STATE_RUNNING) {
                 	str =  "";
-                	//+ "delta = "+ delta + "  \n "
-                	//+ "curr_alpha_obj1 = "+ String.valueOf(curr_alpha_obj1) + "  \n "
+                	//+ "CursorI = "+ delta + "  \n "
+                	//+ "CursorI = "+ String.valueOf(CursorI) + "  \n ";
                 	//+ "curr_alpha_obj2 = "+ String.valueOf(curr_alpha_obj2) + "  \n "
                 	//+ "curr_alpha_obj3 = "+ String.valueOf(curr_alpha_obj3) + "  \n ";
                 	
@@ -477,29 +487,28 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             BackGr_Image.draw(canvas);        
             canvas.restore();   
                     
+            LeftBoarderIcon.drawTo(canvas);  RigthBoarderIcon.drawTo(canvas); 
             
             if (EegLauncherFlag == true){
             	LauncherMusicPlayer.drawTo(canvas); LauncherDnaConsole.drawTo(canvas); 
-            	LauncherCamera.drawTo(canvas); LauncherGoogle.drawTo(canvas);
-            	LauncherMusicPlayerD.drawTo(canvas); LauncherDnaConsoleD.drawTo(canvas); 
-            	LauncherCameraD.drawTo(canvas); LauncherGoogleD.drawTo(canvas);
+            	LauncherCamera.drawTo(canvas); //LauncherGoogle.drawTo(canvas);
+            //	LauncherMusicPlayerD.drawTo(canvas); LauncherDnaConsoleD.drawTo(canvas); LauncherCameraD.drawTo(canvas); LauncherGoogleD.drawTo(canvas);
             }
             	
             if (MusicPlayerFlag == true){
-            	if (play_flag == false){ mp_Play.drawTo(canvas); mp_PlayD.drawTo(canvas); }
-            	if (play_flag == true){ mp_Stop.drawTo(canvas); mp_StopD.drawTo(canvas);}
-	            mp_Next.drawTo(canvas); mp_NextD.drawTo(canvas);
-	            mp_Vol.drawTo(canvas);  mp_VolD.drawTo(canvas); 
-	            mp_Back.drawTo(canvas); mp_BackD.drawTo(canvas);
+            	if (play_flag == false){ mp_Play.drawTo(canvas); }
+            	if (play_flag == true) { mp_Stop.drawTo(canvas); }
+	            mp_Next.drawTo(canvas); //mp_NextD.drawTo(canvas);
+	           // mp_Vol.drawTo(canvas);  mp_VolD.drawTo(canvas);  mp_Back.drawTo(canvas); mp_BackD.drawTo(canvas);
 	            
 	            // -- display icon that was selected
-	            if (CursorI>0){
+	          /*  if (CursorI>0){
 	            	IconBlack.drawTo(canvas);
 		            if (sel_action_i==1){IconPlay.drawTo(canvas);}
 		            if (sel_action_i==2){IconStop.drawTo(canvas);}
 		            if (sel_action_i==3){IconSkip.drawTo(canvas);}	
 		            if (sel_action_i==4){IconVol.drawTo(canvas);}	
-	            }
+	            }*/
             }
          
             if (DnaConsoleFlag == true){
@@ -533,8 +542,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	                        
             }
             
-            SelectedIcon.drawTo(canvas);  
-            
+            SelectedIcon.drawTo(canvas);             
             
             
     }
@@ -592,7 +600,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             if (CursorI == 0 && accel_alpha>0.5f) {CursorI = 1; }
               
               // -- define position of 8 objects
-            if (EegLauncherFlag == false){
+           /* if (EegLauncherFlag == false && MusicPlayerFlag == false){
             curr_alpha_obj1 = alpha; curr_alpha_obj2 = alpha + 180;
             curr_alpha_obj3 = alpha + 90;  curr_alpha_obj4 = alpha + 270;
             curr_alpha_obj5 = alpha + 45;  curr_alpha_obj6 = alpha + 135;
@@ -606,17 +614,29 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             if (curr_alpha_obj6 > 360) {curr_alpha_obj6=curr_alpha_obj6 - 360;}
             if (curr_alpha_obj7 > 360) {curr_alpha_obj7=curr_alpha_obj7 - 360;}
             if (curr_alpha_obj8 > 360) {curr_alpha_obj8=curr_alpha_obj8 - 360;}
-            }              
+            }   */           
+            
             SelectedIcon.setScale(0f); 
+            
+            if (EegLauncherFlag == true) {EEG_launcher_N = 3; }
+            if (MusicPlayerFlag == true) {EEG_launcher_N = 2; }
+            if (DnaConsoleFlag == true)  {EEG_launcher_N = 4; }
+            delta = 360/EEG_launcher_N;
+            curr_alpha_obj1 = alpha; curr_alpha_obj2 = alpha + delta; 
+            curr_alpha_obj3 = alpha + 2*delta; curr_alpha_obj4 = alpha + 3*delta;
+
+            
+            if (curr_alpha_obj1 > 360) {curr_alpha_obj1=curr_alpha_obj1 - 360;}
+            if (curr_alpha_obj2 > 360) {curr_alpha_obj2=curr_alpha_obj2 - 360;}
+            if (curr_alpha_obj3 > 360) {curr_alpha_obj3=curr_alpha_obj3 - 360;}
+            if (curr_alpha_obj4 > 360) {curr_alpha_obj4=curr_alpha_obj4 - 360;}
+            
+            LeftBoarderIcon.updatePhysics(delta/2, 360 - delta/2, CircleRadius, pX, pY);
+            RigthBoarderIcon.updatePhysics(-delta/2, delta/2, CircleRadius, pX, pY);
             
             /* -- ======EEG Launcher===== -- */
             if (EegLauncherFlag == true){
-                
-                curr_alpha_obj1 = alpha; curr_alpha_obj2 = alpha + delta; curr_alpha_obj3 = alpha + 2*delta;
-                if (curr_alpha_obj1 > 360) {curr_alpha_obj1=curr_alpha_obj1 - 360;}
-                if (curr_alpha_obj2 > 360) {curr_alpha_obj2=curr_alpha_obj2 - 360;}
-                if (curr_alpha_obj3 > 360) {curr_alpha_obj3=curr_alpha_obj3 - 360;}
-                
+                                
 	            float[] alpha_rot = new float[] {0.0f, 0.0f, 0.8f, 0.8f, 1f, 0.9f };  Random rs1 =new Random();
 	            LauncherMusicPlayer.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY); LauncherMusicPlayer.setScale(scale_obj);          
 	            LauncherDnaConsole.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj1, CircleRadius, pX, pY);  LauncherDnaConsole.setScale(scale_obj);     
@@ -668,263 +688,159 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            		msgBoard = "prtscr";
 		           	}         
 	            	            			            	
-	            	flag_Cursor = false;            	
+	            	flag_Cursor = false;      
+	            	//MusicPlayerFlag = false; EegLauncherFlag = false; DnaConsoleFlag = true;	
 	
 	            }
             }
             /* -- ======END EEG Launcher===== -- */
     
             
-            
-            /* -- ======EEG Launcher===== -- */
-            /*if (EegLauncherFlag == true){
-	            float[] alpha_rot = new float[] {0.0f, 0.0f, 0.8f, 0.8f, 1f, 0.9f };  Random rs1 =new Random();
-	            LauncherMusicPlayer.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj8, CircleRadius, pX, pY); 
-	            	LauncherMusicPlayer.setScale(scale_obj);          
-	            LauncherDnaConsole.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj2, CircleRadius, pX, pY); 
-	            	LauncherDnaConsole.setScale(scale_obj);     
-	            LauncherCamera.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj6, CircleRadius, pX, pY); 
-	            	LauncherCamera.setScale(scale_obj); 
-	            LauncherGoogle.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj5, CircleRadius, pX, pY); 
-		           	LauncherGoogle.setScale(scale_obj); 
-		           	//---D
-		        LauncherMusicPlayerD.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj4, CircleRadius, pX, pY); 
-	            	LauncherMusicPlayerD.setScale(scale_obj);          
-	            LauncherDnaConsoleD.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj7, CircleRadius, pX, pY); 
-	            	LauncherDnaConsoleD.setScale(scale_obj);     
-	            LauncherCameraD.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY); 
-	            	LauncherCameraD.setScale(scale_obj); 
-	            LauncherGoogleD.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY); 
-		           	LauncherGoogleD.setScale(scale_obj); 
-                             
-	           float lb = 337.5f; float rb = 22.5f;  
-	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
-	            	
-	            	// -- Console
-	            	if (curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb){ 
-	            		EegLauncherFlag = false; DnaConsoleFlag = true;		
-	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
-	            		Prtscr_flag = true;
-	            	} 
-	            	if (curr_alpha_obj7 >= lb || curr_alpha_obj7 <= rb){ 
-	            		EegLauncherFlag = false; DnaConsoleFlag = true;
-	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
-	            		Prtscr_flag = true;
-	            	} 
-	            		            	
-	            	// -- MusicPlayer
-	            	if (curr_alpha_obj8 >= lb || curr_alpha_obj8 <= rb){ 
-	            		MusicPlayerFlag = true; EegLauncherFlag = false;
-	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
-	            		Prtscr_flag = true;
-	            	}	            	
-	            	if (curr_alpha_obj4 >= lb || curr_alpha_obj4 <= rb){
-	            		MusicPlayerFlag = true; EegLauncherFlag = false;
-	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
-	            		Prtscr_flag = true;
-	            	} 
-	            	
-	            	// -- Camera
-	            	if (curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb){  	
-	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
-	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
-	            		Prtscr_flag = true;
-		           	}           
-	            	if (curr_alpha_obj6 >= lb || curr_alpha_obj6 <= rb){  	
-	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
-	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
-	            		Prtscr_flag = true;
-		           	} 
-	            	
-	            	// -- Google
-	            	if (curr_alpha_obj5 >= lb || curr_alpha_obj5 <= rb){  	
-	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
-	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
-	            		Prtscr_flag = true;
-		           	}           
-	            	if (curr_alpha_obj1 >= lb || curr_alpha_obj1 <= rb){  
-	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
-	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
-	            		Prtscr_flag = true;
-		           	} 
-	            		
-	            	
-	            	flag_Cursor = false;            	
-	
-	            }
-            }*/
-            /* -- ======END EEG Launcher===== -- */
-          
-            
             /* -- ======MusicPlayer===== -- */
             if (MusicPlayerFlag == true){
 	            float[] alpha_rot = new float[] {0.0f, 0.0f, 0.8f, 0.8f, 1f, 0.9f };  Random rs1 =new Random();
 	            if (play_flag == true){
-	            	mp_Stop.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY); mp_Stop.setScale(scale_obj);          
-	            	mp_StopD.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj6, CircleRadius, pX, pY);  mp_StopD.setScale(scale_obj);             
+	            	mp_Stop.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY); mp_Stop.setScale(scale_obj);          
 	            }
 	            if (play_flag == false){
-	            	mp_Play.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj2, CircleRadius, pX, pY);  mp_Play.setScale(scale_obj);     
-	            	mp_PlayD.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj6, CircleRadius, pX, pY); mp_PlayD.setScale(scale_obj);
+	            	mp_Play.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj1, CircleRadius, pX, pY);  mp_Play.setScale(scale_obj);     
 	            }
-	            mp_Next.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj5, CircleRadius, pX, pY);   mp_Next.setScale(scale_obj);
-	            mp_NextD.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj3, CircleRadius, pX, pY);   mp_NextD.setScale(scale_obj);
-	            mp_Vol.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj7, CircleRadius, pX, pY);   mp_Vol.setScale(scale_obj);
-	            mp_VolD.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj4, CircleRadius, pX, pY);   mp_VolD.setScale(scale_obj);
-	            mp_Back.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj8, CircleRadius, pX, pY);   mp_Back.setScale(scale_obj);
-	            mp_BackD.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj1, CircleRadius, pX, pY);   mp_BackD.setScale(scale_obj);
+	            mp_Next.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY);   mp_Next.setScale(scale_obj);                       
+               
+	            // -- set coordinates of Icon SelectedIcon  
+	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<3){ 
+	            	SelectedIcon.setScale(scale_obj*1.4f);
+	            	
+	            	// -- play / stop
+	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 
+	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY); 
+	            	}            		            	
+	            	// -- play next
+	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
+	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY); 
+	            	}           	            	                  	
+	
+	            }
 	                             
-	            float lb = 337.5f; float rb = 22.5f;  
-	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
-	            	// -- play
-	            	if (curr_alpha_obj6 >= lb || curr_alpha_obj6 <= rb){ 	            		
-	            		//IconPlay.updateDNA(CursorX, (int)(BackGr_H/2f - BackGr_W/2)-2*CursorR);
-	            		if (play_flag == false)	{ play_flag = true; stop_flag = false; sel_action_i = 1; }
-	            		else          			{ play_flag = false; stop_flag = true; sel_action_i = 2; }
-	            	}            	
-	            	if (curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb){ 
-	            		sel_action_i = 2; 
-	            		//IconPlay.updateDNA(CursorX, (int)(BackGr_H/2f - BackGr_W/2)-2*CursorR);
-	            		if (play_flag == false) { play_flag = true; stop_flag = false; sel_action_i = 1; }
-	            		else       				{ play_flag = false; stop_flag = true; sel_action_i = 2; }           		
+	            // -- manage what was selected  
+	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){            	
+           	
+	            	// -- play / stop
+	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 
+	            		if (play_flag == false)	{ play_flag = true; stop_flag = false; sel_action_i = 1; msgBoard = "play";}
+	            		else          			{ play_flag = false; stop_flag = true; sel_action_i = 2; msgBoard = "stop";}	            		
 	            	} 
 	            		            	
-	            	// -- next
-	            	if (curr_alpha_obj5 >= lb || curr_alpha_obj5 <= rb){ 	            		
-		            	//IconStop.updateDNA(CursorX, (int)(BackGr_H/2f - BackGr_W/2)-2*CursorR);
-	            		next_flag = true; play_flag = true; stop_flag = false; sel_action_i = 3;  
-	            	}            	
-	            	if (curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb){  
-		            	//IconStop.updateDNA(CursorX, (int)(BackGr_H/2f - BackGr_W/2)-2*CursorR);
-	            		next_flag = true; play_flag = true; stop_flag = false; sel_action_i = 3; 
-	            	}       
-	            	
-	            	// -- back
-	            	if (curr_alpha_obj1 >= lb || curr_alpha_obj1 <= rb){ 
-	            		stop_flag = true; MusicPlayerFlag = false; EegLauncherFlag = true; 
-	            	}
-	            	if (curr_alpha_obj8 >= lb || curr_alpha_obj8 <= rb){  
-		            	//back_flag = true;
-	            		stop_flag = true; MusicPlayerFlag = false; EegLauncherFlag = true; 
-	            	}
-	            	     
-	            	// -- volume
-	            	if (curr_alpha_obj7 >= lb || curr_alpha_obj7 <= rb){ 
-	            		sel_action_i = 4;
-	            		//if (play_flag == false) { play_flag = true; stop_flag = false; }
-	            		//else      				{ play_flag = false; stop_flag = true; }
-	            	}            	
-	            	if (curr_alpha_obj4 >= lb || curr_alpha_obj4 <= rb){
-	            		sel_action_i = 4;
-	            		//if (play_flag == false) { play_flag = true; stop_flag = false; }
-	            		//else      				{ play_flag = false; stop_flag = true; }
-	            	}            	    
-	            	
-	            	flag_Cursor = false;
-	            	// -- for testing only
-            		//DnaConsoleFlag = false; EegLauncherFlag = true;   		back_flag = true;
+	            	// -- play next
+	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
+	            		next_flag = true; play_flag = true; stop_flag = false; sel_action_i = 3; 	msgBoard = "play next";
+	            	}	            	
+	            	                  	            			            	
+	            	flag_Cursor = false;            	
+	
+            		MusicPlayerFlag = false; EegLauncherFlag = true;
 	            }
             }
-            /* -- ======END MusicPlayer===== -- */
-         
+            /* -- ======END MusicPlayer===== -- */          
+                  
+            
+   
             /* -- ======DNA Console===== -- */
             if (DnaConsoleFlag == true){
 	            float[] alpha_rot = new float[] {0.0f, 0.0f, 0.8f, 0.8f, 1f, 0.9f }; Random rs1 =new Random();
-	            DnaConsole_T.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY);
-	            DnaConsole_rigth.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj2, CircleRadius, pX, pY);        
-	            DnaConsole_C.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY);                
-	            DnaConsole_Back.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj4, CircleRadius, pX, pY);
-	            DnaConsole_G.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj5, CircleRadius, pX, pY);
-	            DnaConsole_left.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj6, CircleRadius, pX, pY);
-	            DnaConsole_Cancel.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj7, CircleRadius, pX, pY);            
-	            DnaConsole_A.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj8, CircleRadius, pX, pY);
+	            DnaConsole_T.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY);       
+	            DnaConsole_C.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY);    
+	            DnaConsole_G.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj4, CircleRadius, pX, pY);          
+	            DnaConsole_A.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj1, CircleRadius, pX, pY);
 	            	            
 	            DnaConsole_T.setScale(scale_obj); DnaConsole_rigth.setScale(scale_obj);
 	            DnaConsole_C.setScale(scale_obj); DnaConsole_Back.setScale(scale_obj); 		
 	            DnaConsole_G.setScale(scale_obj); DnaConsole_left.setScale(scale_obj);
 	            DnaConsole_Cancel.setScale(scale_obj); DnaConsole_A.setScale(scale_obj);
 	            
-	            /* -- =========== -- */
-	            CursorX_delta = CursorR;
+	            // -- set coordinates of Icon SelectedIcon  
+	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<3){ 
+	            	SelectedIcon.setScale(scale_obj*1.4f);
+	            	
+	            	// -- A
+	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 
+	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY); 
+	            	}            		            	
+	            	// -- C
+	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
+	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY); 
+	            	}           	            	
+	            	// -- T
+	            	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
+	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY); 
+		           	} 
+	            	// -- G
+	            	if (curr_alpha_obj4 > 360 - delta/2  ||  curr_alpha_obj4 <= delta/2){
+	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj4, CircleRadius, pX, pY); 
+		           	} 
+	
+	            }
+	            
+	            // -- manage what was selected 
+	            CursorX_delta = CursorR; float scale_k = 1; 
 	            CursorY = (float) (pY - CircleRadius/2f + CursorR/2f);
-	            float lb = 337.5f; float rb = 22.5f; float scale_k = 1; 
+	            	             
 	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
 	            	ObjectCursorDel.updateDNA(CursorX, pY-CursorY_delta-2*CursorR);  // -- delete old cursor position
 	            	
-	            	if (curr_alpha_obj1 >= lb || curr_alpha_obj1 <= rb){ // -- T
-	            		DnaConsole_T.updatePhysics(alpha_rot[rs1.nextInt(2)], alpha + 0, 0, pX, pY);
-	            		DnaConsole_T.setScale(scale_k * scale_obj); 
-	            		if(CursorI!=console_length){
-		            		sel_action_i = 1;  flag_Cursor = false; ObjectT.updateDNA(CursorX, CursorY);
-		            		console_str[CursorI-1] = "T";
-		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
-	            		}
-	            	}
-	            	if (curr_alpha_obj5 >= lb || curr_alpha_obj5 <= rb){ // -- G
-	            		DnaConsole_G.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-	            		DnaConsole_G.setScale(scale_k * scale_obj); 
-	            		if(CursorI!=console_length){
-		            		sel_action_i = 2; flag_Cursor = false; ObjectG.updateDNA(CursorX, CursorY);
-		            		console_str[CursorI-1] = "G";
-		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
-	            		}
-	            	}            	
-	            	if (curr_alpha_obj3 >= lb || curr_alpha_obj3 <= rb){  // -- C
-	            		DnaConsole_C.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-	            		DnaConsole_C.setScale(scale_k *  scale_obj); 
-	            		if(CursorI!=console_length){
-		            		sel_action_i = 3; flag_Cursor = false; ObjectC.updateDNA(CursorX, CursorY);
-		            		console_str[CursorI-1] = "C";
-		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
-	            		}
-	            	}            	
-	            	if (curr_alpha_obj8 >= lb || curr_alpha_obj8 <= rb){  // -- A
-	            		DnaConsole_A.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-	            		DnaConsole_A.setScale(scale_k * scale_obj); 
+	            	// -- A
+	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 
+	            		//EegLauncherFlag = false; DnaConsoleFlag = true;		
 	            		if(CursorI!=console_length){
 		            		sel_action_i = 4; flag_Cursor = false; ObjectA.updateDNA(CursorX, CursorY);
 		            		console_str[CursorI-1] = "A";
 		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 		            	}
-	            	}
-	            	
-	            	if (curr_alpha_obj6 >= lb || curr_alpha_obj6 <= rb){ // -- hash - move cursor left
-	            		if(CursorI>=2){  // -- moving cursor left not working if cursor at 1st position
-		             		sel_action_i = 0;   flag_Cursor = false; CursorI=CursorI-1;
-		             		CursorX=CursorX-CursorX_delta;           		
-		            		DnaConsole_left.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-		            		DnaConsole_left.setScale(scale_k * scale_obj);
-	            		}
-	            	}            	
-	            	if (curr_alpha_obj2 >= lb || curr_alpha_obj2 <= rb){ // -- move cursor right
+	            		msgBoard = "A";
+	            	} 
+	            		            	
+	            	// -- C
+	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
 	            		if(CursorI!=console_length){
-		            		sel_action_i = 0; flag_Cursor = false; CursorI=CursorI+1;
-		            		CursorX=CursorX+CursorX_delta; 		            		
-		            		DnaConsole_rigth.updatePhysics(alpha_rot[rs1.nextInt(1)], alpha + 45, 0, pX, pY);
-		            		DnaConsole_rigth.setScale(scale_k * scale_obj);
-		            	}
-	            	}            	
-	            	// -- submit button
-	            	if (curr_alpha_obj7 >= lb || curr_alpha_obj7 <= rb){ 
-	            		if(CursorI>=1){  // -- submit not working if cursor at 1st position
-		             		flag_Cursor = false;
-		             		console_str_action = console_str[0] + console_str[1] + console_str[2];
-		             		console_str[0] = "-"; console_str[1] = "-"; console_str[2] = "-"; console_str[3] = "-";
-		             		CursorX = (float) pX - CursorR; CursorI = 1;
-		             		flag_submit = true;
+		            		sel_action_i = 3; flag_Cursor = false; ObjectC.updateDNA(CursorX, CursorY);
+		            		console_str[CursorI-1] = "C";
+		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 	            		}
-	            	}            	
-	            	if (curr_alpha_obj4 >= lb || curr_alpha_obj4 <= rb){ // --inf - submit and clear if cursor at position 7
-	            		DnaConsoleFlag = false; EegLauncherFlag = true;
-	            		//back_flag = true;         		
-	            	}            	
+	            		msgBoard = "C";
+	            	}	            	
 	            	
-	            	if(CursorI<console_length){ ObjectCursor.updateDNA(CursorX, CursorY + CursorR/2f);    }     
+	            	// -- T
+	            	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
+	            		if(CursorI!=console_length){
+		            		sel_action_i = 1;  flag_Cursor = false; ObjectT.updateDNA(CursorX, CursorY);
+		            		console_str[CursorI-1] = "T";
+		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
+	            		}
+	            		msgBoard = "T";
+		           	}  
 	            	
-	            	flag_Cursor = false;
-	            	// -- for testing only
-            		//DnaConsoleFlag = false; EegLauncherFlag = true;   		back_flag = true;
-	            } 
+	            	// -- G
+	            	if (curr_alpha_obj4 > 360 - delta/2  ||  curr_alpha_obj4 <= delta/2){
+	            		if(CursorI!=console_length){
+		            		sel_action_i = 2; flag_Cursor = false; ObjectG.updateDNA(CursorX, CursorY);
+		            		console_str[CursorI-1] = "G";
+		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
+	            		}
+	            		msgBoard = "G";
+		           	}  
+	            	
+            		if(CursorI == 4){
+            			console_str_action = console_str[0] + console_str[1] + console_str[2];
+	             		console_str[0] = "-"; console_str[1] = "-"; console_str[2] = "-"; console_str[3] = "-";
+	             		
+            			msgBoard = console_str_action;
+            			EegLauncherFlag = true; DnaConsoleFlag = false; CursorI = 1;
+            		}
+	            	            			            	
+	            	flag_Cursor = false;      
+	            	//MusicPlayerFlag = true; EegLauncherFlag = false; DnaConsoleFlag = false;	
+	            }
+	            	
             }
             /* -- ======END DNA Console===== -- */
             
