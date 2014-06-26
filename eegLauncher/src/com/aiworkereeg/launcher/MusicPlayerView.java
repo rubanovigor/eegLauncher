@@ -687,7 +687,8 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            		Prtscr_flag = true;
 	            		msgBoard = "prtscr";
 		           	}         
-	            	            			            	
+	            	    
+	            	
 	            	flag_Cursor = false;      
 	            	//MusicPlayerFlag = false; EegLauncherFlag = false; DnaConsoleFlag = true;	
 	

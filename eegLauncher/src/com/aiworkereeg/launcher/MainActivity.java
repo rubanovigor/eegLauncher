@@ -15,9 +15,18 @@ import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
+import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera.Parameters;
+import android.hardware.Camera;
+import android.hardware.Camera.PictureCallback;
+import android.hardware.Camera.ShutterCallback;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,8 +40,11 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,7 +61,8 @@ import com.neurosky.thinkgear.TGEegPower;
 import com.neurosky.thinkgear.TGRawMulti;
 
 
-public class MainActivity extends Activity {
+
+public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	
 	private BluetoothAdapter bluetoothAdapter;
 	TGDevice tgDevice;
@@ -69,6 +82,14 @@ public class MainActivity extends Activity {
     final int ActivityTwoRequestCode = 0;
     Bitmap myBitmap;
     
+    // -- camera 
+    Camera camera;
+    SurfaceView surfaceView;
+    SurfaceHolder surfaceHolder;
+    boolean previewing = false;
+    LayoutInflater controlInflater = null;
+    private boolean flag_camera = true; 
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -84,7 +105,8 @@ public class MainActivity extends Activity {
     	
         // get handles to the GlassView from XML, and its GlassThread
         //mGlassView = (GlassView) findViewById(R.id.lunar);
-        //mGlassThread = mGlassView.getThread();
+        //mGlassThread = mGlassView.getThread();         
+        
         
         mMusicPlayerView = (MusicPlayerView) findViewById(R.id.lunar);
         mMusicPlayerThread = mMusicPlayerView.getThread();
@@ -133,47 +155,79 @@ public class MainActivity extends Activity {
             //Toast.makeText(this, "Bluetooth is available ir", Toast.LENGTH_LONG).show();
             doStuff();
         }	
-              
+         
+       // doCameraShot();
+
+       // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         
+        getWindow().setFormat(PixelFormat.UNKNOWN);
+        surfaceView = (SurfaceView)findViewById(R.id.camerapreview);
+        surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(this);
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        
+        //controlInflater = LayoutInflater.from(getBaseContext());
+       // View viewControl = controlInflater.inflate(R.layout.control, null);
+       // LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, 	LayoutParams.FILL_PARENT);
+       // this.addContentView(viewControl, layoutParamsControl);
+        
+      /*  Button buttonTakePicture = (Button)findViewById(R.id.takepicture);
+        buttonTakePicture.setOnClickListener(new Button.OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				camera.takePicture(myShutterCallback, myPictureCallback_RAW, myPictureCallback_JPG);
+			}});*/
+
+               
 	}
 
 
     	/** Invoked when the Activity loses user focus.    */
     @Override
-    	protected void onPause() {
+    protected void onPause() {
+
+    
         super.onPause();
         mMusicPlayerView.getThread().pause(); // pause game when Activity pauses
         mMusicPlayerView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir          
     }
-	    @Override
-	    public void onDestroy() {    	
+	
+    @Override
+	public void onDestroy() {    	
 	        tgDevice.close();        
 	        super.onDestroy();       
-	    }
+	}
 	    
-	    @Override
-	    protected void onStop() {       
+	@Override
+	protected void onStop() {       
 	        super.onStop();  // Always call the superclass method first	       
-	    }
+	}
 	
 	    /**
 	     * Notification that something is about to happen, to give the Activity a
 	     * chance to save state.
 	     * * @param outState a Bundle into which this Activity should save its state
 	     */
-	    @Override
-	    protected void onSaveInstanceState(Bundle outState) {
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
 	        // just have the View's thread save its state into our Bundle
 	        super.onSaveInstanceState(outState);
 	       // mGlassThread.saveState(outState);
-	    }
+	}
 	    //=======================================
-	    public void doStuff() {
+	public void doStuff() {
 	        //Toast.makeText(this, "connecting...", Toast.LENGTH_SHORT).show();
 	        if (tgDevice.getState() != TGDevice.STATE_CONNECTING && tgDevice.getState() != TGDevice.STATE_CONNECTED) {
 	            tgDevice.connect(RAW_ENABLED);
 	        }
-	    }
+	}
+	    
+	public void doCameraShot() {	  
+	}
+	  
+	  
 	    
 	    // -- save bitmap of screenshot
 	    public void saveBitmap(Bitmap bitmap) {
@@ -242,6 +296,9 @@ public class MainActivity extends Activity {
 	                    case TGDevice.STATE_NOT_FOUND:
 	                    	//mGlassThread.setTGStatus("Can't find");
 	                    	tv_T1.setText("Can't find");
+	                    	if (flag_camera){
+	                    		doCameraShot(); flag_camera = false;
+	                    	}
 	                        break;
 	                    case TGDevice.STATE_NOT_PAIRED:
 	                    	//mGlassThread.setTGStatus("not paired");
@@ -267,6 +324,9 @@ public class MainActivity extends Activity {
 	                    // First send Attention data to the backend in async way
 	                    //APIClient.postData(null, "attention", String.valueOf(msg.arg1), null);
 
+	                	//Log.e(getString(R.string.app_name), "camera.takePicture()");  
+	                	
+	 	               
 	                    At = msg.arg1;         
 	                    tv_A.setText(String.valueOf(At));
 	                    mMusicPlayerThread.setAttention(At);
@@ -297,16 +357,20 @@ public class MainActivity extends Activity {
 	                    
 	                    if (mMusicPlayerView.getThread().Prtscr_flag == true)
         				{ 
-	  	                  		
-		                    View v1 = findViewById(android.R.id.content).getRootView() ; //this works too but gives only content
+	                    	camera.takePicture(myShutterCallback, myPictureCallback_RAW, myPictureCallback_JPG);
+
+		                   /* View v1 = findViewById(android.R.id.content).getRootView() ; //this works too but gives only content
 		                   // View v1 = getWindow().getDecorView().getRootView();
 	                    	v1.setDrawingCacheEnabled(true);
 		                    myBitmap = v1.getDrawingCache();
-		                    saveBitmap(myBitmap);
-                    	 mMusicPlayerView.getThread().Prtscr_flag = false;
+		                    saveBitmap(myBitmap);*/
+	                    	
+	                    	mMusicPlayerView.getThread().Prtscr_flag = false;
         				// onBackPressed();
         				}
-
+	                    if (mMusicPlayerView.getThread().MusicPlayerFlag == true) { camera.stopPreview(); previewing = false;}
+	                    if (mMusicPlayerView.getThread().DnaConsoleFlag == true) {camera.stopPreview(); previewing = false;}
+	                    if (mMusicPlayerView.getThread().MusicPlayerFlag == false) { previewing = true;}
 	                    
 	                    	// -- display velocity based on accel_alpha [0..2.5]
 	                    float vel = mMusicPlayerView.getThread().accel_alpha;
@@ -491,5 +555,76 @@ public class MainActivity extends Activity {
 
 	            }
 	        };
-	   
+	        
+	    /* Handles messages from Camera */
+	        ShutterCallback myShutterCallback = new ShutterCallback(){
+
+	    		@Override
+	    		public void onShutter() {
+	    			// TODO Auto-generated method stub
+	    			
+	    		}};
+	    		
+	    	PictureCallback myPictureCallback_RAW = new PictureCallback(){
+
+	    		@Override
+	    		public void onPictureTaken(byte[] arg0, Camera arg1) {
+	    			// TODO Auto-generated method stub
+	    			
+	    		}};
+	    		
+	    	PictureCallback myPictureCallback_JPG = new PictureCallback(){
+
+	    	@Override
+	    	public void onPictureTaken(byte[] arg0, Camera arg1) {
+	    			// TODO Auto-generated method stub
+	    		Bitmap bitmapPicture = BitmapFactory.decodeByteArray(arg0, 0, arg0.length);
+	    		
+	    		Log.e(getString(R.string.app_name), "camera bitmapPicture");
+	    		try {
+					camera.setPreviewDisplay(surfaceHolder);
+					camera.startPreview();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				previewing = true;
+	    	}};
+
+	    	@Override
+	    	public void surfaceChanged(SurfaceHolder holder, int format, int width,	int height) {
+	    		// TODO Auto-generated method stub
+	    		if(previewing){
+	    			camera.stopPreview();
+	    			previewing = false;
+	    		}
+	    		
+	    		if (camera != null){
+	    			try {
+	    				camera.setPreviewDisplay(surfaceHolder);
+	    				camera.startPreview();
+	    				previewing = true;
+	    			} catch (IOException e) {
+	    				// TODO Auto-generated catch block
+	    				e.printStackTrace();
+	    			}
+	    		}
+	    	}
+
+	    	@Override
+	    	public void surfaceCreated(SurfaceHolder holder) {
+	    		// TODO Auto-generated method stub
+	    		camera = Camera.open();
+	    	}
+
+	    	@Override
+	    	public void surfaceDestroyed(SurfaceHolder holder) {
+	    		// TODO Auto-generated method stub
+	    		camera.stopPreview();
+	    		camera.release();
+	    		camera = null;
+	    		previewing = false;
+	    	}
+
 }
