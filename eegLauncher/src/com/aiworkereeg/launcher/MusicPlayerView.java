@@ -33,9 +33,12 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	float RR; float ZZ;
     	String GameMode="b"; String msgBoard=""; int EEG_launcher_N = 3; int delta = 360/EEG_launcher_N; 
     	String flag; 
-    	boolean play_flag = false; boolean stop_flag = false; boolean back_flag = false; boolean next_flag = false;
-    	boolean Prtscr_flag = false;
-    	boolean EegLauncherFlag = true;	boolean MusicPlayerFlag = false; boolean DnaConsoleFlag = false;
+    	boolean play_flag = false; boolean stop_flag = false; boolean back_flag = false;
+    	boolean next_flag = false; 	boolean Prtscr_flag = false; boolean Picture_flag = false;
+    	
+    	boolean EegLauncherFlag = true;	boolean MusicPlayerFlag = false;
+    	boolean DnaConsoleFlag = false; boolean CameraFlag = false;
+    	
     	boolean action_cancel_flag = false;
     	String s6 = "6s";
         int At = 50; int Med = 50;   int ApM = 100;    int AmM = 0; 
@@ -83,7 +86,9 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         private SkyBody ObjectA; private SkyBody ObjectC; private SkyBody ObjectT; private SkyBody ObjectG;
         private SkyBody ObjectSubmit; private SkyBody ObjectCursor; private SkyBody ObjectCursorDel; private SkyBody ObjectClear; 
         
-        
+        // -- declare objects for EEG Launcher
+        private SkyBody CameraPicture; private SkyBody CameraVideo; private SkyBody CameraPrtScr; 
+        	
         private float StarR; private float CursorR;  private float R_Gr_sphere_C;  private float R_Gr_sphere_S; 
         //float Sl1_0; float Sl1_1; float Sl1_2; float Sl1_3; float Sl1_4; float Sl1_5;
         float Cx_lb_l1; float Cx_lt_l1; float Cx_rt_l1; float Cx_rb_l1;
@@ -208,7 +213,12 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             ObjectCursorDel = new SkyBody(res.getDrawable(R.drawable.p_black_10px), 0.8f); // image,scale
             ObjectClear = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj_console); // image,scale 
               
+            // -- setup objects for Camera layout
+            CameraPicture = new SkyBody(res.getDrawable(R.drawable.icon_camera), scale_obj);
+            CameraVideo = new SkyBody(res.getDrawable(R.drawable.icon_video), scale_obj);
+            CameraPrtScr = new SkyBody(res.getDrawable(R.drawable.icon_prtscr), scale_obj);
             
+              
             StarR = mp_Stop.getImageWidth()/2; // all stars has the same Radius
             StarR = StarR * scale_obj;  // adopt star size to screan using scale
             CursorR = ObjectCursor.getImageWidth()/2f;           
@@ -542,6 +552,10 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	                        
             }
             
+            if (CameraFlag == true){
+            	CameraPrtScr.drawTo(canvas); CameraVideo.drawTo(canvas); CameraPicture.drawTo(canvas); 
+            }
+            
             SelectedIcon.drawTo(canvas);             
             
             
@@ -621,6 +635,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             if (EegLauncherFlag == true) {EEG_launcher_N = 3; }
             if (MusicPlayerFlag == true) {EEG_launcher_N = 2; }
             if (DnaConsoleFlag == true)  {EEG_launcher_N = 4; }
+            if (CameraFlag == true) {EEG_launcher_N = 3; }
             delta = 360/EEG_launcher_N;
             curr_alpha_obj1 = alpha; curr_alpha_obj2 = alpha + delta; 
             curr_alpha_obj3 = alpha + 2*delta; curr_alpha_obj4 = alpha + 3*delta;
@@ -667,31 +682,27 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	// -- Console
 	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 
 	            		EegLauncherFlag = false; DnaConsoleFlag = true;		
-	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
-	            		//Prtscr_flag = true; 
 	            		msgBoard = "console";
 	            	} 
 	            		            	
 	            	// -- MusicPlayer
 	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
 	            		MusicPlayerFlag = true; EegLauncherFlag = false;
-	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
-	            		//Prtscr_flag = true;
 	            		msgBoard = "music";
 	            	}	            	
 	            	
 	            	// -- Camera
 	            	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
-	            		//MusicPlayerFlag = true; EegLauncherFlag = false;
-	            		//EegLauncherFlag = false; DnaConsoleFlag = true;
-	            		Prtscr_flag = true;
-	            		msgBoard = "prtscr";
+	            		CameraFlag = true; EegLauncherFlag = false;
+	            		msgBoard = "camera";
 		           	}         
-	            	    
+	            	                	
+	            	flag_Cursor = false;     
 	            	
-	            	flag_Cursor = false;      
+	            	// -- for testin only
+	            	//Prtscr_flag = true;
 	            	//MusicPlayerFlag = false; EegLauncherFlag = false; DnaConsoleFlag = true;	
-	
+	            	//CameraFlag = true; EegLauncherFlag = false;
 	            }
             }
             /* -- ======END EEG Launcher===== -- */
@@ -845,6 +856,62 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             }
             /* -- ======END DNA Console===== -- */
             
+            /* -- ======Camera===== -- */
+            if (CameraFlag == true){          
+	            float[] alpha_rot = new float[] {0.0f, 0.0f, 0.8f, 0.8f, 1f, 0.9f };  Random rs1 =new Random();
+	            CameraPicture.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY); CameraPicture.setScale(scale_obj);          
+	            CameraVideo.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj2, CircleRadius, pX, pY);  CameraVideo.setScale(scale_obj);     
+	            CameraPrtScr.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY); CameraPrtScr.setScale(scale_obj); 
+	            
+	            // -- set coordinates of Icon SelectedIcon  
+	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<3){ 
+	            	SelectedIcon.setScale(scale_obj*1.4f);
+	            	
+	            	// -- Console
+	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 
+	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY); 
+	            	}            		            	
+	            	// -- MusicPlayer
+	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
+	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY); 
+	            	}           	            	
+	            	// -- Camera
+	            	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
+	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY); 
+		           	}                   	
+	
+	            }
+	                             
+	            // -- manage what was selected  
+	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
+	            	
+	            	// -- picture
+	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 	            			
+	            		msgBoard = "picture was taken";
+	            		Picture_flag = true;
+	            	} 
+	            		            	
+	            	// -- video
+	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
+
+	            		msgBoard = "video in dev...";
+	            	}	            	
+	            	
+	            	// -- PrtScr
+	            	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
+	            		Prtscr_flag = true;
+	            		msgBoard = "screenshot was taken";
+		           	}         
+	            	    
+	            	
+	            	flag_Cursor = false;     
+	            	
+	            	EegLauncherFlag = true; CameraFlag = false;	
+	
+	            }
+            }
+            /* -- ======END Camera===== -- */
+    
             
             setState(STATE_RUNNING);  //set game status and update and print message
             

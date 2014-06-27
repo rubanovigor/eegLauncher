@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -117,7 +119,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         // give the GlassView a handle to the TextView used for messages
         mMusicPlayerView.setTextView((TextView) findViewById(R.id.text));
         
-        b = (Button) findViewById(R.id.b_RunDNAconsole);
+       // b = (Button) findViewById(R.id.b_RunDNAconsole);
         // give the GlassView a handle to the TextView used for messages
         tv_Att = (TextView) findViewById(R.id.Att_text);
         tv_Med = (TextView) findViewById(R.id.Med_text);
@@ -179,7 +181,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 				// TODO Auto-generated method stub
 				camera.takePicture(myShutterCallback, myPictureCallback_RAW, myPictureCallback_JPG);
 			}});*/
-
+      
                
 	}
 
@@ -223,17 +225,21 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	            tgDevice.connect(RAW_ENABLED);
 	        }
 	}
-	    
-	public void doCameraShot() {	  
-	}
-	  
-	  
+	      
 	    
 	    // -- save bitmap of screenshot
 	    public void saveBitmap(Bitmap bitmap) {
-	        String filePath = Environment.getExternalStorageDirectory()
-	                + File.separator + "Pictures/screenshot.png";
-	        File imagePath = new File(filePath);
+	     //   String filePath = Environment.getExternalStorageDirectory() + File.separator + "Pictures/screenshot.png";
+	       // File imagePath = new File(filePath);
+	        
+	        File pictureFileDir = getDir();
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyymmddhhmmss");
+    	    String date = dateFormat.format(new Date());
+    	    String photoFile = "eeg_scr" + date + ".png";
+
+    	    String filePath = pictureFileDir.getPath() + File.separator + photoFile;
+    	    File imagePath = new File(filePath);
+	        
 	        FileOutputStream fos;
 	        try {
 	            fos = new FileOutputStream(imagePath);
@@ -291,14 +297,17 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                        //mGlassThread.setTGStatus("Connected");
 	                        //mGlassThread.setGameMode(GameMode_str);
 	                        mMusicPlayerThread.doStart(); //start game
+	                       // flag_camera = true;
+	                      /*  camera.stopPreview();
+	                        camera.release();
+	        	    		camera = null;
+	        	    		previewing = false;*/
+	        	    		
 	                        //mGlassThread.doStart();
 	                        break;
 	                    case TGDevice.STATE_NOT_FOUND:
 	                    	//mGlassThread.setTGStatus("Can't find");
 	                    	tv_T1.setText("Can't find");
-	                    	if (flag_camera){
-	                    		doCameraShot(); flag_camera = false;
-	                    	}
 	                        break;
 	                    case TGDevice.STATE_NOT_PAIRED:
 	                    	//mGlassThread.setTGStatus("not paired");
@@ -355,22 +364,29 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
             				// onBackPressed();
             				} 
 	                    
-	                    if (mMusicPlayerView.getThread().Prtscr_flag == true)
-        				{ 
+	                    if (mMusicPlayerView.getThread().Picture_flag == true)
+        				{ 	                    	
 	                    	camera.takePicture(myShutterCallback, myPictureCallback_RAW, myPictureCallback_JPG);
-
-		                   /* View v1 = findViewById(android.R.id.content).getRootView() ; //this works too but gives only content
+	                    	
+	                    	mMusicPlayerView.getThread().Picture_flag = false;
+        				}
+	                    
+	                    if (mMusicPlayerView.getThread().Prtscr_flag == true)
+        				{ 	                    	
+		                    View v1 = findViewById(android.R.id.content).getRootView() ; //this works too but gives only content
 		                   // View v1 = getWindow().getDecorView().getRootView();
 	                    	v1.setDrawingCacheEnabled(true);
 		                    myBitmap = v1.getDrawingCache();
-		                    saveBitmap(myBitmap);*/
+		                    saveBitmap(myBitmap);
 	                    	
 	                    	mMusicPlayerView.getThread().Prtscr_flag = false;
         				// onBackPressed();
         				}
-	                    if (mMusicPlayerView.getThread().MusicPlayerFlag == true) { camera.stopPreview(); previewing = false;}
-	                    if (mMusicPlayerView.getThread().DnaConsoleFlag == true) {camera.stopPreview(); previewing = false;}
-	                    if (mMusicPlayerView.getThread().MusicPlayerFlag == false) { previewing = true;}
+	                    
+	                   // if (mMusicPlayerView.getThread().MusicPlayerFlag == true) { camera.stopPreview(); previewing = false;}
+	                   // if (mMusicPlayerView.getThread().DnaConsoleFlag == true) {camera.stopPreview(); previewing = false;}
+	                   // if (mMusicPlayerView.getThread().MusicPlayerFlag == false) { previewing = true;}
+	                   // if (mMusicPlayerView.getThread().DnaConsoleFlag == false) { previewing = true;}
 	                    
 	                    	// -- display velocity based on accel_alpha [0..2.5]
 	                    float vel = mMusicPlayerView.getThread().accel_alpha;
@@ -390,7 +406,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                    //if (mMusicPlayerView.getThread().action_cancel_flag){tv_TimeToSel.setText("cancel");}
 	                    if (tts < 3f &&  mMusicPlayerView.getThread().flag_Cursor) {
 	                    	tv_TimeToSel.setTextSize(36); tv_TimeToSel.setText(String.valueOf(Math.round(tts)) ); 
-	                    	mMusicPlayerView.getThread().msgBoard = "";}
+	                    	mMusicPlayerView.getThread().msgBoard = " ";}
 	                    else {
 	                    	tv_TimeToSel.setTextSize(15); tv_TimeToSel.setText(mMusicPlayerView.getThread().msgBoard);
 	                    	}
@@ -563,7 +579,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    		public void onShutter() {
 	    			// TODO Auto-generated method stub
 	    			
-	    		}};
+	    		}
+	    	};
 	    		
 	    	PictureCallback myPictureCallback_RAW = new PictureCallback(){
 
@@ -571,14 +588,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    		public void onPictureTaken(byte[] arg0, Camera arg1) {
 	    			// TODO Auto-generated method stub
 	    			
-	    		}};
+	    		}
+	    	};
 	    		
-	    	PictureCallback myPictureCallback_JPG = new PictureCallback(){
+	    PictureCallback myPictureCallback_JPG = new PictureCallback(){
 
 	    	@Override
 	    	public void onPictureTaken(byte[] arg0, Camera arg1) {
 	    			// TODO Auto-generated method stub
-	    		Bitmap bitmapPicture = BitmapFactory.decodeByteArray(arg0, 0, arg0.length);
+	    		//Bitmap bitmapPicture = BitmapFactory.decodeByteArray(arg0, 0, arg0.length);
 	    		
 	    		Log.e(getString(R.string.app_name), "camera bitmapPicture");
 	    		try {
@@ -590,8 +608,41 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 				}
 				
 				previewing = true;
-	    	}};
+				
+				// --- saving picture
+				File pictureFileDir = getDir();
+	    	    if (!pictureFileDir.exists() && !pictureFileDir.mkdirs()) {
+	    	      //Log.d(MakePhotoActivity.DEBUG_TAG, "Can't create directory to save image.");
+	    	     // Toast.makeText(context, "Can't create directory to save image.", Toast.LENGTH_LONG).show();
+	    	      return;
+	    	    }
+	    	    
+	    	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyymmddhhmmss");
+	    	    String date = dateFormat.format(new Date());
+	    	    String photoFile = "eeg_" + date + ".jpg";
 
+	    	    String filename = pictureFileDir.getPath() + File.separator + photoFile;
+
+	    	    File pictureFile = new File(filename);
+	    	    try {
+		    	      FileOutputStream fos = new FileOutputStream(pictureFile);
+		    	      fos.write(arg0);
+		    	      fos.close();
+		    	     // Toast.makeText(context, "New Image saved:" + photoFile,  Toast.LENGTH_LONG).show();
+		    	    } catch (Exception error) {
+		    	     // Log.d(MakePhotoActivity.DEBUG_TAG, "File" + filename + "not saved: "  + error.getMessage());
+		    	      //Toast.makeText(context, "Image could not be saved.", Toast.LENGTH_LONG).show();
+		    	    }
+	    	}
+	    };
+
+	    	  
+	        private File getDir() {
+	    	    File sdDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+	    	    return new File(sdDir, "eeg_picture");
+	        }
+	    	
+	    	
 	    	@Override
 	    	public void surfaceChanged(SurfaceHolder holder, int format, int width,	int height) {
 	    		// TODO Auto-generated method stub
@@ -615,7 +666,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    	@Override
 	    	public void surfaceCreated(SurfaceHolder holder) {
 	    		// TODO Auto-generated method stub
+	    		if(flag_camera ){
 	    		camera = Camera.open();
+	    		camera.setDisplayOrientation(90);
+	    		}
 	    	}
 
 	    	@Override
