@@ -34,7 +34,9 @@ class GlassView extends SurfaceView implements SurfaceHolder.Callback {
         int At = 50; int Med = 50;   int ApM = 100;    int AmM = 0;
         CharSequence TGStatus;
         float alpha = 0;  float alpha1_1=0;
-        float scale_obj = 0.8f; float scale_obj_rot = 0.8f; float scale_obj_console = 0.8f;
+        //float scale_obj = 0.8f; float scale_obj_rot = 0.8f; float scale_obj_console = 0.8f;
+        // -- for glass
+        float scale_obj = 0.5f; float scale_obj_rot = 0.5f; float scale_obj_console = 0.5f;
         float CircleRadius = 1f; //280f;   // -- for android phone
       //  float CircleRadius = 120f;		// -- for google glass
         float accel_alpha = 0f;
