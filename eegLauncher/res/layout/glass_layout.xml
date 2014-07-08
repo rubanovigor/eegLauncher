@@ -163,12 +163,10 @@
 
           <SurfaceView
               android:id="@+id/surfaceView1"
-              android:layout_width="1dip"
-              android:layout_height="1dip"
-              android:layout_alignParentTop="true"
-              android:layout_marginLeft="20dp"
-              android:layout_marginTop="48dp"
-              android:layout_toRightOf="@+id/TimeToSel" />
+              android:layout_width="30dip"
+              android:layout_height="30dip"
+              android:layout_centerVertical="true"
+              android:layout_centerHorizontal="true" />
 
      </RelativeLayout>
          

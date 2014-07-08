@@ -168,6 +168,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         surfaceHolder.addCallback(this);
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         
+		Log.d(getString(R.string.app_name), "camera on create"); 
+		
         //controlInflater = LayoutInflater.from(getBaseContext());
        // View viewControl = controlInflater.inflate(R.layout.control, null);
        // LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, 	LayoutParams.FILL_PARENT);
@@ -298,6 +300,23 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                        //mGlassThread.setGameMode(GameMode_str);
 	                        mMusicPlayerThread.doStart(); //start game
 	                       // flag_camera = true;
+	        	    		/*camera.stopPreview();
+	        	    		camera.release();
+	        	    		camera = null;
+	        	    		previewing = false;
+	        	    		Log.d(getString(R.string.app_name), "camera release ir");
+	        	    		camera = Camera.open();  		//camera.setDisplayOrientation(90);
+	        	    		Log.d(getString(R.string.app_name), "camera open ir"); 
+	        	    		
+	                        try {
+	    	    				camera.setPreviewDisplay(surfaceHolder);
+	    	    				camera.startPreview();
+	    	    				previewing = true;
+	    	    				Log.d(getString(R.string.app_name), "camera start preview ir");
+	    	    			} catch (IOException e) {
+	    	    				// TODO Auto-generated catch block
+	    	    				e.printStackTrace();
+	    	    			}*/
 	                      /*  camera.stopPreview();
 	                        camera.release();
 	        	    		camera = null;
@@ -649,6 +668,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    		if(previewing){
 	    			camera.stopPreview();
 	    			previewing = false;
+	    			Log.d(getString(R.string.app_name), "camera stop preview");
 	    		}
 	    		
 	    		if (camera != null){
@@ -656,11 +676,13 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    				camera.setPreviewDisplay(surfaceHolder);
 	    				camera.startPreview();
 	    				previewing = true;
+	    				Log.d(getString(R.string.app_name), "camera start preview");
 	    			} catch (IOException e) {
 	    				// TODO Auto-generated catch block
 	    				e.printStackTrace();
 	    			}
 	    		}
+	    		Log.d(getString(R.string.app_name), "camera surfaceChanged ir");
 	    	}
 
 	    	@Override
@@ -668,7 +690,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    		// TODO Auto-generated method stub
 	    		if(flag_camera ){
 	    		camera = Camera.open();
-	    		camera.setDisplayOrientation(90);
+	    		////camera.startPreview();
+	    		//camera.setDisplayOrientation(90);
+	    		Log.d(getString(R.string.app_name), "camera open"); 
 	    		}
 	    	}
 
@@ -679,6 +703,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    		camera.release();
 	    		camera = null;
 	    		previewing = false;
+	    		Log.d(getString(R.string.app_name), "camera release");
 	    	}
 
 }

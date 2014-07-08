@@ -155,10 +155,11 @@
 
            <SurfaceView
                android:id="@+id/camerapreview"
-               android:layout_width="35dp"
-               android:layout_height="35dp"
-               android:layout_above="@+id/Vel_label"
-               android:layout_alignParentLeft="true" />
+               android:layout_width="100dp"
+               android:layout_height="100dp"
+               android:layout_centerHorizontal="true"
+               android:layout_centerVertical="true"
+                />
            
      </RelativeLayout>
          
