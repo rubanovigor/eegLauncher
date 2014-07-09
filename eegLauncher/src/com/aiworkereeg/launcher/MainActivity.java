@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	TGDevice tgDevice;
 	private static final boolean RAW_ENABLED = false; // false by default
 	
-	TextView tv_T1;	TextView tv_A;	TextView tv_M; TextView tv_TimeToSel;
+	TextView tv_T1;	TextView tv_A;	TextView tv_M; TextView tv_TimeToSel; TextView tv_consoleBoard;
 	private int At = 50;     private int Med = 50;
 	TextView tv_Med;    TextView tv_Att;    TextView tv_Vel;    TextView tv_AmM;    
 	Button b; 
@@ -128,7 +128,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         tv_AmM = (TextView) findViewById(R.id.AmM_text);
         
         tv_TimeToSel = (TextView) findViewById(R.id.TimeToSel);
-             
+        tv_consoleBoard = (TextView) findViewById(R.id.console_info);
         
         if (savedInstanceState == null) {
             // we were just launched: set up a new game
@@ -424,16 +424,19 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                    //if (tts < 3f && vel<=0 && mMusicPlayerView.getThread().flag_Cursor)
 	                    //if (mMusicPlayerView.getThread().action_cancel_flag){tv_TimeToSel.setText("cancel");}
 	                    if (tts < 3f &&  mMusicPlayerView.getThread().flag_Cursor) {
-	                    	tv_TimeToSel.setTextSize(36); tv_TimeToSel.setText(String.valueOf(Math.round(tts)) ); 
+	                    	tv_TimeToSel.setTextSize(20); tv_TimeToSel.setText(String.valueOf(Math.round(tts)) ); 
 	                    	mMusicPlayerView.getThread().msgBoard = " ";}
 	                    else {
-	                    	tv_TimeToSel.setTextSize(15); tv_TimeToSel.setText(mMusicPlayerView.getThread().msgBoard);
+	                    	tv_TimeToSel.setTextSize(20); tv_TimeToSel.setText(mMusicPlayerView.getThread().msgBoard);
 	                    	}
 	                    if (mMusicPlayerView.getThread().action_cancel_flag){
-	                    	tv_TimeToSel.setTextSize(15);tv_TimeToSel.setText("cancel");
+	                    	tv_TimeToSel.setTextSize(20);tv_TimeToSel.setText("cancel");
 	                    	mMusicPlayerView.getThread().msgBoard = "";
 	                    	}
 	                    
+	                    tv_consoleBoard.setTextSize(10);tv_consoleBoard.setText(mMusicPlayerView.getThread().consoleBoard);
+	                    
+
 	                   /* tv_Att.setText(String.valueOf(At)); // display meditation
 	                    // change size and color of Att text view
 	                    if (At < 30) {

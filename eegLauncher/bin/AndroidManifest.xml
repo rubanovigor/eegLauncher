@@ -25,9 +25,9 @@
         <activity
             android:name="com.aiworkereeg.launcher.MainActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:screenOrientation="landscape" 
+            android:screenOrientation="portrait" 
             android:background="@android:color/transparent"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"  >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

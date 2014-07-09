@@ -31,7 +31,8 @@ import android.widget.TextView;
 class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     class MusicPlayerThread extends Thread {
     	float RR; float ZZ;
-    	String GameMode="b"; String msgBoard=""; int EEG_launcher_N = 3; int delta = 360/EEG_launcher_N; 
+    	String GameMode="b"; String msgBoard=""; String consoleBoard="";
+    	int EEG_launcher_N = 3; int delta = 360/EEG_launcher_N; 
     	String flag; 
     	boolean play_flag = false; boolean stop_flag = false; boolean back_flag = false;
     	boolean next_flag = false; 	boolean Prtscr_flag = false; boolean Picture_flag = false;
@@ -653,9 +654,12 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             if (EegLauncherFlag == true){
                                 
 	            float[] alpha_rot = new float[] {0.0f, 0.0f, 0.8f, 0.8f, 1f, 0.9f };  Random rs1 =new Random();
-	            LauncherMusicPlayer.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY); LauncherMusicPlayer.setScale(scale_obj);          
-	            LauncherDnaConsole.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj1, CircleRadius, pX, pY);  LauncherDnaConsole.setScale(scale_obj);     
-	            LauncherCamera.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY);      LauncherCamera.setScale(scale_obj); 
+	            LauncherMusicPlayer.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY);
+	            LauncherMusicPlayer.setScale(scale_obj);          
+	            LauncherDnaConsole.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj1, CircleRadius, pX, pY);
+	            LauncherDnaConsole.setScale(scale_obj);     
+	            LauncherCamera.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY);  
+	            LauncherCamera.setScale(scale_obj); 
 	            
 	            // -- set coordinates of Icon SelectedIcon  
 	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<3){ 
@@ -681,19 +685,19 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	
 	            	// -- Console
 	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 
-	            		EegLauncherFlag = false; DnaConsoleFlag = true;		
+	            	//	EegLauncherFlag = false; DnaConsoleFlag = true;		
 	            		msgBoard = "console";
 	            	} 
 	            		            	
 	            	// -- MusicPlayer
 	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
-	            		MusicPlayerFlag = true; EegLauncherFlag = false;
+	            	//	MusicPlayerFlag = true; EegLauncherFlag = false;
 	            		msgBoard = "music";
 	            	}	            	
 	            	
 	            	// -- Camera
 	            	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
-	            		CameraFlag = true; EegLauncherFlag = false;
+	            	//	CameraFlag = true; EegLauncherFlag = false;
 	            		msgBoard = "camera";
 		           	}         
 	            	                	
@@ -701,7 +705,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	
 	            	// -- for testin only
 	            	//Prtscr_flag = true;
-	            	//MusicPlayerFlag = false; EegLauncherFlag = false; DnaConsoleFlag = true;	
+	            	MusicPlayerFlag = false; EegLauncherFlag = false; DnaConsoleFlag = true;	
 	            	//CameraFlag = true; EegLauncherFlag = false;
 	            }
             }
@@ -712,12 +716,15 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             if (MusicPlayerFlag == true){
 	            float[] alpha_rot = new float[] {0.0f, 0.0f, 0.8f, 0.8f, 1f, 0.9f };  Random rs1 =new Random();
 	            if (play_flag == true){
-	            	mp_Stop.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY); mp_Stop.setScale(scale_obj);          
+	            	mp_Stop.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY); 
+	            	mp_Stop.setScale(scale_obj);          
 	            }
 	            if (play_flag == false){
-	            	mp_Play.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj1, CircleRadius, pX, pY);  mp_Play.setScale(scale_obj);     
+	            	mp_Play.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj1, CircleRadius, pX, pY); 
+	            	mp_Play.setScale(scale_obj);     
 	            }
-	            mp_Next.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY);   mp_Next.setScale(scale_obj);                       
+	            mp_Next.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY); 
+	            mp_Next.setScale(scale_obj);                       
                
 	            // -- set coordinates of Icon SelectedIcon  
 	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<3){ 
@@ -841,6 +848,8 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            		msgBoard = "G";
 		           	}  
 	            	
+	            	ConsoleWhatComand();
+	            	
             		if(CursorI == 4){
             			console_str_action = console_str[0] + console_str[1] + console_str[2];
 	             		console_str[0] = "-"; console_str[1] = "-"; console_str[2] = "-"; console_str[3] = "-";
@@ -918,6 +927,32 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             mLastTime = now;
             
         }
+    
+        private void ConsoleWhatComand() {
+        	if (console_str[0] == "A" || console_str[0] == "C" || console_str[0] == "T" || console_str[0] == "G")
+        		{ consoleBoard = "A: BCI settings \n AAA-AAT/ATA-ATT \n central cluster +10/-10"; 
+        	     	if (console_str[1] == "A")	{ consoleBoard = "AA: A/T central cluster +10"; 
+        	     		if (console_str[2] == "A" || console_str[1] == "T")	{ consoleBoard = "AAA-AAT \n central cluster +10"; }
+        	     		if (console_str[2] == "C")	{ consoleBoard = "AAC: clear"; }
+        	     		if (console_str[2] == "G")	{ consoleBoard = "AAG: in dev"; }
+        	     		}
+        	     	if (console_str[1] == "T")	{ consoleBoard = "AT: A/Tcentral cluster -10"; 
+	    	     		if (console_str[2] == "A" || console_str[1] == "T")	{ consoleBoard = "ATA-ATT \n central cluster -10"; }
+	    	     		if (console_str[2] == "C")	{ consoleBoard = "ATC: clear"; }
+	    	     		if (console_str[2] == "G")	{ consoleBoard = "ATG: in dev"; }
+	    	     		}
+        	     	if (console_str[1] == "C")	{ consoleBoard = "AC: clear";
+        	     		}
+	        	    if (console_str[1] == "G")	{ consoleBoard = "AG: in dev"; 
+	    	     		if (console_str[2] == "A")	{ consoleBoard = "AGA: in dev"; }
+	    	     		if (console_str[2] == "T")	{ consoleBoard = "AGA: in dev"; }
+	    	     		if (console_str[2] == "C")	{ consoleBoard = "AGC: clear"; }
+	    	     		if (console_str[2] == "G")	{ consoleBoard = "AGG: in dev"; }
+	    	     		}
+        		}
+        	//if (console_str[0] == "C" || console_str[0] == "T" || console_str[0] == "G"){consoleBoard = "in dev...";}
+        }   
+        
     }
 
     /** Handle to the application context, used to e.g. fetch Drawables. */
