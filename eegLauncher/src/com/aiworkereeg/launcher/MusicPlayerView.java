@@ -31,8 +31,9 @@ import android.widget.TextView;
 class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     class MusicPlayerThread extends Thread {
     	float RR; float ZZ;
-    	String GameMode="b"; String msgBoard=""; String consoleBoard="";
+    	String GameMode="b"; String msgBoard=""; String consoleBoard=""; String consoleLine="";
     	int EEG_launcher_N = 3; int delta = 360/EEG_launcher_N; 
+    	int ClusterLeftX = -30; int ClusterCenterX = 0; int ClusterRightX = 30; 
     	String flag; 
     	boolean play_flag = false; boolean stop_flag = false; boolean back_flag = false;
     	boolean next_flag = false; 	boolean Prtscr_flag = false; boolean Picture_flag = false;
@@ -528,7 +529,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            DnaConsole_G.drawTo(canvas); DnaConsole_left.drawTo(canvas); 
 	            DnaConsole_Cancel.drawTo(canvas); DnaConsole_A.drawTo(canvas);
 	         
-	            float CurosrXl = (float) pX - CursorR;
+	            /*float CurosrXl = (float) pX - CursorR;
 	            if (CursorI>0){
 	            	for(int l=0; l<console_length-1; l++){	            	              	
 	            		//if (console_str[0].equalsIgnoreCase("0") ){ObjectA.drawTo(canvas);};
@@ -547,7 +548,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 		            //if (sel_action_i==5){ObjectSubmit.drawTo(canvas);}
 		            //if (sel_action_i==10){ObjectClear.drawTo(canvas);}
 		            
-	            }
+	            }*/
 	            //ObjectCursorDel.drawTo(canvas);
 	            ObjectCursor.drawTo(canvas);
 	                        
@@ -589,23 +590,21 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             	// -- time to action selection
             if (accel_alpha<=0f && CursorI != 0){ TimeToSelect = TimeToSelect - 0.015f; action_cancel_flag = false;}
             	else {
-            		if (TimeToSelect>0f && TimeToSelect<=2f && accel_alpha>0f && accel_alpha<=1f){ action_cancel_flag = true;}	
+            		if (TimeToSelect>0f && TimeToSelect<=2f && accel_alpha>-5f && accel_alpha<=1f){ action_cancel_flag = true;}	
             		TimeToSelect = 3f;
             		}
             if (TimeToSelect == 3f && accel_alpha>1f){ action_cancel_flag = false;}	
            
             if (TimeToSelect<=0f){ TimeToSelect = 0f;}
             
+            //ClusterLeftX = -30; ClusterCenterX = 0; ClusterRightX = 30; 
             	// -- update accel_alpha and alpha
-            if (Math.abs(At-Med) <= 30 && accel_alpha > 0) 
-            	{ 
-            		accel_alpha = accel_alpha - 0.015f ; 
-            		alpha = alpha + accel_alpha; 
-            	}
+            if (At-Med >= ClusterLeftX && At-Med <= ClusterRightX && accel_alpha > 0) 
+            					 				{ accel_alpha = accel_alpha - 0.015f ; alpha = alpha + accel_alpha; }
             else {
-                if (At-Med > 30 ){ accel_alpha = accel_alpha + 0.015f ; alpha = alpha + accel_alpha; } 
+                if (At-Med > ClusterRightX )	{ accel_alpha = accel_alpha + 0.015f ; alpha = alpha + accel_alpha; } 
                 else {
-                	if (At-Med < -30 ){accel_alpha = accel_alpha + 0.015f ; alpha = alpha + accel_alpha; }
+                	if (At-Med < ClusterLeftX )	{ accel_alpha = accel_alpha + 0.015f ; alpha = alpha + accel_alpha; }
                 }                    
             }       
             if (alpha >=360) {alpha = alpha-360; }
@@ -812,10 +811,10 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            		//EegLauncherFlag = false; DnaConsoleFlag = true;		
 	            		if(CursorI!=console_length){
 		            		sel_action_i = 4; flag_Cursor = false; ObjectA.updateDNA(CursorX, CursorY);
-		            		console_str[CursorI-1] = "A";
+		            		console_str[CursorI-1] = "A"; 
 		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 		            	}
-	            		msgBoard = "A";
+	            		msgBoard = "A"; 
 	            	} 
 	            		            	
 	            	// -- C
@@ -826,6 +825,8 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 	            		}
 	            		msgBoard = "C";
+	            		console_str[0] = "-"; console_str[1] = "-"; console_str[2] = "-"; console_str[3] = "-";
+	            		CursorI = 1;
 	            	}	            	
 	            	
 	            	// -- T
@@ -855,9 +856,12 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	             		console_str[0] = "-"; console_str[1] = "-"; console_str[2] = "-"; console_str[3] = "-";
 	             		
             			msgBoard = console_str_action;
-            			EegLauncherFlag = true; DnaConsoleFlag = false; CursorI = 1;
+            			//EegLauncherFlag = true; DnaConsoleFlag = false; 
+            			CursorI = 1;
             		}
-	            	            			            	
+	            	  
+            		consoleLine = console_str[0] + "  " + console_str[1] + "  " + console_str[3];
+            		
 	            	flag_Cursor = false;      
 	            	//MusicPlayerFlag = true; EegLauncherFlag = false; DnaConsoleFlag = false;	
 	            }
@@ -929,29 +933,49 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         }
     
         private void ConsoleWhatComand() {
-        	if (console_str[0] == "A" || console_str[0] == "C" || console_str[0] == "T" || console_str[0] == "G")
-        		{ consoleBoard = "A: BCI settings \n AAA-AAT/ATA-ATT \n central cluster +10/-10"; 
-        	     	if (console_str[1] == "A")	{ consoleBoard = "AA: A/T central cluster +10"; 
-        	     		if (console_str[2] == "A" || console_str[1] == "T")	{ consoleBoard = "AAA-AAT \n central cluster +10"; }
-        	     		if (console_str[2] == "C")	{ consoleBoard = "AAC: clear"; }
-        	     		if (console_str[2] == "G")	{ consoleBoard = "AAG: in dev"; }
+        	// --first letter A
+        	//if (console_str[0] == "A" || console_str[0] == "C" || console_str[0] == "T" || console_str[0] == "G")
+        	if (console_str[0] == "A")
+        		{ 	consoleBoard = "A: BCI settings \n AAA-AAT/ATA-ATT \n central cluster +10/-10"; 
+        	     	
+        			if (console_str[1] == "A")	{
+        	     		consoleBoard = "AAA/AAT central cluster +10"; 
+        	     		if (console_str[2] == "A") 
+        	     			{ consoleBoard = "AAA submitted\n central cluster -100:-35:35:100";
+        	     			  ClusterLeftX = -35; ClusterRightX = 35; }
+        	     		if (console_str[2] == "T") 
+        	     			{ consoleBoard = "AAT submitted\n central cluster -100:-35:35:100";
+        	     			  ClusterLeftX = -35; ClusterRightX = 35; }
+        	     		if (console_str[2] == "C") { consoleBoard = "AAC: clear"; }
+        	     		if (console_str[2] == "G") { consoleBoard = "AAG: in dev"; }
         	     		}
-        	     	if (console_str[1] == "T")	{ consoleBoard = "AT: A/Tcentral cluster -10"; 
-	    	     		if (console_str[2] == "A" || console_str[1] == "T")	{ consoleBoard = "ATA-ATT \n central cluster -10"; }
-	    	     		if (console_str[2] == "C")	{ consoleBoard = "ATC: clear"; }
+        	     	
+        	     	if (console_str[1] == "T")	{ 
+        	     		consoleBoard = "ATA/ATT central cluster -10"; 
+        	     		if (console_str[2] == "A")
+        	     			{ consoleBoard = "ATA submitted\n central cluster -100:-25:25:100";
+        	     			  ClusterLeftX = -25; ClusterRightX = 25; }
+    	     			if (console_str[2] == "T")
+    	     				{ consoleBoard = "ATT submitted\n central cluster -100:-25:25:100";
+    	     				  ClusterLeftX = -25; ClusterRightX = 25; }
+    	     			if (console_str[2] == "C")	{ consoleBoard = "ATC: clear"; }
 	    	     		if (console_str[2] == "G")	{ consoleBoard = "ATG: in dev"; }
 	    	     		}
-        	     	if (console_str[1] == "C")	{ consoleBoard = "AC: clear";
-        	     		}
-	        	    if (console_str[1] == "G")	{ consoleBoard = "AG: in dev"; 
+        	     	
+        	     	if (console_str[1] == "C")	{ consoleBoard = "AC: clear"; }
+
+        	     	if (console_str[1] == "G")	{ consoleBoard = "AG: in dev"; 
 	    	     		if (console_str[2] == "A")	{ consoleBoard = "AGA: in dev"; }
 	    	     		if (console_str[2] == "T")	{ consoleBoard = "AGA: in dev"; }
 	    	     		if (console_str[2] == "C")	{ consoleBoard = "AGC: clear"; }
 	    	     		if (console_str[2] == "G")	{ consoleBoard = "AGG: in dev"; }
 	    	     		}
         		}
-        	//if (console_str[0] == "C" || console_str[0] == "T" || console_str[0] == "G"){consoleBoard = "in dev...";}
-        }   
+        	
+        	// --first letter T
+        	if (console_str[0] == "C"){consoleBoard = "clear";}
+        	if (console_str[0] == "T" || console_str[0] == "G"){consoleBoard = "in dev...";}
+        } 
         
     }
 

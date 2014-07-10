@@ -70,7 +70,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	TGDevice tgDevice;
 	private static final boolean RAW_ENABLED = false; // false by default
 	
-	TextView tv_T1;	TextView tv_A;	TextView tv_M; TextView tv_TimeToSel; TextView tv_consoleBoard;
+	TextView tv_T1;	TextView tv_A;	TextView tv_M; TextView tv_TimeToSel; 
+	TextView tv_consoleBoard; TextView tv_consoleLine;
 	private int At = 50;     private int Med = 50;
 	TextView tv_Med;    TextView tv_Att;    TextView tv_Vel;    TextView tv_AmM;    
 	Button b; 
@@ -129,6 +130,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         
         tv_TimeToSel = (TextView) findViewById(R.id.TimeToSel);
         tv_consoleBoard = (TextView) findViewById(R.id.console_info);
+        tv_consoleLine = (TextView) findViewById(R.id.console_line);
         
         if (savedInstanceState == null) {
             // we were just launched: set up a new game
@@ -298,30 +300,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                        tv_T1.setText("Connected");
 	                        //mGlassThread.setTGStatus("Connected");
 	                        //mGlassThread.setGameMode(GameMode_str);
-	                        mMusicPlayerThread.doStart(); //start game
-	                       // flag_camera = true;
-	        	    		/*camera.stopPreview();
-	        	    		camera.release();
-	        	    		camera = null;
-	        	    		previewing = false;
-	        	    		Log.d(getString(R.string.app_name), "camera release ir");
-	        	    		camera = Camera.open();  		//camera.setDisplayOrientation(90);
-	        	    		Log.d(getString(R.string.app_name), "camera open ir"); 
-	        	    		
-	                        try {
-	    	    				camera.setPreviewDisplay(surfaceHolder);
-	    	    				camera.startPreview();
-	    	    				previewing = true;
-	    	    				Log.d(getString(R.string.app_name), "camera start preview ir");
-	    	    			} catch (IOException e) {
-	    	    				// TODO Auto-generated catch block
-	    	    				e.printStackTrace();
-	    	    			}*/
-	                      /*  camera.stopPreview();
-	                        camera.release();
-	        	    		camera = null;
-	        	    		previewing = false;*/
-	        	    		
+	                        mMusicPlayerThread.doStart(); //start game	                       	        	    		
 	                        //mGlassThread.doStart();
 	                        break;
 	                    case TGDevice.STATE_NOT_FOUND:
@@ -435,6 +414,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                    	}
 	                    
 	                    tv_consoleBoard.setTextSize(10);tv_consoleBoard.setText(mMusicPlayerView.getThread().consoleBoard);
+	                    tv_consoleLine.setTextSize(30); tv_consoleLine.setText(mMusicPlayerView.getThread().consoleLine);
+	                   
 	                    
 
 	                   /* tv_Att.setText(String.valueOf(At)); // display meditation
@@ -549,8 +530,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                    if (Math.abs(At-Med) <= 15)	{tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.WHITE);}
 	                    	else if (Math.abs(At-Med) <= 30) {tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.WHITE); }
 	                    
-	                    if (At-Med < -45 || At-Med > 45) {tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.GREEN);}
-	                    	else if (At-Med < -30 || At-Med > 30) {tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.GREEN); }
+	                    if (At-Med < -45 || At-Med > 45) {tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.WHITE);}
+	                    	else if (At-Med < -30 || At-Med > 30) {tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.WHITE); }
 	                                       
 	                    
 	                    
