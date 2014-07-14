@@ -33,7 +33,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	float RR; float ZZ;
     	String GameMode="b"; String msgBoard=""; String consoleBoard=""; String consoleLine="";
     	int EEG_launcher_N = 3; int delta = 360/EEG_launcher_N; 
-    	int ClusterLeftX = -30; int ClusterCenterX = 0; int ClusterRightX = 30; 
+    	int ClusterLeftX = -30; int ClusterCenterX = 0; int ClusterRightX = 30; int ClusterDelta = 0; 
     	String flag; 
     	boolean play_flag = false; boolean stop_flag = false; boolean back_flag = false;
     	boolean next_flag = false; 	boolean Prtscr_flag = false; boolean Picture_flag = false;
@@ -597,45 +597,32 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
            
             if (TimeToSelect<=0f){ TimeToSelect = 0f;}
             
-            //ClusterLeftX = -30; ClusterCenterX = 0; ClusterRightX = 30; 
+            //ClusterLeftX = -30; ClusterCenterX = 0; ClusterRightX = 30; ClusterDelta = 0;
             	// -- update accel_alpha and alpha
-            if (At-Med >= ClusterLeftX && At-Med <= ClusterRightX && accel_alpha > 0) 
-            					 				{ accel_alpha = accel_alpha - 0.015f ; alpha = alpha + accel_alpha; }
+            if (At-Med >= ClusterLeftX-ClusterDelta &&
+            	At-Med <= ClusterRightX+ClusterDelta &&
+            	accel_alpha > 0) 
+            				{ accel_alpha = accel_alpha - 0.015f ; alpha = alpha + accel_alpha; }
             else {
-                if (At-Med > ClusterRightX )	{ accel_alpha = accel_alpha + 0.015f ; alpha = alpha + accel_alpha; } 
+                if (At-Med > ClusterRightX+ClusterDelta )
+                			{ accel_alpha = accel_alpha + 0.015f ; alpha = alpha + accel_alpha; } 
                 else {
-                	if (At-Med < ClusterLeftX )	{ accel_alpha = accel_alpha + 0.015f ; alpha = alpha + accel_alpha; }
+                	if (At-Med < ClusterLeftX-ClusterDelta )
+                			{ accel_alpha = accel_alpha + 0.015f ; alpha = alpha + accel_alpha; }
                 }                    
             }       
             if (alpha >=360) {alpha = alpha-360; }
                 // -- reset flag if acceleration increase above 1 
             if (accel_alpha>1f && CursorI<=console_length) {flag_Cursor=true; }
             	
-            if (CursorI == 0 && accel_alpha>0.5f) {CursorI = 1; }
-              
-              // -- define position of 8 objects
-           /* if (EegLauncherFlag == false && MusicPlayerFlag == false){
-            curr_alpha_obj1 = alpha; curr_alpha_obj2 = alpha + 180;
-            curr_alpha_obj3 = alpha + 90;  curr_alpha_obj4 = alpha + 270;
-            curr_alpha_obj5 = alpha + 45;  curr_alpha_obj6 = alpha + 135;
-            curr_alpha_obj7 = alpha + 225; curr_alpha_obj8 = alpha + 315;
-            
-            if (curr_alpha_obj1 > 360) {curr_alpha_obj1=curr_alpha_obj1 - 360;}
-            if (curr_alpha_obj2 > 360) {curr_alpha_obj2=curr_alpha_obj2 - 360;}
-            if (curr_alpha_obj3 > 360) {curr_alpha_obj3=curr_alpha_obj3 - 360;}
-            if (curr_alpha_obj4 > 360) {curr_alpha_obj4=curr_alpha_obj4 - 360;}
-            if (curr_alpha_obj5 > 360) {curr_alpha_obj5=curr_alpha_obj5 - 360;}
-            if (curr_alpha_obj6 > 360) {curr_alpha_obj6=curr_alpha_obj6 - 360;}
-            if (curr_alpha_obj7 > 360) {curr_alpha_obj7=curr_alpha_obj7 - 360;}
-            if (curr_alpha_obj8 > 360) {curr_alpha_obj8=curr_alpha_obj8 - 360;}
-            }   */           
+            if (CursorI == 0 && accel_alpha>0.5f) {CursorI = 1; }                    
             
             SelectedIcon.setScale(0f); 
             
             if (EegLauncherFlag == true) {EEG_launcher_N = 3; }
             if (MusicPlayerFlag == true) {EEG_launcher_N = 2; }
             if (DnaConsoleFlag == true)  {EEG_launcher_N = 4; }
-            if (CameraFlag == true) {EEG_launcher_N = 3; }
+            if (CameraFlag == true) 	 {EEG_launcher_N = 3; }
             delta = 360/EEG_launcher_N;
             curr_alpha_obj1 = alpha; curr_alpha_obj2 = alpha + delta; 
             curr_alpha_obj3 = alpha + 2*delta; curr_alpha_obj4 = alpha + 3*delta;
@@ -824,9 +811,10 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 		            		console_str[CursorI-1] = "C";
 		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 	            		}
-	            		msgBoard = "C";
+	            		ClearConsole();
+	            		/*msgBoard = "C";
 	            		console_str[0] = "-"; console_str[1] = "-"; console_str[2] = "-"; console_str[3] = "-";
-	            		CursorI = 1;
+	            		CursorI = 1;*/
 	            	}	            	
 	            	
 	            	// -- T
@@ -932,6 +920,11 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             
         }
     
+        private void ClearConsole() {
+    		msgBoard = "C";
+    		console_str[0] = "-"; console_str[1] = "-"; console_str[2] = "-"; console_str[3] = "-";
+    		CursorI = 1; consoleBoard = "C - clear";
+        }
         private void ConsoleWhatComand() {
         	// --first letter A
         	//if (console_str[0] == "A" || console_str[0] == "C" || console_str[0] == "T" || console_str[0] == "G")
@@ -939,27 +932,25 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         		{ 	consoleBoard = "A: BCI settings \n AAA-AAT/ATA-ATT \n central cluster +10/-10"; 
         	     	
         			if (console_str[1] == "A")	{
-        	     		consoleBoard = "AAA/AAT central cluster +10"; 
-        	     		if (console_str[2] == "A") 
-        	     			{ consoleBoard = "AAA submitted\n central cluster -100:-35:35:100";
-        	     			  ClusterLeftX = -35; ClusterRightX = 35; }
-        	     		if (console_str[2] == "T") 
-        	     			{ consoleBoard = "AAT submitted\n central cluster -100:-35:35:100";
-        	     			  ClusterLeftX = -35; ClusterRightX = 35; }
+        	     		consoleBoard = "AAA/AAT central cluster +10\nAAG/ATG ClusterDelta = 0"; 
+        	     		if (console_str[2] == "A") {ClearConsole(); ClusterDelta = 5;
+        	     			consoleBoard = "AAA submitted\n central cluster +10"; }
+        	     		if (console_str[2] == "T") {ClearConsole(); ClusterDelta = 5;
+        	     			consoleBoard = "AAT submitted\n central cluster +10"; }
         	     		if (console_str[2] == "C") { consoleBoard = "AAC: clear"; }
-        	     		if (console_str[2] == "G") { consoleBoard = "AAG: in dev"; }
+        	     		if (console_str[2] == "G") {ClearConsole(); ClusterDelta = 0;
+        	     			consoleBoard = "AAG: submitted\nClusterDelta = 0"; }
         	     		}
         	     	
         	     	if (console_str[1] == "T")	{ 
-        	     		consoleBoard = "ATA/ATT central cluster -10"; 
-        	     		if (console_str[2] == "A")
-        	     			{ consoleBoard = "ATA submitted\n central cluster -100:-25:25:100";
-        	     			  ClusterLeftX = -25; ClusterRightX = 25; }
-    	     			if (console_str[2] == "T")
-    	     				{ consoleBoard = "ATT submitted\n central cluster -100:-25:25:100";
-    	     				  ClusterLeftX = -25; ClusterRightX = 25; }
+        	     		consoleBoard = "ATA/ATT central cluster -10\nAAG/ATG ClusterDelta = 0"; 
+        	     		if (console_str[2] == "A"){ClearConsole();ClusterDelta = -5;
+        	     			consoleBoard = "ATA submitted\n central cluster -10";}
+    	     			if (console_str[2] == "T"){ClearConsole(); ClusterDelta = -5;
+    	     				consoleBoard = "ATT submitted\n central cluster -10"; }
     	     			if (console_str[2] == "C")	{ consoleBoard = "ATC: clear"; }
-	    	     		if (console_str[2] == "G")	{ consoleBoard = "ATG: in dev"; }
+	    	     		if (console_str[2] == "G")	{ClearConsole(); ClusterDelta = 0;
+	    	     			consoleBoard = "ATG: submitted\nClusterDelta = 0"; }
 	    	     		}
         	     	
         	     	if (console_str[1] == "C")	{ consoleBoard = "AC: clear"; }
@@ -972,9 +963,18 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	    	     		}
         		}
         	
+        	// --first letter C
+        	//if (console_str[0] == "C" || console_str[1] == "C" || console_str[2] == "C"){}
         	// --first letter T
-        	if (console_str[0] == "C"){consoleBoard = "clear";}
-        	if (console_str[0] == "T" || console_str[0] == "G"){consoleBoard = "in dev...";}
+        	if (console_str[0] == "T"){ClearConsole(); consoleBoard = "in dev...";}
+        	// --first letter G
+        	if (console_str[0] == "G")
+    		{ 	consoleBoard = "GGG - zoom out"; 
+    	     	if (console_str[1] == "G")	{ consoleBoard = "GGG - zoom out"; 
+    	     		if (console_str[2] == "G")	{ consoleBoard = "GGG - zoom out"; 
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;		}
+    	     		}
+    		}
         } 
         
     }

@@ -102,7 +102,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         // tell system to use the layout defined in our XML file
         //setContentView(R.layout.glass_layout);
         setContentView(R.layout.musicplayer_layout);
-
+        Log.d(getString(R.string.app_name), "ir_debug onCreate()");
        // Intent myIntent = new Intent(this, dnaConsoleActivity.class);
     	//startActivity(myIntent);       
     	
@@ -192,23 +192,30 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 
     	/** Invoked when the Activity loses user focus.    */
     @Override
-    protected void onPause() {
-
-    
+    protected void onPause() {  
         super.onPause();
         mMusicPlayerView.getThread().pause(); // pause game when Activity pauses
-        mMusicPlayerView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir          
+        mMusicPlayerView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir   
+        Log.d(getString(R.string.app_name), "ir_debug onPause()");
     }
 	
     @Override
 	public void onDestroy() {    	
 	        tgDevice.close();        
-	        super.onDestroy();       
+	        super.onDestroy();   
+	        Log.d(getString(R.string.app_name), "ir_debug onDestroy()");
 	}
-	    
+    
+    @Override
+	public void onStart() {    	       
+	        super.onStart();   
+	        Log.d(getString(R.string.app_name), "ir_debug onStart()");
+	}	   
+    
 	@Override
 	protected void onStop() {       
-	        super.onStop();  // Always call the superclass method first	       
+	        super.onStop();  // Always call the superclass method first	  
+	        Log.d(getString(R.string.app_name), "ir_debug onStop()");
 	}
 	
 	    /**
@@ -413,7 +420,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                    	mMusicPlayerView.getThread().msgBoard = "";
 	                    	}
 	                    
-	                    tv_consoleBoard.setTextSize(10);tv_consoleBoard.setText(mMusicPlayerView.getThread().consoleBoard);
+	                    tv_consoleBoard.setTextSize(15);tv_consoleBoard.setText(mMusicPlayerView.getThread().consoleBoard);
 	                    tv_consoleLine.setTextSize(30); tv_consoleLine.setText(mMusicPlayerView.getThread().consoleLine);
 	                   
 	                    
@@ -601,7 +608,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    			// TODO Auto-generated method stub
 	    		//Bitmap bitmapPicture = BitmapFactory.decodeByteArray(arg0, 0, arg0.length);
 	    		
-	    		Log.e(getString(R.string.app_name), "camera bitmapPicture");
+	    		Log.e(getString(R.string.app_name), "ir_debug bitmapPicture");
 	    		try {
 					camera.setPreviewDisplay(surfaceHolder);
 					camera.startPreview();
@@ -649,24 +656,30 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    	@Override
 	    	public void surfaceChanged(SurfaceHolder holder, int format, int width,	int height) {
 	    		// TODO Auto-generated method stub
+	    		Log.d(getString(R.string.app_name), "ir_debug surfaceChanged " + previewing);
+	    					
+				
 	    		if(previewing){
 	    			camera.stopPreview();
+	    			Log.d(getString(R.string.app_name), "ir_debug surfaceChanged -- stopPreview()" + previewing);
 	    			previewing = false;
-	    			Log.d(getString(R.string.app_name), "camera stop preview");
 	    		}
 	    		
 	    		if (camera != null){
 	    			try {
+	    				//camera.stopPreview();
+	    				//Log.d(getString(R.string.app_name), "ir_debug surfaceChanged -- stopPreview()" + previewing);
 	    				camera.setPreviewDisplay(surfaceHolder);
 	    				camera.startPreview();
-	    				previewing = true;
-	    				Log.d(getString(R.string.app_name), "camera start preview");
+	    				Log.d(getString(R.string.app_name), "ir_debug surfaceChanged -- startPreview()" + previewing);
+	    				previewing = false;
+		    			
 	    			} catch (IOException e) {
 	    				// TODO Auto-generated catch block
 	    				e.printStackTrace();
 	    			}
 	    		}
-	    		Log.d(getString(R.string.app_name), "camera surfaceChanged ir");
+	    		
 	    	}
 
 	    	@Override
@@ -674,9 +687,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    		// TODO Auto-generated method stub
 	    		if(flag_camera ){
 	    		camera = Camera.open();
-	    		////camera.startPreview();
-	    		//camera.setDisplayOrientation(90);
-	    		Log.d(getString(R.string.app_name), "camera open"); 
+	    		camera.startPreview();
+	    		//camera.setDisplayOrientation(90); 
+	    		Log.d(getString(R.string.app_name), "ir_debug surfaceCreated --> Camera.open()" + flag_camera);
 	    		}
 	    	}
 
@@ -686,8 +699,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    		camera.stopPreview();
 	    		camera.release();
 	    		camera = null;
-	    		previewing = false;
-	    		Log.d(getString(R.string.app_name), "camera release");
+	    		//previewing = false;
+	    		Log.d(getString(R.string.app_name), "ir_debug surfaceDestroyed --> stopPreview() - release()" + flag_camera);
 	    	}
 
 }
