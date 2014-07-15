@@ -14,6 +14,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" /> 
+    <uses-permission android:name="com.google.android.glass.permission.DEVELOPMENT" />
+        
  	<uses-feature android:name="android.hardware.camera" />
  	<uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -27,7 +29,7 @@
         <activity
             android:name="com.aiworkereeg.launcher.MainActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:screenOrientation="landscape" 
+            android:screenOrientation="portrait" 
             android:background="@android:color/transparent"
             android:label="@string/app_name"  >
             <intent-filter>
