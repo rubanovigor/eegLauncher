@@ -202,7 +202,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
     	mMusicPlayerView.getThread().pause(); // pause game when Activity pauses
         mMusicPlayerView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir   
         
-        releaseCamera();
+        // Release the Camera because we don't need it when paused
+        // and other activities might need to use it.
+        if (camera != null) {
+          //  camera.release();
+            //camera = null;
+        }
         
         Log.d(getString(R.string.app_name), "ir_d onPause()");
     }
@@ -214,7 +219,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
                 tgDevice.close();
             }
 
-            releaseCamera();
+           // releaseCamera();
 
         } catch (NullPointerException e) {   } 
 
@@ -233,7 +238,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
                 tgDevice.close();
             }
 
-            releaseCamera();
+          //  releaseCamera();
 
         } catch (NullPointerException e) {
 
@@ -242,10 +247,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
     @Override
     public void onResume() {
         super.onResume();
-        releaseCamera();
+       // camera.release();
+        // Get the Camera instance as the activity achieves full user focus
         if (camera == null) {
-            //initializeCamera();
+           // initializeCamera(); // Local method to handle camera init
         }
+        
         Log.d(getString(R.string.app_name), "ir_d onResume()");
     }
 	
