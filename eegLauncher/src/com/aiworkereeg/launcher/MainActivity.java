@@ -205,8 +205,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         // Release the Camera because we don't need it when paused
         // and other activities might need to use it.
         if (camera != null) {
-          //  camera.release();
-            //camera = null;
+            camera.release();
+            camera = null;
         }
         
         Log.d(getString(R.string.app_name), "ir_d onPause()");
@@ -710,7 +710,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    			camera.stopPreview();
 	    			previewing = false;
 	    			Log.d(getString(R.string.app_name), "ir_d surfaceChanged stopPreview()" );
-	    		}
+	    		} 
 	    		
 	    		/*if (camera != null){
 	    			try {
@@ -730,18 +730,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    		//releaseCamera();
 	    		//initializeCamera();
 	    		//camera.open();
-	    		 if (camera == null) {camera.open();}
+	    	    if (camera == null) {camera.open();}
 	            try {
 	                if (camera != null) {
 	                   // camera.setPreviewDisplay(holder);
 	                    camera.setPreviewDisplay(surfaceHolder);                   
 	                    camera.startPreview();
 	                    previewing = true;
-	                    Log.d(getString(R.string.app_name), "ir_d surfaceChanged --> start preview" );
+	                    Log.d(getString(R.string.app_name), "ir_d surfaceChanged --> start preview" + camera );
 	                }
 	            } catch (IOException e) {
-	                Log.d(getString(R.string.app_name), "ir_d surfaceChanged --> Error setting camera preview: " + e.getMessage());
-	            }
+	                Log.d(getString(R.string.app_name), "ir_d surfaceChanged --> Error setting camera preview: " + camera);
+	            } 
 	    		
 	    	}
 

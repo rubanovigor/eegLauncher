@@ -671,19 +671,19 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	
 	            	// -- Console
 	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 
-	            	//	EegLauncherFlag = false; DnaConsoleFlag = true;		
+	            		EegLauncherFlag = false; DnaConsoleFlag = true;		
 	            		msgBoard = "console";
 	            	} 
 	            		            	
 	            	// -- MusicPlayer
 	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
-	            	//	MusicPlayerFlag = true; EegLauncherFlag = false;
+	            		MusicPlayerFlag = true; EegLauncherFlag = false;
 	            		msgBoard = "music";
 	            	}	            	
 	            	
 	            	// -- Camera
 	            	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
-	            	//	CameraFlag = true; EegLauncherFlag = false;
+	            		CameraFlag = true; EegLauncherFlag = false;
 	            		msgBoard = "camera";
 		           	}         
 	            	                	
@@ -691,7 +691,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	
 	            	// -- for testin only
 	            	//Prtscr_flag = true;
-	            	MusicPlayerFlag = false; EegLauncherFlag = false; DnaConsoleFlag = true;	
+	            	//MusicPlayerFlag = false; EegLauncherFlag = false; DnaConsoleFlag = true;	
 	            	//CameraFlag = true; EegLauncherFlag = false;
 	            }
             }
@@ -758,10 +758,10 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            DnaConsole_G.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj4, CircleRadius, pX, pY);          
 	            DnaConsole_A.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj1, CircleRadius, pX, pY);
 	            	            
-	            DnaConsole_T.setScale(scale_obj); DnaConsole_rigth.setScale(scale_obj);
+	           /* DnaConsole_T.setScale(scale_obj); DnaConsole_rigth.setScale(scale_obj);
 	            DnaConsole_C.setScale(scale_obj); DnaConsole_Back.setScale(scale_obj); 		
 	            DnaConsole_G.setScale(scale_obj); DnaConsole_left.setScale(scale_obj);
-	            DnaConsole_Cancel.setScale(scale_obj); DnaConsole_A.setScale(scale_obj);
+	            DnaConsole_Cancel.setScale(scale_obj); DnaConsole_A.setScale(scale_obj);*/
 	            
 	            // -- set coordinates of Icon SelectedIcon  
 	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<3){ 
@@ -787,7 +787,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            }
 	            
 	            // -- manage what was selected 
-	            CursorX_delta = CursorR; float scale_k = 1; 
+	            CursorX_delta = CursorR; //float scale_k = 1; 
 	            CursorY = (float) (pY - CircleRadius/2f + CursorR/2f);
 	            	             
 	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
@@ -955,26 +955,134 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         	     	
         	     	if (console_str[1] == "C")	{ consoleBoard = "AC: clear"; }
 
-        	     	if (console_str[1] == "G")	{ consoleBoard = "AG: in dev"; 
-	    	     		if (console_str[2] == "A")	{ consoleBoard = "AGA: in dev"; }
-	    	     		if (console_str[2] == "T")	{ consoleBoard = "AGA: in dev"; }
-	    	     		if (console_str[2] == "C")	{ consoleBoard = "AGC: clear"; }
-	    	     		if (console_str[2] == "G")	{ consoleBoard = "AGG: in dev"; }
-	    	     		}
+        			if (console_str[1] == "G")	{
+        	     		consoleBoard = "AG*: zoom out"; 
+        	     		if (console_str[2] == "A") {consoleBoard = "AGA: zoom out";
+        	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+        	     			}
+        	     		if (console_str[2] == "T") { consoleBoard = "AGT: zoom out";
+        	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+        	     			}
+        	     		if (console_str[2] == "C") { consoleBoard = "AGC: clear"; 
+        	     			}
+        	     		if (console_str[2] == "G") { consoleBoard = "AGA: zoom out";
+        	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+        	     			}
+        	     		}
         		}
         	
         	// --first letter C
-        	//if (console_str[0] == "C" || console_str[1] == "C" || console_str[2] == "C"){}
+        	//if (console_str[0] == "C" || console_str[1] == "C" || console_str[2] == "C"){} //realized in updatePhysics clearConsole()
+        	
+
         	// --first letter T
-        	if (console_str[0] == "T"){ClearConsole(); consoleBoard = "in dev...";}
+        	if (console_str[0] == "T")
+    		{ 	consoleBoard = "T**: zoom out"; 
+    	     	
+    			if (console_str[1] == "A")	{
+    	     		consoleBoard = "TA*: zoom out"; 
+    	     		if (console_str[2] == "A") {consoleBoard = "TAA: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
+    	     		if (console_str[2] == "T") { consoleBoard = "TAT: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;	
+    	     			}
+    	     		if (console_str[2] == "C") { consoleBoard = "TAC: clear"; 
+    	     			}
+    	     		if (console_str[2] == "G") { consoleBoard = "TAA: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
+    	     		}
+    	     	
+    			if (console_str[1] == "T")	{
+    	     		consoleBoard = "TT*: zoom out"; 
+    	     		if (console_str[2] == "A") {consoleBoard = "TTA: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;	
+    	     			}
+    	     		if (console_str[2] == "T") { consoleBoard = "TTT: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
+    	     		if (console_str[2] == "C") { consoleBoard = "TTC: clear"; 
+    	     			}
+    	     		if (console_str[2] == "G") { consoleBoard = "TTA: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
+    	     		}
+    	     	
+    	     	if (console_str[1] == "C")	{ consoleBoard = "TC: clear"; 
+    	     		}
+
+    			if (console_str[1] == "G")	{
+    	     		consoleBoard = "TG*: zoom out"; 
+    	     		if (console_str[2] == "A") {consoleBoard = "TGA: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
+    	     		if (console_str[2] == "T") { consoleBoard = "TGT: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
+    	     		if (console_str[2] == "C") { consoleBoard = "TGC: clear"; 
+    	     			}
+    	     		if (console_str[2] == "G") { consoleBoard = "TGA: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
+    	     		}
+    			}
+        	
+        	
         	// --first letter G
         	if (console_str[0] == "G")
-    		{ 	consoleBoard = "GGG - zoom out"; 
-    	     	if (console_str[1] == "G")	{ consoleBoard = "GGG - zoom out"; 
-    	     		if (console_str[2] == "G")	{ consoleBoard = "GGG - zoom out"; 
-    	     				EegLauncherFlag = true; DnaConsoleFlag = false;		}
+    		{ 	consoleBoard = "G**: zoom out"; 
+    	     	
+    			if (console_str[1] == "A")	{
+    	     		consoleBoard = "GA*: zoom out"; 
+    	     		if (console_str[2] == "A") {consoleBoard = "GAA: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
+    	     		if (console_str[2] == "T") { consoleBoard = "GAT: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;	
+    	     			}
+    	     		if (console_str[2] == "C") { consoleBoard = "GAC: clear"; 
+    	     			}
+    	     		if (console_str[2] == "G") { consoleBoard = "GAA: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
     	     		}
-    		}
+    	     	
+    			if (console_str[1] == "T")	{
+    	     		consoleBoard = "GT*: zoom out"; 
+    	     		if (console_str[2] == "A") {consoleBoard = "GTA: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;	
+    	     			}
+    	     		if (console_str[2] == "T") { consoleBoard = "GTT: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
+    	     		if (console_str[2] == "C") { consoleBoard = "GTC: clear"; 
+    	     			}
+    	     		if (console_str[2] == "G") { consoleBoard = "GTA: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
+    	     		}
+    	     	
+    	     	if (console_str[1] == "C")	{ consoleBoard = "GC: clear"; 
+    	     		}
+
+    			if (console_str[1] == "G")	{
+    	     		consoleBoard = "GG*: zoom out"; 
+    	     		if (console_str[2] == "A") {consoleBoard = "GGA: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
+    	     		if (console_str[2] == "T") { consoleBoard = "GGT: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
+    	     		if (console_str[2] == "C") { consoleBoard = "GGC: clear"; 
+    	     			}
+    	     		if (console_str[2] == "G") { consoleBoard = "GGA: zoom out";
+    	     				EegLauncherFlag = true; DnaConsoleFlag = false;
+    	     			}
+    	     		}
+    			}
+
+        	
         } 
         
     }
