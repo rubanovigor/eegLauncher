@@ -93,6 +93,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
     boolean previewing = false;
     LayoutInflater controlInflater = null;
     private boolean flag_camera = true; 
+    private int cameraId = 0;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +105,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         //setContentView(R.layout.glass_layout);
         setContentView(R.layout.musicplayer_layout);
         
-        Log.d(getString(R.string.app_name), "ir onCreate()");
+        Log.d(getString(R.string.app_name), "ir_d onCreate()");
        // Intent myIntent = new Intent(this, dnaConsoleActivity.class);
     	//startActivity(myIntent);       
     	
@@ -162,25 +163,17 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
             doStuff();
         }	
          
-       // doCameraShot();
+       
 
-       // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        
-        //getWindow().setFormat(PixelFormat.UNKNOWN);
+        // -- camera block        
+        	//getWindow().setFormat(PixelFormat.UNKNOWN);
         surfaceView = (SurfaceView)findViewById(R.id.camerapreview);
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
-       // surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        
-       // initializeCamera();
-        
-		Log.d(getString(R.string.app_name), "camera on create"); 
-		
-        //controlInflater = LayoutInflater.from(getBaseContext());
-       // View viewControl = controlInflater.inflate(R.layout.control, null);
-       // LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, 	LayoutParams.FILL_PARENT);
-       // this.addContentView(viewControl, layoutParamsControl);
-        
+        	//surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+               
+		//Log.d(getString(R.string.app_name), "ir_d onCreate()"); 
+       
       /*  Button buttonTakePicture = (Button)findViewById(R.id.takepicture);
         buttonTakePicture.setOnClickListener(new Button.OnClickListener(){
 
@@ -189,28 +182,44 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 				// TODO Auto-generated method stub
 				camera.takePicture(myShutterCallback, myPictureCallback_RAW, myPictureCallback_JPG);
 			}});*/
-      
-               
+                  
 	}
 
-
-    	/** Invoked when the Activity loses user focus.    */
+	@Override
+	public void onStart() {    	       
+		super.onStart();   
+		Log.d(getString(R.string.app_name), "ir_d onStart()");
+	}	      
+	@Override
+	public void onResume() {
+		super.onResume();
+		//initializeCamera();
+	      
+	   Log.d(getString(R.string.app_name), "ir_d onResume()");
+	}
     @Override
     public void onPause() {        
         super.onPause();
         
     	mMusicPlayerView.getThread().pause(); // pause game when Activity pauses
         mMusicPlayerView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir   
-        
-        // Release the Camera because we don't need it when paused
-        // and other activities might need to use it.
-        if (camera != null) {
-            camera.release();
-            camera = null;
-        }
-        
+               
         Log.d(getString(R.string.app_name), "ir_d onPause()");
     }
+    @Override
+	public void onStop() { 
+		super.onStop();
+        try {
+            if (tgDevice != null) {
+                tgDevice.close();
+            }
+
+          //  releaseCamera();
+
+        } catch (NullPointerException e) { }
+        
+        Log.d(getString(R.string.app_name), "ir_d onStop()");
+	}
     @Override
 	public void onDestroy() {  
     	super.onDestroy();  
@@ -221,40 +230,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 
            // releaseCamera();
 
-        } catch (NullPointerException e) {   } 
+        } catch (NullPointerException e) { } 
 
 	    Log.d(getString(R.string.app_name), "ir_d onDestroy()");
 	}    
-    @Override
-	public void onStart() {    	       
-	     super.onStart();   
-	     Log.d(getString(R.string.app_name), "ir_d onStart()");
-	}	      
-	@Override
-	public void onStop() { 
-		super.onStop();
-        try {
-            if (tgDevice != null) {
-                tgDevice.close();
-            }
-
-          //  releaseCamera();
-
-        } catch (NullPointerException e) {
-
-        }
-	}
-    @Override
-    public void onResume() {
-        super.onResume();
-       // camera.release();
-        // Get the Camera instance as the activity achieves full user focus
-        if (camera == null) {
-           // initializeCamera(); // Local method to handle camera init
-        }
-        
-        Log.d(getString(R.string.app_name), "ir_d onResume()");
-    }
+   
 	
 	    /**
 	     * Notification that something is about to happen, to give the Activity a
@@ -267,8 +247,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	        super.onSaveInstanceState(outState);
 	       // mGlassThread.saveState(outState);
 	}
-	    //=======================================
-	public void doStuff() {
+	   
+		// -- tgDevice State
+		public void doStuff() {
 	        //Toast.makeText(this, "connecting...", Toast.LENGTH_SHORT).show();
 	        if (tgDevice.getState() != TGDevice.STATE_CONNECTING && tgDevice.getState() != TGDevice.STATE_CONNECTED) {
 	            tgDevice.connect(RAW_ENABLED);
@@ -303,8 +284,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	        }
 	    }
 	    
-	    // start dnaConsol
-	    public void start_dnaConsol(View view) {
+	    // -- start dnaConsol
+	    /*public void start_dnaConsol(View view) {
 	    	//Toast.makeText(this, "starting space shuttle", Toast.LENGTH_SHORT).show();
 	        Intent myIntent = new Intent(view.getContext(), dnaConsoleActivity.class);
 	       // myIntent.putExtra("user_name", displayName);
@@ -312,7 +293,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    	startActivity(myIntent);
 	    	//startActivityForResult(myIntent, ActivityTwoRequestCode);
 	    	
-	    }
+	    }*/
 	    
 	    @Override
 	    public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -326,7 +307,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    }
 	    	    
 	    
-	    /* Handles messages from TGDevice */
+	    // -- Handles messages from TGDevice 
 	    private final Handler handler = new Handler() {
 	            @Override
 	            public void handleMessage(Message msg) {               
@@ -631,7 +612,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	            }
 	        };
 	        
-	    /* Handles messages from Camera */
+	    // -- Handles messages from Camera 
 	        ShutterCallback myShutterCallback = new ShutterCallback(){
 
 	    		@Override
@@ -650,14 +631,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    		}
 	    	}; 
 	    		
-	    PictureCallback myPictureCallback_JPG = new PictureCallback(){
+	    	PictureCallback myPictureCallback_JPG = new PictureCallback(){
 
 	    	@Override
 	    	public void onPictureTaken(byte[] arg0, Camera arg1) {
 	    			// TODO Auto-generated method stub
 	    		//Bitmap bitmapPicture = BitmapFactory.decodeByteArray(arg0, 0, arg0.length);
 	    		
-	    		Log.e(getString(R.string.app_name), "ir_d bitmapPicture");
+	    		Log.d(getString(R.string.app_name), "ir_d onPictureTaken() --> bitmapPicture");
 	    		try {
 					camera.setPreviewDisplay(surfaceHolder);
 					camera.startPreview();
@@ -706,42 +687,38 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    	
 	    	@Override
 	    	public void surfaceChanged(SurfaceHolder holder, int format, int width,	int height) {			
-	    		if(previewing){
-	    			camera.stopPreview();
-	    			previewing = false;
-	    			Log.d(getString(R.string.app_name), "ir_d surfaceChanged stopPreview()" );
-	    		} 
-	    		
-	    		/*if (camera != null){
-	    			try {
-	    				//camera.stopPreview();
-	    				//Log.d(getString(R.string.app_name), "ir_debug surfaceChanged -- stopPreview()" + previewing);
-	    				camera.setPreviewDisplay(surfaceHolder);
-	    				camera.startPreview();
-	    				Log.d(getString(R.string.app_name), "ir_debug surfaceChanged -- startPreview()" + previewing);
-	    				previewing = false;
-		    			
-	    			} catch (IOException e) {
-	    				// TODO Auto-generated catch block
-	    				e.printStackTrace();
-	    			}
-	    		}*/
-	    		Log.d(getString(R.string.app_name), "ir_d surfaceChanged" );
-	    		//releaseCamera();
 	    		//initializeCamera();
-	    		//camera.open();
-	    	    if (camera == null) {camera.open();}
+	            // If your preview can change or rotate, take care of those events here.
+	            // Make sure to stop the preview before resizing or reformatting it.
+	    	
+	            if (holder.getSurface() == null){
+	            	Log.d(getString(R.string.app_name), "ir_d surfaceChanged --> preview surface does not exist");
+	                return;
+	            }
+
+	            // stop preview before making changes
 	            try {
-	                if (camera != null) {
-	                   // camera.setPreviewDisplay(holder);
-	                    camera.setPreviewDisplay(surfaceHolder);                   
-	                    camera.startPreview();
-	                    previewing = true;
-	                    Log.d(getString(R.string.app_name), "ir_d surfaceChanged --> start preview" + camera );
-	                }
-	            } catch (IOException e) {
-	                Log.d(getString(R.string.app_name), "ir_d surfaceChanged --> Error setting camera preview: " + camera);
-	            } 
+	                camera.stopPreview();
+	                Log.d(getString(R.string.app_name), "ir_d surfaceChanged --> camera.stopPreview()  " + camera);
+	            } catch (Exception e){ // ignore: tried to stop a non-existent preview
+	            	Log.d(getString(R.string.app_name), "ir_d surfaceChanged --> Error camera.stopPreview()  " + camera);
+	            }
+
+	            // set preview size and make any resize, rotate or
+	            // reformatting changes here
+
+	            // -- start preview with new settings	            
+	    		if (camera != null) {
+	    			try { 
+	    				camera.setPreviewDisplay(holder);
+	    				//camera.setPreviewDisplay(surfaceHolder);
+	    				camera.startPreview();
+	                    Log.d(getString(R.string.app_name),"ir_d surfaceChanged --> camera.setPreviewDisplay()  " + camera);
+	                } catch (IOException e) 
+	                { Log.d(getString(R.string.app_name), "ir_d surfaceChanged --> Error setting camera preview:  " + camera); }
+	                	
+	    			camera.setDisplayOrientation(90);
+	            }
 	    		
 	    	}
 
@@ -749,41 +726,43 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    	public void surfaceCreated(SurfaceHolder holder) {
 	    		// The Surface has been created, now tell the camera where to draw the preview.
 	    		initializeCamera();
-	        	/*if (camera == null) {
-	        		camera = Camera.open();
-	            }*/
-	          /*  try {
-	                if (camera != null) {
-	                   // camera.setPreviewDisplay(holder);
-	                    camera.setPreviewDisplay(surfaceHolder);
-	                    
-	                    camera.startPreview();
-	                }
-	            } catch (IOException e) {
-	                Log.d(getString(R.string.app_name), "ir_d surfaceCreated --> Error setting camera preview: " + e.getMessage());
-	            }*/
-	            
-	    		/*if(flag_camera ){
-	    		camera = Camera.open();
-	    		camera.startPreview();
-	    		//camera.setDisplayOrientation(90); 
-	    		Log.d(getString(R.string.app_name), "ir_debug surfaceCreated --> Camera.open()" + flag_camera);
-	    		}*/
+
+	    		Log.d(getString(R.string.app_name), "ir_d surfaceCreated()");
+	    		
 	    	}
 
 	    	@Override
 	    	public void surfaceDestroyed(SurfaceHolder holder) {
-	    		// release camera
-	    		releaseCamera();
-	    		Log.d(getString(R.string.app_name), "ir_d surfaceDestroyed");
+	    	    // Surface will be destroyed when we return, so stop the preview.
+	    	    if (camera != null) {// Call stopPreview() to stop updating the preview surface.
+	    	        camera.stopPreview();
+	    	    }
+	    	    releaseCamera();
+	    	    
+	    		Log.d(getString(R.string.app_name), "ir_d surfaceDestroyed()");
 	    	}
 
 	        private void initializeCamera()
-	        { // Create an instance of Camera
-	        	if (camera == null) {
-	        		camera = Camera.open();
-	        		//previewing = true;
-	        		Log.d(getString(R.string.app_name), "ir_d Camera.open()" );
+	        { 
+	            // -- do we have a camera?
+	            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+	              Toast.makeText(this, "No camera on this device", Toast.LENGTH_LONG).show();
+	            } else {
+	              //cameraId = findFrontFacingCamera();
+	              cameraId = 0;
+	              if (cameraId < 0) {
+	                Toast.makeText(this, "No front facing camera found.",Toast.LENGTH_LONG).show();
+	              }
+	            }
+	            
+	            // -- open camera
+	            try {
+	            	releaseCamera();
+	            	camera = Camera.open(cameraId);
+	            	Log.d(getString(R.string.app_name), "ir_d initializeCamera() --> Camera.open()  " + camera + "  " + cameraId);
+	            } catch (Exception e) {
+	                Log.d(getString(R.string.app_name), "ir_d initializeCamera() failed to open Camera");
+	                
 	            }
 	            
 	        }
@@ -793,8 +772,27 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                camera.stopPreview();
 	                camera.release();
 	                camera = null;
-	                Log.d(getString(R.string.app_name), "ir_d Camera.release() true" );
+	                
+	                Log.d(getString(R.string.app_name), "ir_d releaseCamera() --> Camera.release() true  " + camera );
 	            }
-	            Log.d(getString(R.string.app_name), "ir_d Camera.release() false" );
+	            
+	            Log.d(getString(R.string.app_name), "ir_d releaseCamera() --> Camera.release() false  " + camera );
+	            
 	        }
+
+	        private int findFrontFacingCamera() {
+	            int cameraId = -1;
+	            // Search for the front facing camera
+	            int numberOfCameras = Camera.getNumberOfCameras();
+	            for (int i = 0; i < numberOfCameras; i++) {
+	              CameraInfo info = new CameraInfo();
+	              Camera.getCameraInfo(i, info);
+	              if (info.facing == CameraInfo.CAMERA_FACING_FRONT) {
+	            	  Log.d(getString(R.string.app_name), "ir_d findFrontFacingCamera() CAMERA_FACING_FRONT found" );
+	                cameraId = i;
+	                break;
+	              }
+	            }
+	            return cameraId;
+	          }
 }

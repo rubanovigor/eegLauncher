@@ -29,7 +29,7 @@
         <activity
             android:name="com.aiworkereeg.launcher.MainActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:screenOrientation="portrait"
+            
             android:background="@android:color/transparent"
             android:label="@string/app_name"  >
             <intent-filter>
