@@ -37,12 +37,15 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	String flag; 
     	boolean play_flag = false; boolean stop_flag = false; boolean back_flag = false;
     	boolean next_flag = false; 	boolean Prtscr_flag = false; boolean Picture_flag = false;
-    	
+
+    	// -- eeg launcher by default
     	boolean EegLauncherFlag = true;	boolean MusicPlayerFlag = false;
     	boolean DnaConsoleFlag = false; boolean CameraFlag = false;
+    	// -- camera by default
+    	//boolean EegLauncherFlag = false;	boolean MusicPlayerFlag = false;
+    	//boolean DnaConsoleFlag = false; boolean CameraFlag = true;
     	
     	boolean action_cancel_flag = false;
-    	String s6 = "6s";
         int At = 50; int Med = 50;   int ApM = 100;    int AmM = 0; 
         int console_length = 4;
         String[] console_str = new String[] {"-","-","-","-"}; //maximum rotation angle
@@ -902,13 +905,14 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
 	            		Prtscr_flag = true;
 	            		msgBoard = "screenshot was taken";
-		           	}         
-	            	    
+		           	}                     	   
 	            	
 	            	flag_Cursor = false;     
 	            	
 	            	EegLauncherFlag = true; CameraFlag = false;	
 	
+	            	// -- for testing only
+	            	//Picture_flag = true;
 	            }
             }
             /* -- ======END Camera===== -- */

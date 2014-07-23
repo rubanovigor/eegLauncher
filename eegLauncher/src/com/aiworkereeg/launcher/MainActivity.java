@@ -674,7 +674,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 		    	      //Toast.makeText(context, "Image could not be saved.", Toast.LENGTH_LONG).show();
 		    	    }
 	    	    
-	    	    releaseCamera();
+	    	   // releaseCamera();
 	    	}
 	    };
 
