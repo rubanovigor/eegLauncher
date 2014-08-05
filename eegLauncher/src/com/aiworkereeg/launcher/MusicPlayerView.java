@@ -37,6 +37,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	String flag; 
     	boolean play_flag = false; boolean stop_flag = false; boolean back_flag = false;
     	boolean next_flag = false; 	boolean Prtscr_flag = false; boolean Picture_flag = false;
+    	boolean TwitPicture_flag = false;
 
     	// -- eeg launcher by default
     	boolean EegLauncherFlag = true;	boolean MusicPlayerFlag = false;
@@ -305,11 +306,11 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             synchronized (mSurfaceHolder) {
                 setState(STATE_PAUSE);
                // mRotating = 0;
-                pX = savedState.getDouble(KEY_X);
+              /*  pX = savedState.getDouble(KEY_X);
                 pY = savedState.getDouble(KEY_Y);
                 EegLauncherFlag = savedState.getBoolean(KEY_EEG);
                 DnaConsoleFlag = savedState.getBoolean(KEY_DNA);
-                MusicPlayerFlag = savedState.getBoolean(KEY_MP);
+                MusicPlayerFlag = savedState.getBoolean(KEY_MP);*/
             }
         }
 
@@ -344,11 +345,11 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         public Bundle saveState(Bundle map) {
             synchronized (mSurfaceHolder) {
                 if (map != null) {
-                    map.putDouble(KEY_X, Double.valueOf(pX));
+                /*    map.putDouble(KEY_X, Double.valueOf(pX));
                     map.putDouble(KEY_Y, Double.valueOf(pY));
                     map.putBoolean(KEY_EEG, Boolean.valueOf(EegLauncherFlag));
                     map.putBoolean(KEY_DNA, Boolean.valueOf(DnaConsoleFlag));
-                    map.putBoolean(KEY_MP , Boolean.valueOf(MusicPlayerFlag));
+                    map.putBoolean(KEY_MP , Boolean.valueOf(MusicPlayerFlag));*/
                 }
             }
             return map;
@@ -439,18 +440,6 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                 	str =  "";
                 	//+ "CursorI = "+ delta + "  \n "
                 	//+ "CursorI = "+ String.valueOf(CursorI) + "  \n ";
-                	//+ "curr_alpha_obj2 = "+ String.valueOf(curr_alpha_obj2) + "  \n "
-                	//+ "curr_alpha_obj3 = "+ String.valueOf(curr_alpha_obj3) + "  \n ";
-                	
-                	//if (flag_submit) {str = "you have typed: " + console_str_action + " real action will setup soon";}
-                	
-                	//+ "action_cancel_flag = "+ action_cancel_flag + "  \n "
-                	//+ "play_flag: "+ String.valueOf(play_flag) + "  \n ";
-                	//+ "sel_action_i "+ String.valueOf(sel_action_i) + "\n";
-                	//+ "BackGr_H/2f: " + String.valueOf(BackGr_H/2f ) + "\n"
-                	//+ "pY " + String.valueOf(pY ) + "\n";
-                	//+"obj1_center[] " + String.valueOf(obj1_center[0]) + " | "+ String.valueOf(obj1_center[1]) + "\n";
-                			//TGStatus;//ir
                 	
                 } else {
                     Resources res = mContext.getResources();      str = "";
@@ -516,14 +505,6 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            mp_Next.drawTo(canvas); //mp_NextD.drawTo(canvas);
 	           // mp_Vol.drawTo(canvas);  mp_VolD.drawTo(canvas);  mp_Back.drawTo(canvas); mp_BackD.drawTo(canvas);
 	            
-	            // -- display icon that was selected
-	          /*  if (CursorI>0){
-	            	IconBlack.drawTo(canvas);
-		            if (sel_action_i==1){IconPlay.drawTo(canvas);}
-		            if (sel_action_i==2){IconStop.drawTo(canvas);}
-		            if (sel_action_i==3){IconSkip.drawTo(canvas);}	
-		            if (sel_action_i==4){IconVol.drawTo(canvas);}	
-	            }*/
             }
          
             if (DnaConsoleFlag == true){
@@ -532,28 +513,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            DnaConsole_G.drawTo(canvas); DnaConsole_left.drawTo(canvas); 
 	            DnaConsole_Cancel.drawTo(canvas); DnaConsole_A.drawTo(canvas);
 	         
-	            /*float CurosrXl = (float) pX - CursorR;
-	            if (CursorI>0){
-	            	for(int l=0; l<console_length-1; l++){	            	              	
-	            		//if (console_str[0].equalsIgnoreCase("0") ){ObjectA.drawTo(canvas);};
-	            		ObjectA.updateDNA(CurosrXl, CursorY); ObjectC.updateDNA(CurosrXl, CursorY);
-	            		ObjectT.updateDNA(CurosrXl, CursorY); ObjectG.updateDNA(CurosrXl, CursorY);
-	            		if (console_str[l].equalsIgnoreCase("A") ){ObjectA.drawTo(canvas);};
-	            		if (console_str[l].equalsIgnoreCase("C") ){ObjectC.drawTo(canvas);};
-	            		if (console_str[l].equalsIgnoreCase("T") ){ObjectT.drawTo(canvas);};
-	            		if (console_str[l].equalsIgnoreCase("G") ){ObjectG.drawTo(canvas);};
-	            		CurosrXl = CurosrXl + CursorR;
-	            	}
-		        //    if (sel_action_i==1){ObjectT.drawTo(canvas);}
-		          //  if (sel_action_i==2){ObjectG.drawTo(canvas);}
-		           // if (sel_action_i==3){ObjectC.drawTo(canvas);}
-		           // if (sel_action_i==4){ObjectA.drawTo(canvas);}
-		            //if (sel_action_i==5){ObjectSubmit.drawTo(canvas);}
-		            //if (sel_action_i==10){ObjectClear.drawTo(canvas);}
-		            
-	            }*/
-	            //ObjectCursorDel.drawTo(canvas);
-	            ObjectCursor.drawTo(canvas);
+	            //ObjectCursor.drawTo(canvas);
 	                        
             }
             
@@ -693,6 +653,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	flag_Cursor = false;     
 	            	
 	            	// -- for testin only
+	            	TwitPicture_flag = true;
 	            	//Prtscr_flag = true;
 	            	//MusicPlayerFlag = false; EegLauncherFlag = false; DnaConsoleFlag = true;	
 	            	//CameraFlag = true; EegLauncherFlag = false;
@@ -895,10 +856,10 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            		Picture_flag = true;
 	            	} 
 	            		            	
-	            	// -- video
+	            	// -- video//twitter
 	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
-
-	            		msgBoard = "video in dev...";
+	            		TwitPicture_flag = true;
+	            		msgBoard = "TwitPicture";
 	            	}	            	
 	            	
 	            	// -- PrtScr

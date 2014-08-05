@@ -54,11 +54,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aiworkereeg.launcher.MusicService;
-import com.aiworkereeg.launcher.GlassView;
-import com.aiworkereeg.launcher.GlassView.GlassThread;
 import com.aiworkereeg.launcher.MusicPlayerView;
 import com.aiworkereeg.launcher.MusicPlayerView.MusicPlayerThread;
 import com.aiworkereeg.launcher.R;
+
 import com.neurosky.thinkgear.TGDevice;
 import com.neurosky.thinkgear.TGEegPower;
 import com.neurosky.thinkgear.TGRawMulti;
@@ -71,18 +70,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	TGDevice tgDevice;
 	private static final boolean RAW_ENABLED = false; // false by default
 	
-	TextView tv_T1;	TextView tv_A;	TextView tv_M; TextView tv_TimeToSel; 
+	TextView tv_info;	TextView tv_TimeToSel; 
 	TextView tv_consoleBoard; TextView tv_consoleLine;
 	private int At = 50;     private int Med = 50;
 	TextView tv_Med;    TextView tv_Att;    TextView tv_Vel;    TextView tv_AmM;    
-	Button b; 
     	/** A handle to the thread that's actually running the animation. */
-   // private GlassThread mGlassThread;
-    private MusicPlayerThread mMusicPlayerThread;
-    
+    private MusicPlayerThread mMusicPlayerThread;   
     	/** A handle to the View in which the game is running. */
-    //private GlassView mGlassView;
     private MusicPlayerView mMusicPlayerView;
+    
     final int ActivityTwoRequestCode = 0;
     Bitmap myBitmap;
     
@@ -94,6 +90,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
     LayoutInflater controlInflater = null;
     private boolean flag_camera = true; 
     private int cameraId = 0;
+    public String filename = "empty";
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,33 +98,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        // tell system to use the layout defined in our XML file
-        //setContentView(R.layout.glass_layout);
+        // -- tell system to use the layout defined in our XML file
         setContentView(R.layout.musicplayer_layout);
-        
-        Log.d(getString(R.string.app_name), "ir_d onCreate()");
-       // Intent myIntent = new Intent(this, dnaConsoleActivity.class);
-    	//startActivity(myIntent);       
-    	
-        // get handles to the GlassView from XML, and its GlassThread
-        //mGlassView = (GlassView) findViewById(R.id.lunar);
-        //mGlassThread = mGlassView.getThread();         
-        
-        
+                       
         mMusicPlayerView = (MusicPlayerView) findViewById(R.id.lunar);
         mMusicPlayerThread = mMusicPlayerView.getThread();
-        
-     //   mGlassView = (GlassView) findViewById(R.id.lunarGlass);
-       // mGlassThread = mGlassView.getThread();
 
-        // give the GlassView a handle to the TextView used for messages
+        // -- give the MusicPlayerView a handle to the TextView used for messages
         mMusicPlayerView.setTextView((TextView) findViewById(R.id.text));
-        
-       // b = (Button) findViewById(R.id.b_RunDNAconsole);
-        // give the GlassView a handle to the TextView used for messages
+		tv_info = (TextView) findViewById(R.id.text);
+        // -- give the GlassView a handle to the TextView used for messages
         tv_Att = (TextView) findViewById(R.id.Att_text);
-        tv_Med = (TextView) findViewById(R.id.Med_text);
-        
+        tv_Med = (TextView) findViewById(R.id.Med_text);       
         tv_Vel = (TextView) findViewById(R.id.Vel_text);
         tv_AmM = (TextView) findViewById(R.id.AmM_text);
         
@@ -145,12 +127,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
            // mMusicPlayerThread.restoreState(savedInstanceState);        	
             //Log.w(this.getClass().getName(), "SIS is nonnull");
         }
-		
-		
-		tv_T1 = (TextView) findViewById(R.id.text);
-		tv_A = (TextView) findViewById(R.id.Att_text);
-        tv_M = (TextView) findViewById(R.id.Med_text);
-		
+				
         /* Checking BT and connecting to the TG device */
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {	// Alert user that Bluetooth is not available
@@ -163,7 +140,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
             doStuff();
         }	
          
-       
 
         // -- camera block        
         	//getWindow().setFormat(PixelFormat.UNKNOWN);
@@ -172,7 +148,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         surfaceHolder.addCallback(this);
         	//surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
                
-		//Log.d(getString(R.string.app_name), "ir_d onCreate()"); 
+		Log.d(getString(R.string.app_name), "ir_d onCreate()"); 
        
       /*  Button buttonTakePicture = (Button)findViewById(R.id.takepicture);
         buttonTakePicture.setOnClickListener(new Button.OnClickListener(){
@@ -195,7 +171,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 		super.onResume();
 		//initializeCamera();
 	      
-	   Log.d(getString(R.string.app_name), "ir_d onResume()");
+		mMusicPlayerView.getThread().unpause(); // pause game when Activity pauses
+        mMusicPlayerView.getThread().setRunning(true); //correctly destroy SurfaceHolder, ir   
+          
+	    Log.d(getString(R.string.app_name), "ir_d onResume()");
 	}
     @Override
     public void onPause() {        
@@ -223,15 +202,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
     @Override
 	public void onDestroy() {  
     	super.onDestroy();  
-        try {
+       /* try {
             if (tgDevice != null) {
                 tgDevice.close();
             }
 
            // releaseCamera();
 
-        } catch (NullPointerException e) { } 
+        } catch (NullPointerException e) { } */
 
+       // mMusicPlayerView.getThread().pause(); // pause game when Activity pauses
+       // mMusicPlayerView.getThread().setRunning(false); //correctly destroy SurfaceHolder, ir   
+           
 	    Log.d(getString(R.string.app_name), "ir_d onDestroy()");
 	}    
    
@@ -249,16 +231,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	}
 	   
 		// -- tgDevice State
-		public void doStuff() {
-	        //Toast.makeText(this, "connecting...", Toast.LENGTH_SHORT).show();
-	        if (tgDevice.getState() != TGDevice.STATE_CONNECTING && tgDevice.getState() != TGDevice.STATE_CONNECTED) {
-	            tgDevice.connect(RAW_ENABLED);
-	        }
+	public void doStuff() {
+	   //Toast.makeText(this, "connecting...", Toast.LENGTH_SHORT).show();
+	   if (tgDevice.getState() != TGDevice.STATE_CONNECTING && tgDevice.getState() != TGDevice.STATE_CONNECTED) {
+	       tgDevice.connect(RAW_ENABLED);
+	   }
 	}
-	      
-	    
+	
+		    
 	    // -- save bitmap of screenshot
-	    public void saveBitmap(Bitmap bitmap) {
+	public void saveBitmap(Bitmap bitmap) {
 	     //   String filePath = Environment.getExternalStorageDirectory() + File.separator + "Pictures/screenshot.png";
 	       // File imagePath = new File(filePath);
 	        
@@ -282,21 +264,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	        } catch (IOException e) {
 	            Log.e("GREC", e.getMessage(), e);
 	        }
-	    }
+	}
 	    
-	    // -- start dnaConsol
-	    /*public void start_dnaConsol(View view) {
-	    	//Toast.makeText(this, "starting space shuttle", Toast.LENGTH_SHORT).show();
-	        Intent myIntent = new Intent(view.getContext(), dnaConsoleActivity.class);
-	       // myIntent.putExtra("user_name", displayName);
-	       // myIntent.putExtra("GameMode", "4s");
-	    	startActivity(myIntent);
-	    	//startActivityForResult(myIntent, ActivityTwoRequestCode);
-	    	
-	    }*/
 	    
-	    @Override
-	    public boolean onKeyDown(int keyCode, KeyEvent event) {
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	        switch (keyCode) {
 	            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
 	            case KeyEvent.KEYCODE_HEADSETHOOK:
@@ -304,13 +276,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                return true;
 	        }
 	        return super.onKeyDown(keyCode, event);
-	    }
+	}
 	    	    
 	    
-	    // -- Handles messages from TGDevice 
-	    private final Handler handler = new Handler() {
-	            @Override
-	            public void handleMessage(Message msg) {               
+	    
+  // -- Handles messages from TGDevice 
+	private final Handler handler = new Handler() {
+	   @Override
+	   public void handleMessage(Message msg) {               
 	                switch (msg.what) {
 	                case TGDevice.MSG_STATE_CHANGE:
 	                    /*display message according to state change type */
@@ -319,38 +292,23 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                        break;
 	                    case TGDevice.STATE_CONNECTING:
 	                    	//mGlassThread.setTGStatus("Connecting...");
-	                    	tv_T1.setText("Connecting...");
+	                    	tv_info.setText("Connecting...");
 	                    	//releaseCamera();
 	                        break;
 	                    case TGDevice.STATE_CONNECTED:
 	                        tgDevice.start();
-	                        tv_T1.setText("Connected");
-	                        //mGlassThread.setTGStatus("Connected");
-	                        //mGlassThread.setGameMode(GameMode_str);
-	                        mMusicPlayerThread.doStart(); //start game	                       	        	    		
-	                        //mGlassThread.doStart();
+	                        tv_info.setText("Connected");
+	                        // -- start thread with eeg_launcher
+	                        mMusicPlayerThread.doStart(); 	                       	        	    		
 	                        break;
 	                    case TGDevice.STATE_NOT_FOUND:
-	                    	//mGlassThread.setTGStatus("Can't find");
-	                    	tv_T1.setText("Can't find");
-	                    	/*initializeCamera();
-	        	            try {
-	        	                if (camera != null) {
-	        	                   // camera.setPreviewDisplay(holder);
-	        	                    camera.setPreviewDisplay(surfaceHolder);	        	                    
-	        	                    camera.startPreview();
-	        	                }
-	        	            } catch (IOException e) {
-	        	                Log.d(getString(R.string.app_name), "ir_d surfaceCreated --> Error setting camera preview: " + e.getMessage());
-	        	            }*/
+	                    	tv_info.setText("neurosky mindwave mobile was not found");
 	                        break;
 	                    case TGDevice.STATE_NOT_PAIRED:
-	                    	//mGlassThread.setTGStatus("not paired");
-	                    	tv_T1.setText("not paired !!!!!");
+	                    	tv_info.setText("neurosky mindwave mobile not paired !!!!!");
 	                        break;
 	                    case TGDevice.STATE_DISCONNECTED:
-	                    	//mGlassThread.setTGStatus("Disconnected");
-	                    	tv_T1.setText("Disconnected");
+	                    	tv_info.setText("Disconnected");
 	                    }
 
 	                    break;
@@ -365,17 +323,17 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                    //tv.append("Heart rate: " + msg.arg1 + "\n");
 	                    break;
 	                case TGDevice.MSG_ATTENTION:
-	                    // First send Attention data to the backend in async way
+	                    // -- First send Attention data to the backend in async way
 	                    //APIClient.postData(null, "attention", String.valueOf(msg.arg1), null);
 
 	                	//Log.e(getString(R.string.app_name), "camera.takePicture()");  
-	                	
-	 	               
+	                		 	               
 	                    At = msg.arg1;         
-	                    tv_A.setText(String.valueOf(At));
+	                    tv_Att.setText(String.valueOf(At));
 	                    mMusicPlayerThread.setAttention(At);
 	                    
 	                    // -- do appropriate action for music player
+	                    	// --play/stop/playnext
 	                    if (mMusicPlayerView.getThread().play_flag == true)
                     		{ 
 	                    	 startService(new Intent(MusicService.ACTION_PLAY)); 
@@ -391,31 +349,37 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
                 			 mMusicPlayerView.getThread().next_flag = false;
                 			}
 	                    
-	                    if (mMusicPlayerView.getThread().back_flag == true)
+	                   /* if (mMusicPlayerView.getThread().back_flag == true)
             				{ 
 	                    	 //startService(new Intent(MusicService.ACTION_PAUSE));
 	                    	 startService(new Intent(MusicService.ACTION_STOP)); 
 	                    	 mMusicPlayerView.getThread().back_flag = false;
             				// onBackPressed();
-            				} 
+            				} */
 	                    
+	                    	// -- camera/twitter/PrtSc
 	                    if (mMusicPlayerView.getThread().Picture_flag == true)
         				{ 	                    	
 	                    	camera.takePicture(myShutterCallback, myPictureCallback_RAW, myPictureCallback_JPG);
 	                    	
 	                    	mMusicPlayerView.getThread().Picture_flag = false;
         				}
+	                    if (mMusicPlayerView.getThread().TwitPicture_flag == true)
+        				{ 	                    	
+	                    	camera.takePicture(myShutterCallback, myPictureCallback_RAW, myPictureCallback_JPG);
+		                    	                    	
+	                    	mMusicPlayerView.getThread().TwitPicture_flag = false;
+        				}
 	                    
 	                    if (mMusicPlayerView.getThread().Prtscr_flag == true)
         				{ 	                    	
-		                    View v1 = findViewById(android.R.id.content).getRootView() ; //this works too but gives only content
-		                   // View v1 = getWindow().getDecorView().getRootView();
+		                    View v1 = findViewById(android.R.id.content).getRootView() ; 
 	                    	v1.setDrawingCacheEnabled(true);
 		                    myBitmap = v1.getDrawingCache();
 		                    saveBitmap(myBitmap);
 	                    	
 	                    	mMusicPlayerView.getThread().Prtscr_flag = false;
-        				// onBackPressed();
+	                    		// onBackPressed();
         				}
 	                    
 	                   // if (mMusicPlayerView.getThread().MusicPlayerFlag == true) { camera.stopPreview(); previewing = false;}
@@ -455,8 +419,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                   
 	                    
 
-	                   /* tv_Att.setText(String.valueOf(At)); // display meditation
-	                    // change size and color of Att text view
+	                    /* tv_Att.setText(String.valueOf(At)); // display meditation
+	                    	// -- change size and color of Att text view
 	                    if (At < 30) {
 	                    	//tv_Att.setTextColor(Color.YELLOW);
 	                    	tv_Att.setTextSize(20);
@@ -468,69 +432,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                        	//tv_Att.setTextColor(Color.RED);
 	                        	tv_Att.setTextSize(40);
 	                        }                    
-	                    } 
-	                    
-	                    tv_Vel.setText(String.valueOf(At+Med)); // display Att-Med
-	                    // change size and color of Att+Med text view 
-	                    if (At+Med < 60) {
-	                    	tv_Vel.setTextSize(20);
-	                    } else {
-	                        if (At+Med <140) {
-	                        	tv_Vel.setTextSize(30);
-	                        } else {
-	                        	tv_Vel.setTextSize(40);
-	                        }                    
-	                    }   */                
-	                    
-	                    //display numer of correct/incorrect words
-	                    //tv_CorrectWords.setText(String.valueOf(mGlassView.getThread().CorrectW));
-	                    //tv_IncorrectWords.setText(String.valueOf(mGlassView.getThread().IncorrectW));
-	                    
-	                    // -- display Genome TextViews
-	                    /*genome =mGlassView.getThread().DesGenSequence;
-	                    //tv_ActGenSeq.setText(String.valueOf(mGlassView.getThread().ScreenFlag));
-	                    if (mGlassView.getThread().ScreenFlag<9){
-	                    	genome_letter = Character.toString(genome.charAt(mGlassView.getThread().ScreenFlag-1));
-	                    }*/
-	                                        
-	                    // -- send seq to GlassThread
-	                   // tv_DesGenSeq.setText(mGlassView.getThread().DesGenSequence);
-	                   // tv_GenLet.setText(genome + "\n" + Character.toString(mGlassView.getThread().CurrentLetter));
-	                    //tv_GenLet.setTextColor(Color.GREEN);
-	                    	
-	                    /*if (genome_letter.equals("A")) { 
-	                    	mGlassThread.setGenome(0,0,genome_letter); 
-	                    	tv_GenLet.setText(genome_letter + "(00)");
-	                    }                     
-	                    if (genome_letter.equals("C")){ 
-	                    	mGlassThread.setGenome(0,1,genome_letter);
-	                    	tv_GenLet.setText(genome_letter + "(01)");
-	                    }
-	                    if (genome_letter.equals("T")){ 
-	                    	mGlassThread.setGenome(1,0,genome_letter); 
-	                    	tv_GenLet.setText(genome_letter + "(10)");
-	                    }
-	                    if (genome_letter.equals("G")){ 
-	                    	mGlassThread.setGenome(1,1,genome_letter);
-	                    	tv_GenLet.setText(genome_letter + "(11)");
-	                    }*/
-	                    	
-	                    //tv_ActGenSeq.setText(String.valueOf(mGlassView.getThread().ActGenSequence));
-	                   // tv_ActGenSeq.setText(String.valueOf(GenLetLengthScore.length()));
-	                    //tv_ActGenSeq.setTextColor(Color.BLUE);
-	                    
-	                    //tv_ActGenSeqBin.setText(String.valueOf(mGlassView.getThread().ActGenSequenceBin));
-	                    
-	                   /* Intent output = new Intent();
-	                    //output.putExtra(com.aiworkereeg.saveopportunity.Main.Number1Code, mGlassView.getThread().GameScore);
-	                    //output.putExtra(com.aiworkereeg.saveopportunity.Main.Number1Code, GenLetLengthScore.length());
-	                    output.putExtra(com.aiworkereeg.saveopportunity.Main.Number1Code, 
-	                    				mGlassView.getThread().CorrectW);
-	                    setResult(RESULT_OK, output);
-	                    //finish();
-	                    
+	                    } */
+ 	                    		                    
 	                    // --saving data to file
-	                    String filename ="so_v2_<date_time>.csv";
+	                    /* String filename ="so_v2_<date_time>.csv";
 	                    Time now = new Time();
 	                    now.setToNow();
 	                    String date_time = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));                    
@@ -544,12 +449,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                    //APIClient.postData(null, "meditation", String.valueOf(msg.arg1), null);
 
 	                    Med = msg.arg1;
-	                    tv_M.setText(String.valueOf(Med));
+	                    tv_Med.setText(String.valueOf(Med));
 	                    mMusicPlayerThread.setMeditation(Med);
 	                    
-	                    tv_Med.setText(String.valueOf(Med)); // display meditation
-	                    // change size and color of Med text view
-	                    if (Med < 30) {
+	                    // -- change size and color of Med text view
+	                   /* if (Med < 30) {
 	                    	//tv_Med.setTextColor(Color.YELLOW);
 	                    	//tv_Med.setTextSize(20);
 	                    } else {
@@ -560,25 +464,20 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                        	//tv_Med.setTextColor(Color.RED);
 	                        	//tv_Med.setTextSize(40);
 	                        }                    
-	                    }
+	                    }*/
 	 
 	                    tv_AmM.setText(String.valueOf(At-Med)); // display Att-Med
-	                    // change size and color of Att-Med text view                   
-	                    if (Math.abs(At-Med) <= 15)	{tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.WHITE);}
-	                    	else if (Math.abs(At-Med) <= 30) {tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.WHITE); }
+	                    	// -- change size and color of Att-Med text view                   
+	                    if (Math.abs(At-Med) <= 15)	{tv_AmM.setTextSize(25); tv_AmM.setTextColor(Color.GRAY);}
+	                    	else if (Math.abs(At-Med) <= 30) {tv_AmM.setTextSize(25); tv_AmM.setTextColor(Color.GRAY); }
 	                    
 	                    if (At-Med < -45 || At-Med > 45) {tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.WHITE);}
 	                    	else if (At-Med < -30 || At-Med > 30) {tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.WHITE); }
-	                                       
-	                    
-	                    
-	                    
-	                    
+	                                                           
 	                    
 	                    break;
 	                case TGDevice.MSG_BLINK:
 	                    //tv.append("Blink: " + msg.arg1 + "\n");
-	                    //tv_b.setText(String.valueOf(msg.arg1));
 	                    break;
 	                case TGDevice.MSG_RAW_COUNT:
 	                    //tv.append("Raw Count: " + msg.arg1 + "\n");
@@ -647,7 +546,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 					e.printStackTrace();
 				}
 				
-				previewing = true;
+				//previewing = true;
 				
 				// --- saving picture
 				File pictureFileDir = getDir();
@@ -661,7 +560,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    	    String date = dateFormat.format(new Date());
 	    	    String photoFile = "eeg_" + date + ".jpg";
 
-	    	    String filename = pictureFileDir.getPath() + File.separator + photoFile;
+	    	    filename = pictureFileDir.getPath() + File.separator + photoFile;
 
 	    	    File pictureFile = new File(filename);
 	    	    try {
@@ -673,7 +572,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 		    	     // Log.d(MakePhotoActivity.DEBUG_TAG, "File" + filename + "not saved: "  + error.getMessage());
 		    	      //Toast.makeText(context, "Image could not be saved.", Toast.LENGTH_LONG).show();
 		    	    }
-	    	    
+	    	     
 	    	   // releaseCamera();
 	    	}
 	    };
@@ -688,15 +587,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    	@Override
 	    	public void surfaceChanged(SurfaceHolder holder, int format, int width,	int height) {			
 	    		//initializeCamera();
-	            // If your preview can change or rotate, take care of those events here.
-	            // Make sure to stop the preview before resizing or reformatting it.
+	            // -- If your preview can change or rotate, take care of those events here.
+	            // -- Make sure to stop the preview before resizing or reformatting it.
 	    	
 	            if (holder.getSurface() == null){
 	            	Log.d(getString(R.string.app_name), "ir_d surfaceChanged --> preview surface does not exist");
 	                return;
 	            }
 
-	            // stop preview before making changes
+	            // -- stop preview before making changes
 	            try {
 	                camera.stopPreview();
 	                Log.d(getString(R.string.app_name), "ir_d surfaceChanged --> camera.stopPreview()  " + camera);
@@ -711,7 +610,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	    		if (camera != null) {
 	    			try { 
 	    				camera.setPreviewDisplay(holder);
-	    				//camera.setPreviewDisplay(surfaceHolder);
+	    				// -- camera.setPreviewDisplay(surfaceHolder);
 	    				camera.startPreview();
 	                    Log.d(getString(R.string.app_name),"ir_d surfaceChanged --> camera.setPreviewDisplay()  " + camera);
 	                } catch (IOException e) 
@@ -724,7 +623,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 
 	    	@Override
 	    	public void surfaceCreated(SurfaceHolder holder) {
-	    		// The Surface has been created, now tell the camera where to draw the preview.
+	    		// -- The Surface has been created, now tell the camera where to draw the preview.
 	    		initializeCamera();
 
 	    		Log.d(getString(R.string.app_name), "ir_d surfaceCreated()");
