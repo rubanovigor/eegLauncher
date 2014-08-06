@@ -1076,6 +1076,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                 mStatusText.setText(m.getData().getString("text"));
             }
         });
+        
 
         setFocusable(true); // make sure we get key events
     }
@@ -1115,6 +1116,12 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder holder) {
         // start the thread here so that we don't busy-wait in run()
         // waiting for the surface to be created
+        if(thread.getState() == Thread.State.TERMINATED)
+        {
+        //MusicPlayerThread state TERMINATED..make new...under CheckCreateThread
+        	thread = new MusicPlayerThread(holder, mContext, new Handler());
+        } 
+        
         thread.setRunning(true);
         thread.start();
     }

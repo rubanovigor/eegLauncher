@@ -171,8 +171,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 		super.onResume();
 		//initializeCamera();
 	      
-		mMusicPlayerView.getThread().unpause(); // pause game when Activity pauses
-        mMusicPlayerView.getThread().setRunning(true); //correctly destroy SurfaceHolder, ir   
+		//mMusicPlayerView.getThread().unpause(); // pause game when Activity pauses
+        //mMusicPlayerView.getThread().setRunning(true); //correctly destroy SurfaceHolder, ir   
           
 	    Log.d(getString(R.string.app_name), "ir_d onResume()");
 	}
