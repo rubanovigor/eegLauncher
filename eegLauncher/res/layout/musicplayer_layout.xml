@@ -104,7 +104,7 @@
                 
          <TextView
           android:id="@+id/AmM_text"
-		  android:text="20"
+		  android:text=" "
 		  android:visibility="visible"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
              android:layout_centerHorizontal="true"
              android:layout_centerVertical="true"
              android:gravity="center_horizontal"
-             android:text=" T "
+             android:text=" "
              android:textColor="#ffffff"
              android:textSize="20sp"
              android:visibility="visible" />
@@ -175,7 +175,7 @@
              android:layout_centerHorizontal="true"
              android:layout_above ="@+id/TimeToSel"
              android:gravity="center_horizontal"
-             android:text="AAA"
+             android:text=" "
              android:textColor="#ffffff"
              android:textSize="30sp"
              android:layout_marginBottom="5dp"
