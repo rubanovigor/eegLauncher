@@ -360,14 +360,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                    	// -- camera/twitter/PrtSc
 	                    if (mMusicPlayerView.getThread().Picture_flag == true)
         				{ 	                    	
-	                    	camera.takePicture(myShutterCallback, myPictureCallback_RAW, myPictureCallback_JPG);
-	                    	
+	                    	camera.takePicture(myShutterCallback, myPictureCallback_RAW, myPictureCallback_JPG);	                    	
 	                    	mMusicPlayerView.getThread().Picture_flag = false;
         				}
 	                    if (mMusicPlayerView.getThread().TwitPicture_flag == true)
         				{ 	                    	
-	                    	camera.takePicture(myShutterCallback, myPictureCallback_RAW, myPictureCallback_JPG);
-		                    	                    	
+	                    	//camera.takePicture(myShutterCallback, myPictureCallback_RAW, myPictureCallback_JPG);		                    	                    	
 	                    	mMusicPlayerView.getThread().TwitPicture_flag = false;
         				}
 	                    
@@ -468,11 +466,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	 
 	                    tv_AmM.setText(String.valueOf(At-Med)); // display Att-Med
 	                    	// -- change size and color of Att-Med text view                   
-	                    if (Math.abs(At-Med) <= 15)	{tv_AmM.setTextSize(25); tv_AmM.setTextColor(Color.GRAY);}
-	                    	else if (Math.abs(At-Med) <= 30) {tv_AmM.setTextSize(25); tv_AmM.setTextColor(Color.GRAY); }
+	                    if (Math.abs(At-Med) <= 15)	{tv_AmM.setTextSize(17); tv_AmM.setTextColor(Color.GRAY);}
+	                    	else if (Math.abs(At-Med) <= 30) {tv_AmM.setTextSize(17); tv_AmM.setTextColor(Color.GRAY); }
 	                    
-	                    if (At-Med < -45 || At-Med > 45) {tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.WHITE);}
-	                    	else if (At-Med < -30 || At-Med > 30) {tv_AmM.setTextSize(30); tv_AmM.setTextColor(Color.WHITE); }
+	                    if (At-Med < -45 || At-Med > 45) {tv_AmM.setTextSize(22); tv_AmM.setTextColor(Color.WHITE);}
+	                    	else if (At-Med < -30 || At-Med > 30) {tv_AmM.setTextSize(22); tv_AmM.setTextColor(Color.WHITE); }
 	                                                           
 	                    
 	                    break;

@@ -28,19 +28,18 @@
           android:textColor="#88ffffff"
           android:textSize="20sp"/>
         
-                      
         <TextView
-          android:id="@+id/Att_text"
-		  android:text="-"
-		  android:visibility="visible"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_above="@+id/text2_empty"
-          android:layout_alignParentLeft="true"
-          android:gravity="center_horizontal"
-          android:textColor="#ffffff"
-          android:textSize="24sp"
-          android:padding="5dip"  />
+            android:id="@+id/Att_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/text2_empty"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_horizontal"
+            android:padding="5dip"
+            android:text="-"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            android:visibility="visible" />
  
         <TextView
           android:id="@+id/Vel_text"
@@ -75,7 +74,7 @@
           android:layout_below="@+id/text2_empty"
           android:layout_alignParentLeft="true"
           android:textColor="#ffffff"
-          android:textSize="32sp" /> 
+          android:textSize="12sp" /> 
  
         
         <TextView
