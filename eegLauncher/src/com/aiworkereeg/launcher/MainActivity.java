@@ -324,8 +324,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                    break;
 	                case TGDevice.MSG_ATTENTION:
 	                    // -- First send Attention data to the backend in async way
-	                    //APIClient.postData(null, "attention", String.valueOf(msg.arg1), null);
-
+	                    //APIClient.postData(null, "attention", String.valueOf(msg.arg1), null); // old
+	                	APIClient.collectAttention(null, msg.arg1);
+	                	
 	                	//Log.e(getString(R.string.app_name), "camera.takePicture()");  
 	                		 	               
 	                    At = msg.arg1;         
@@ -444,7 +445,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                    break;
 	                    
 	                case TGDevice.MSG_MEDITATION:
-	                    //APIClient.postData(null, "meditation", String.valueOf(msg.arg1), null);
+	                    //APIClient.postData(null, "meditation", String.valueOf(msg.arg1), null); //old code
+	                	APIClient.collectMeditation(null, msg.arg1);
 
 	                    Med = msg.arg1;
 	                    tv_Med.setText(String.valueOf(Med));
@@ -466,11 +468,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	 
 	                    tv_AmM.setText(String.valueOf(At-Med)); // display Att-Med
 	                    	// -- change size and color of Att-Med text view                   
-	                    if (Math.abs(At-Med) <= 15)	{tv_AmM.setTextSize(17); tv_AmM.setTextColor(Color.GRAY);}
-	                    	else if (Math.abs(At-Med) <= 30) {tv_AmM.setTextSize(17); tv_AmM.setTextColor(Color.GRAY); }
+	                    if (Math.abs(At-Med) <= 15)	{tv_AmM.setTextSize(22); tv_AmM.setTextColor(Color.GRAY);}
+	                    	else if (Math.abs(At-Med) <= 30) {tv_AmM.setTextSize(22); tv_AmM.setTextColor(Color.GRAY); }
 	                    
-	                    if (At-Med < -45 || At-Med > 45) {tv_AmM.setTextSize(22); tv_AmM.setTextColor(Color.WHITE);}
-	                    	else if (At-Med < -30 || At-Med > 30) {tv_AmM.setTextSize(22); tv_AmM.setTextColor(Color.WHITE); }
+	                    if (At-Med < -45 || At-Med > 45) {tv_AmM.setTextSize(25); tv_AmM.setTextColor(Color.GREEN);}
+	                    	else if (At-Med < -30 || At-Med > 30) {tv_AmM.setTextSize(25); tv_AmM.setTextColor(Color.GREEN); }
 	                                                           
 	                    
 	                    break;
@@ -492,6 +494,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	                	break;
 	                case TGDevice.MSG_EEG_POWER:
 	                    TGEegPower eegPower = (TGEegPower) msg.obj;
+	                    APIClient.collectEEGPower(null, eegPower);
 	                    
 	                   /* delta = eegPower.delta;
 	                    high_alpha = eegPower.highAlpha;

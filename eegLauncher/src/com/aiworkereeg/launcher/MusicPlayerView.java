@@ -57,7 +57,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         
         CharSequence TGStatus;
         float alpha = 0;  float alpha1_1=0;
-        float scale_obj = 0.8f; float scale_obj_rot = 0.8f; float scale_obj_console = 0.5f;
+        float scale_obj = 0.7f; float scale_obj_rot = 0.7f; float scale_obj_console = 0.5f;
       //  float CircleRadius = 1f; //280f;   // -- for android phone
         float CircleRadius = 100f;		// -- for google glass
         float accel_alpha = 0f;
@@ -169,11 +169,11 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             Resources res = context.getResources();  
             // -- setup objects for EEG Launcher
             LauncherMusicPlayer = new SkyBody(res.getDrawable(R.drawable.icon_musicplayer), scale_obj);
-            LauncherCamera = new SkyBody(res.getDrawable(R.drawable.icon_camera2), scale_obj);
+            LauncherCamera = new SkyBody(res.getDrawable(R.drawable.icon_cam), scale_obj);
             LauncherDnaConsole = new SkyBody(res.getDrawable(R.drawable.icon_console), scale_obj);
             LauncherGoogle = new SkyBody(res.getDrawable(R.drawable.icon_google), scale_obj);
             LauncherMusicPlayerD = new SkyBody(res.getDrawable(R.drawable.icon_musicplayer), scale_obj);
-            LauncherCameraD = new SkyBody(res.getDrawable(R.drawable.icon_camera2), scale_obj);
+            LauncherCameraD = new SkyBody(res.getDrawable(R.drawable.icon_cam), scale_obj);
             LauncherDnaConsoleD = new SkyBody(res.getDrawable(R.drawable.icon_console), scale_obj);
             LauncherGoogleD = new SkyBody(res.getDrawable(R.drawable.icon_google), scale_obj);
             
@@ -223,7 +223,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             ObjectClear = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj_console); // image,scale 
               
             // -- setup objects for Camera layout
-            CameraPicture = new SkyBody(res.getDrawable(R.drawable.icon_camera), scale_obj);
+            CameraPicture = new SkyBody(res.getDrawable(R.drawable.icon_cam), scale_obj);
             CameraVideo = new SkyBody(res.getDrawable(R.drawable.icon_video), scale_obj);
             CameraPrtScr = new SkyBody(res.getDrawable(R.drawable.icon_prtscr), scale_obj);
             
@@ -569,13 +569,13 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             if (At-Med >= ClusterLeftX-ClusterDelta &&
             	At-Med <= ClusterRightX+ClusterDelta &&
             	accel_alpha > 0) 
-            				{ accel_alpha = accel_alpha - 0.015f ; alpha = alpha + accel_alpha; }
+            				{ accel_alpha = accel_alpha - 0.35f*(float)elapsed ; alpha = alpha + accel_alpha; }
             else {
                 if (At-Med > ClusterRightX+ClusterDelta )
-                			{ accel_alpha = accel_alpha + 0.015f ; alpha = alpha + accel_alpha; } 
+                			{ accel_alpha = accel_alpha + 0.35f*(float)elapsed ; alpha = alpha + accel_alpha; } 
                 else {
                 	if (At-Med < ClusterLeftX-ClusterDelta )
-                			{ accel_alpha = accel_alpha + 0.015f ; alpha = alpha + accel_alpha; }
+                			{ accel_alpha = accel_alpha + 0.35f*(float)elapsed ; alpha = alpha + accel_alpha; }
                 }                    
             }       
             if (alpha >=360) {alpha = alpha-360; }
@@ -657,7 +657,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	flag_Cursor = false;     
 	            	
 	            	// -- for testin only
-	            	TwitPicture_flag = true;
+	            	//TwitPicture_flag = true;
 	            	//Prtscr_flag = true;
 	            	//MusicPlayerFlag = false; EegLauncherFlag = false; DnaConsoleFlag = true;	
 	            	//CameraFlag = true; EegLauncherFlag = false;
@@ -855,11 +855,17 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	                             
 	            // -- manage what was selected  
 	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
-	            	
+	            	// double elapsed_cam = 0.0;
+	            	// msgBoard = String.valueOf(elapsed_cam);
 	            	// -- picture
 	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 	            			
-	            		msgBoard = "picture was taken";
+	            		/*msgBoard = "focus camera";
+	            		do {
+	            			msgBoard = String.valueOf(elapsed_cam);
+	            			elapsed_cam = (now - mLastTime) / 1000.0;
+	            		} while (elapsed_cam<0.03);*/
 	            		Picture_flag = true;
+	            		msgBoard = "picture was taken";
 	            	} 
 	            		            	
 	            	// -- video//twitter
