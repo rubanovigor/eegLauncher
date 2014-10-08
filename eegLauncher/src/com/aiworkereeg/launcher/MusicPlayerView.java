@@ -48,6 +48,9 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	// -- terminal by default
     	//boolean EegLauncherFlag = false;	boolean MusicPlayerFlag = false;
     	//boolean DnaConsoleFlag = true; boolean CameraFlag = false;
+    	// -- music by default
+    	//boolean EegLauncherFlag = false;	boolean MusicPlayerFlag = true;
+    	//boolean DnaConsoleFlag = false; boolean CameraFlag = false;
     	
     	boolean action_cancel_flag = false;
         int At = 50; int Med = 50;   int ApM = 100;    int AmM = 0; 
@@ -72,31 +75,34 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         
         // -- declare objects for EEG Launcher
         private SkyBody LauncherMusicPlayer; private SkyBody LauncherDnaConsole; 
-        	private SkyBody LauncherMusicPlayerD; private SkyBody LauncherDnaConsoleD;
-        private SkyBody LauncherCamera; private SkyBody LauncherGoogle;
-        	private SkyBody LauncherCameraD; private SkyBody LauncherGoogleD;
+        	//private SkyBody LauncherMusicPlayerD; private SkyBody LauncherDnaConsoleD;
+        private SkyBody LauncherCamera; //private SkyBody LauncherGoogle;
+        	//private SkyBody LauncherCameraD; private SkyBody LauncherGoogleD;
         private SkyBody SelectedIcon; private SkyBody LeftBoarderIcon; private SkyBody RigthBoarderIcon;
         
         
         // -- declare objects for Music Player
         //private SkyBody Object1_1;  private SkyBody Object1_2;  private SkyBody Object1_3; 
-        private SkyBody mp_Play; private SkyBody mp_PlayD; 
-        private SkyBody mp_Stop;private SkyBody mp_StopD;
-        private SkyBody mp_Next; private SkyBody mp_NextD;
-        private SkyBody mp_Vol; private SkyBody mp_VolD;
-        private SkyBody mp_Back; private SkyBody mp_BackD;
-        private SkyBody IconPlay; private SkyBody IconStop; private SkyBody IconSkip;
-        private SkyBody IconBlack; private SkyBody IconVol; 
+        private SkyBody mp_Play;// private SkyBody mp_PlayD; 
+        private SkyBody mp_Stop;//private SkyBody mp_StopD;
+        private SkyBody mp_Next; //private SkyBody mp_NextD;
+       // private SkyBody mp_Vol; private SkyBody mp_VolD;
+       // private SkyBody mp_Back; private SkyBody mp_BackD;
+       // private SkyBody IconPlay; //private SkyBody IconStop; private SkyBody IconSkip;
+        //private SkyBody IconBlack; private SkyBody IconVol; 
         
         // -- declare objects for DNA Console
-        private SkyBody DnaConsole_T; private SkyBody DnaConsole_rigth; private SkyBody DnaConsole_C; private SkyBody DnaConsole_Back;
-        private SkyBody DnaConsole_G; private SkyBody DnaConsole_left; private SkyBody DnaConsole_Cancel; private SkyBody DnaConsole_A;
+        private SkyBody DnaConsole_T; private SkyBody DnaConsole_C; private SkyBody DnaConsole_G; private SkyBody DnaConsole_A;
+      //  private SkyBody DnaConsole_rigth;  private SkyBody DnaConsole_Back;   private SkyBody DnaConsole_left; private SkyBody DnaConsole_Cancel; 
         
         private SkyBody ObjectA; private SkyBody ObjectC; private SkyBody ObjectT; private SkyBody ObjectG;
-        private SkyBody ObjectSubmit; private SkyBody ObjectCursor; private SkyBody ObjectCursorDel; private SkyBody ObjectClear; 
+        //private SkyBody ObjectSubmit;
+        private SkyBody ObjectCursor; private SkyBody ObjectCursorDel; 
+        //private SkyBody ObjectClear; 
         
         // -- declare objects for EEG Launcher
-        private SkyBody CameraPicture; private SkyBody CameraVideo; private SkyBody CameraPrtScr; 
+        private SkyBody CameraPicture;  private SkyBody CameraPrtScr;
+       // private SkyBody CameraVideo; 
         	
         private float StarR; private float CursorR;  private float R_Gr_sphere_C;  private float R_Gr_sphere_S; 
         //float Sl1_0; float Sl1_1; float Sl1_2; float Sl1_3; float Sl1_4; float Sl1_5;
@@ -137,10 +143,10 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         public static final int STATE_WIN = 5;
 
         /** UI constants (i.e. the speed & fuel bars) */
-        private static final String KEY_X = "pX";      private static final String KEY_Y = "pY";
-        private static final String KEY_EEG = "EegLauncherFlag"; 
-        private static final String KEY_DNA = "DnaConsoleFlag";
-        private static final String KEY_MP = "MusicPlayerFlag";
+       // private static final String KEY_X = "pX";      private static final String KEY_Y = "pY";
+        //private static final String KEY_EEG = "EegLauncherFlag"; 
+        //private static final String KEY_DNA = "DnaConsoleFlag";
+        //private static final String KEY_MP = "MusicPlayerFlag";
 
         /** Current height/width of the surface/canvas. @see #setSurfaceSize        */
         private int BackGr_H = 1;        private int BackGr_W = 1;
@@ -171,11 +177,11 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             LauncherMusicPlayer = new SkyBody(res.getDrawable(R.drawable.icon_musicplayer), scale_obj);
             LauncherCamera = new SkyBody(res.getDrawable(R.drawable.icon_cam), scale_obj);
             LauncherDnaConsole = new SkyBody(res.getDrawable(R.drawable.icon_console), scale_obj);
-            LauncherGoogle = new SkyBody(res.getDrawable(R.drawable.icon_google), scale_obj);
-            LauncherMusicPlayerD = new SkyBody(res.getDrawable(R.drawable.icon_musicplayer), scale_obj);
-            LauncherCameraD = new SkyBody(res.getDrawable(R.drawable.icon_cam), scale_obj);
-            LauncherDnaConsoleD = new SkyBody(res.getDrawable(R.drawable.icon_console), scale_obj);
-            LauncherGoogleD = new SkyBody(res.getDrawable(R.drawable.icon_google), scale_obj);
+            //LauncherGoogle = new SkyBody(res.getDrawable(R.drawable.icon_google), scale_obj);
+            //LauncherMusicPlayerD = new SkyBody(res.getDrawable(R.drawable.icon_musicplayer), scale_obj);
+            //LauncherCameraD = new SkyBody(res.getDrawable(R.drawable.icon_cam), scale_obj);
+            //LauncherDnaConsoleD = new SkyBody(res.getDrawable(R.drawable.icon_console), scale_obj);
+            //LauncherGoogleD = new SkyBody(res.getDrawable(R.drawable.icon_google), scale_obj);
             
             SelectedIcon = new SkyBody(res.getDrawable(R.drawable.icon_selected_icon), scale_obj);
             LeftBoarderIcon = new SkyBody(res.getDrawable(R.drawable.icon_boarder), scale_obj);
@@ -183,32 +189,32 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
   
                        
             // -- setup objects for MusicPlayer
-            mp_Stop = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj); // image,scale
-            mp_Play = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj); 
-            mp_StopD = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj); 
-            mp_PlayD = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj);
+            mp_Stop = new SkyBody(res.getDrawable(R.drawable.icon_stop_grey), scale_obj); // image,scale
+            mp_Play = new SkyBody(res.getDrawable(R.drawable.icon_play_grey), scale_obj); 
+           // mp_StopD = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj); 
+            //mp_PlayD = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj);
             
-            mp_Next = new SkyBody(res.getDrawable(R.drawable.icon_next), scale_obj); 
-            mp_NextD = new SkyBody(res.getDrawable(R.drawable.icon_next), scale_obj);            
-            mp_Vol = new SkyBody(res.getDrawable(R.drawable.icon_volume_plus), scale_obj);
-            mp_VolD = new SkyBody(res.getDrawable(R.drawable.icon_volume_plus), scale_obj);
-            mp_Back = new SkyBody(res.getDrawable(R.drawable.icon_inf), scale_obj);
-            mp_BackD = new SkyBody(res.getDrawable(R.drawable.icon_inf), scale_obj);
+            mp_Next = new SkyBody(res.getDrawable(R.drawable.icon_next_grey), scale_obj); 
+            //mp_NextD = new SkyBody(res.getDrawable(R.drawable.icon_next), scale_obj);            
+            //mp_Vol = new SkyBody(res.getDrawable(R.drawable.icon_volume_plus), scale_obj);
+            //mp_VolD = new SkyBody(res.getDrawable(R.drawable.icon_volume_plus), scale_obj);
+            //mp_Back = new SkyBody(res.getDrawable(R.drawable.icon_inf), scale_obj);
+            //mp_BackD = new SkyBody(res.getDrawable(R.drawable.icon_inf), scale_obj);
               
-            IconPlay = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj); 
-            IconStop = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj);  
-            IconSkip = new SkyBody(res.getDrawable(R.drawable.icon_next), scale_obj);
-            IconBlack = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj);
-            IconVol = new SkyBody(res.getDrawable(R.drawable.icon_volume_plus), scale_obj);
+          //  IconPlay = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj); 
+           // IconStop = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj);  
+           // IconSkip = new SkyBody(res.getDrawable(R.drawable.icon_next), scale_obj);
+           // IconBlack = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj);
+           // IconVol = new SkyBody(res.getDrawable(R.drawable.icon_volume_plus), scale_obj);
             
             // -- setup objects for DNA Console
             DnaConsole_T = new SkyBody(res.getDrawable(R.drawable.icon_t), scale_obj); // image,scale
-            DnaConsole_rigth = new SkyBody(res.getDrawable(R.drawable.icon_rigth), scale_obj); // image,scale
+          //  DnaConsole_rigth = new SkyBody(res.getDrawable(R.drawable.icon_rigth), scale_obj); // image,scale
             DnaConsole_C = new SkyBody(res.getDrawable(R.drawable.icon_c), scale_obj); // image,scale
-            DnaConsole_Back = new SkyBody(res.getDrawable(R.drawable.icon_inf), scale_obj); // image,scale
+           // DnaConsole_Back = new SkyBody(res.getDrawable(R.drawable.icon_inf), scale_obj); // image,scale
             DnaConsole_G = new SkyBody(res.getDrawable(R.drawable.icon_g), scale_obj);
-            DnaConsole_left = new SkyBody(res.getDrawable(R.drawable.icon_left), scale_obj);
-            DnaConsole_Cancel = new SkyBody(res.getDrawable(R.drawable.icon_submit1), scale_obj);
+            //DnaConsole_left = new SkyBody(res.getDrawable(R.drawable.icon_left), scale_obj);
+            //DnaConsole_Cancel = new SkyBody(res.getDrawable(R.drawable.icon_submit1), scale_obj);
             DnaConsole_A = new SkyBody(res.getDrawable(R.drawable.icon_a), scale_obj);
               
             ObjectA = new SkyBody(res.getDrawable(R.drawable.icon_a), scale_obj_console); // image,scale
@@ -216,16 +222,16 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             ObjectT = new SkyBody(res.getDrawable(R.drawable.icon_t), scale_obj_console); // image,scale
             ObjectG = new SkyBody(res.getDrawable(R.drawable.icon_g), scale_obj_console); // image,scale
               
-            ObjectSubmit = new SkyBody(res.getDrawable(R.drawable.black), scale_obj_console); // image,scale
+           // ObjectSubmit = new SkyBody(res.getDrawable(R.drawable.black), scale_obj_console); // image,scale
             //ObjectCursor = new SkyBody(res.getDrawable(R.drawable.p_amber_1px), 5f); // image,scale
             ObjectCursor = new SkyBody(res.getDrawable(R.drawable.icon_cursor), scale_obj_console*0.5f);
             ObjectCursorDel = new SkyBody(res.getDrawable(R.drawable.p_black_10px), 0.8f); // image,scale
-            ObjectClear = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj_console); // image,scale 
+           // ObjectClear = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj_console); // image,scale 
               
             // -- setup objects for Camera layout
-            CameraPicture = new SkyBody(res.getDrawable(R.drawable.icon_cam), scale_obj);
-            CameraVideo = new SkyBody(res.getDrawable(R.drawable.icon_video), scale_obj);
-            CameraPrtScr = new SkyBody(res.getDrawable(R.drawable.icon_prtscr), scale_obj);
+            CameraPicture = new SkyBody(res.getDrawable(R.drawable.icon_picture), scale_obj);
+           // CameraVideo = new SkyBody(res.getDrawable(R.drawable.icon_video), scale_obj);
+            CameraPrtScr = new SkyBody(res.getDrawable(R.drawable.icon_printscreen), scale_obj);
             
               
             StarR = mp_Stop.getImageWidth()/2; // all stars has the same Radius
@@ -234,7 +240,6 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             
             
             // cache handles to our key drawables
-            //BackGr_Image = context.getResources().getDrawable(R.drawable.music_player_bcgrnd);
             BackGr_Image = context.getResources().getDrawable(R.drawable.blacksquare);
            
         }
@@ -276,9 +281,10 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                 Cy_rb_l1 = (float)(pY + CircleRadius);  // 1280 -> 160(1/8); 320(1/4); 640(1/2); 
                 
                 float iconXc = (float)(pX - CircleRadius - 1.5f*StarR);  float iconYc = (float)(pY - CircleRadius);
-                IconPlay.setCenterCoordinates(iconXc, iconYc);  IconStop.setCenterCoordinates(iconXc, iconYc); 
-                IconSkip.setCenterCoordinates(iconXc, iconYc);  IconBlack.setCenterCoordinates(iconXc, iconYc);
-                IconVol.setCenterCoordinates(iconXc, iconYc);
+               // IconPlay.setCenterCoordinates(iconXc, iconYc); // IconStop.setCenterCoordinates(iconXc, iconYc); 
+                //IconSkip.setCenterCoordinates(iconXc, iconYc); 
+                //IconBlack.setCenterCoordinates(iconXc, iconYc);
+                //IconVol.setCenterCoordinates(iconXc, iconYc);
                 
                 //ObjectG.setCenterCoordinates(CursorX, (float)pY*2f); ObjectG.setScale(scale_obj_console);
                 //mp_Next.setCenterCoordinates(Cx_rb_l1, Cy_rb_l1); mp_Next.setScale(scale_obj); mp_Next.setAlpha(0f);
@@ -511,17 +517,18 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             }
          
             if (DnaConsoleFlag == true){
-	            DnaConsole_T.drawTo(canvas); DnaConsole_rigth.drawTo(canvas); 
-	            DnaConsole_C.drawTo(canvas); DnaConsole_Back.drawTo(canvas);
-	            DnaConsole_G.drawTo(canvas); DnaConsole_left.drawTo(canvas); 
-	            DnaConsole_Cancel.drawTo(canvas); DnaConsole_A.drawTo(canvas);
+	            DnaConsole_T.drawTo(canvas); //DnaConsole_rigth.drawTo(canvas); 
+	            DnaConsole_C.drawTo(canvas); //DnaConsole_Back.drawTo(canvas);
+	            DnaConsole_G.drawTo(canvas); //DnaConsole_left.drawTo(canvas); 
+	            DnaConsole_A.drawTo(canvas); // DnaConsole_Cancel.drawTo(canvas);
 	         
 	            //ObjectCursor.drawTo(canvas);
 	                        
             }
             
             if (CameraFlag == true){
-            	CameraPrtScr.drawTo(canvas); CameraVideo.drawTo(canvas); CameraPicture.drawTo(canvas); 
+            	CameraPrtScr.drawTo(canvas); CameraPicture.drawTo(canvas); 
+            	//CameraVideo.drawTo(canvas); 
             }
             
             SelectedIcon.drawTo(canvas);             
@@ -589,7 +596,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             if (EegLauncherFlag == true) {EEG_launcher_N = 3; }
             if (MusicPlayerFlag == true) {EEG_launcher_N = 2; }
             if (DnaConsoleFlag == true)  {EEG_launcher_N = 4; }
-            if (CameraFlag == true) 	 {EEG_launcher_N = 3; }
+            if (CameraFlag == true) 	 {EEG_launcher_N = 2; }
             delta = 360/EEG_launcher_N;
             curr_alpha_obj1 = alpha; curr_alpha_obj2 = alpha + delta; 
             curr_alpha_obj3 = alpha + 2*delta; curr_alpha_obj4 = alpha + 3*delta;
@@ -830,26 +837,28 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             /* -- ======Camera===== -- */
             if (CameraFlag == true){          
 	            float[] alpha_rot = new float[] {0.0f, 0.0f, 0.8f, 0.8f, 1f, 0.9f };  Random rs1 =new Random();
-	            CameraPicture.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY); CameraPicture.setScale(scale_obj);          
-	            CameraVideo.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj2, CircleRadius, pX, pY);  CameraVideo.setScale(scale_obj);     
-	            CameraPrtScr.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY); CameraPrtScr.setScale(scale_obj); 
+	            CameraPicture.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY); CameraPicture.setScale(scale_obj);             
+	            CameraPrtScr.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY); CameraPrtScr.setScale(scale_obj); 
+	         // CameraVideo.updatePhysics(alpha_rot[rs1.nextInt(1)], curr_alpha_obj3, CircleRadius, pX, pY);  CameraVideo.setScale(scale_obj);  
 	            
 	            // -- set coordinates of Icon SelectedIcon  
 	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<3){ 
 	            	SelectedIcon.setScale(scale_obj*1.4f);
 	            	
-	            	// -- Console
+	            	// -- Picture
 	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 
 	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj1, CircleRadius, pX, pY); 
 	            	}            		            	
-	            	// -- MusicPlayer
+        	            	
+	            	// -- PrintScreen
 	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
 	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj2, CircleRadius, pX, pY); 
-	            	}           	            	
-	            	// -- Camera
-	            	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
-	            		SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY); 
-		           	}                   	
+		           	}         
+	            	
+	            	// -- video
+	            	//if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
+	            	//	SelectedIcon.updatePhysics(alpha_rot[rs1.nextInt(2)], curr_alpha_obj3, CircleRadius, pX, pY); 
+	            	//}   
 	
 	            }
 	                             
@@ -869,13 +878,13 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	} 
 	            		            	
 	            	// -- video//twitter
-	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
-	            		TwitPicture_flag = true;
-	            		msgBoard = "sharing in dev";
-	            	}	            	
+	            //	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
+	            //		TwitPicture_flag = true;
+	            //		msgBoard = "sharing in dev";
+	            //	}	            	
 	            	
 	            	// -- PrtScr
-	            	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
+	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
 	            		Prtscr_flag = true;
 	            		msgBoard = "PrtSc";
 		           	}                     	   
