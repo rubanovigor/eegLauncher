@@ -95,9 +95,9 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
         private SkyBody DnaConsole_T; private SkyBody DnaConsole_C; private SkyBody DnaConsole_G; private SkyBody DnaConsole_A;
       //  private SkyBody DnaConsole_rigth;  private SkyBody DnaConsole_Back;   private SkyBody DnaConsole_left; private SkyBody DnaConsole_Cancel; 
         
-        private SkyBody ObjectA; private SkyBody ObjectC; private SkyBody ObjectT; private SkyBody ObjectG;
+       // private SkyBody ObjectA; private SkyBody ObjectC; private SkyBody ObjectT; private SkyBody ObjectG;
         //private SkyBody ObjectSubmit;
-        private SkyBody ObjectCursor; private SkyBody ObjectCursorDel; 
+       // private SkyBody ObjectCursor; private SkyBody ObjectCursorDel; 
         //private SkyBody ObjectClear; 
         
         // -- declare objects for EEG Launcher
@@ -189,12 +189,11 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
   
                        
             // -- setup objects for MusicPlayer
-            mp_Stop = new SkyBody(res.getDrawable(R.drawable.icon_stop_grey), scale_obj); // image,scale
-            mp_Play = new SkyBody(res.getDrawable(R.drawable.icon_play_grey), scale_obj); 
+            mp_Stop = new SkyBody(res.getDrawable(R.drawable.icon_stop_white), scale_obj); // image,scale
+            mp_Play = new SkyBody(res.getDrawable(R.drawable.icon_play_white), scale_obj); 
+            mp_Next = new SkyBody(res.getDrawable(R.drawable.icon_next_white), scale_obj); 
            // mp_StopD = new SkyBody(res.getDrawable(R.drawable.icon_stop), scale_obj); 
             //mp_PlayD = new SkyBody(res.getDrawable(R.drawable.icon_play), scale_obj);
-            
-            mp_Next = new SkyBody(res.getDrawable(R.drawable.icon_next_grey), scale_obj); 
             //mp_NextD = new SkyBody(res.getDrawable(R.drawable.icon_next), scale_obj);            
             //mp_Vol = new SkyBody(res.getDrawable(R.drawable.icon_volume_plus), scale_obj);
             //mp_VolD = new SkyBody(res.getDrawable(R.drawable.icon_volume_plus), scale_obj);
@@ -217,15 +216,15 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
             //DnaConsole_Cancel = new SkyBody(res.getDrawable(R.drawable.icon_submit1), scale_obj);
             DnaConsole_A = new SkyBody(res.getDrawable(R.drawable.icon_a), scale_obj);
               
-            ObjectA = new SkyBody(res.getDrawable(R.drawable.icon_a), scale_obj_console); // image,scale
-            ObjectC = new SkyBody(res.getDrawable(R.drawable.icon_c), scale_obj_console); // image,scale
-            ObjectT = new SkyBody(res.getDrawable(R.drawable.icon_t), scale_obj_console); // image,scale
-            ObjectG = new SkyBody(res.getDrawable(R.drawable.icon_g), scale_obj_console); // image,scale
+         //   ObjectA = new SkyBody(res.getDrawable(R.drawable.icon_a), scale_obj_console); // image,scale
+          //  ObjectC = new SkyBody(res.getDrawable(R.drawable.icon_c), scale_obj_console); // image,scale
+          //  ObjectT = new SkyBody(res.getDrawable(R.drawable.icon_t), scale_obj_console); // image,scale
+          //  ObjectG = new SkyBody(res.getDrawable(R.drawable.icon_g), scale_obj_console); // image,scale
               
            // ObjectSubmit = new SkyBody(res.getDrawable(R.drawable.black), scale_obj_console); // image,scale
             //ObjectCursor = new SkyBody(res.getDrawable(R.drawable.p_amber_1px), 5f); // image,scale
-            ObjectCursor = new SkyBody(res.getDrawable(R.drawable.icon_cursor), scale_obj_console*0.5f);
-            ObjectCursorDel = new SkyBody(res.getDrawable(R.drawable.p_black_10px), 0.8f); // image,scale
+           // ObjectCursor = new SkyBody(res.getDrawable(R.drawable.icon_cursor), scale_obj_console*0.5f);
+           // ObjectCursorDel = new SkyBody(res.getDrawable(R.drawable.p_black_10px), 0.8f); // image,scale
            // ObjectClear = new SkyBody(res.getDrawable(R.drawable.icon_black), scale_obj_console); // image,scale 
               
             // -- setup objects for Camera layout
@@ -236,7 +235,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
               
             StarR = mp_Stop.getImageWidth()/2; // all stars has the same Radius
             StarR = StarR * scale_obj;  // adopt star size to screan using scale
-            CursorR = ObjectCursor.getImageWidth()/2f;           
+            CursorR = CameraPicture.getImageWidth()/2f;           
             
             
             // cache handles to our key drawables
@@ -289,8 +288,8 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
                 //ObjectG.setCenterCoordinates(CursorX, (float)pY*2f); ObjectG.setScale(scale_obj_console);
                 //mp_Next.setCenterCoordinates(Cx_rb_l1, Cy_rb_l1); mp_Next.setScale(scale_obj); mp_Next.setAlpha(0f);
                 
-                ObjectCursor.setCenterCoordinates((float)(4*pX), (float)pY );
-                ObjectCursorDel.setCenterCoordinates((float)(4*pX), (float)pY );
+               // ObjectCursor.setCenterCoordinates((float)(4*pX), (float)pY );
+               // ObjectCursorDel.setCenterCoordinates((float)(4*pX), (float)pY );
                 
                 mLastTime = System.currentTimeMillis() + 100;
                 setState(STATE_RUNNING);
@@ -768,13 +767,13 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            CursorY = (float) (pY - CircleRadius/2f + CursorR/2f);
 	            	             
 	            if (accel_alpha <= 0 && flag_Cursor == true && TimeToSelect<=0){ 
-	            	ObjectCursorDel.updateDNA(CursorX, pY-CursorY_delta-2*CursorR);  // -- delete old cursor position
+	            	//ObjectCursorDel.updateDNA(CursorX, pY-CursorY_delta-2*CursorR);  // -- delete old cursor position
 	            	
 	            	// -- A
 	            	if (curr_alpha_obj1 > 360 - delta/2  ||  curr_alpha_obj1 <= delta/2){ 
 	            		//EegLauncherFlag = false; DnaConsoleFlag = true;		
 	            		if(CursorI!=console_length){
-		            		sel_action_i = 4; flag_Cursor = false; ObjectA.updateDNA(CursorX, CursorY);
+		            		sel_action_i = 4; flag_Cursor = false; //ObjectA.updateDNA(CursorX, CursorY);
 		            		console_str[CursorI-1] = "A"; 
 		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 		            	}
@@ -784,7 +783,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	// -- C
 	            	if (curr_alpha_obj2 > 360 - delta/2  ||  curr_alpha_obj2 <= delta/2){
 	            		if(CursorI!=console_length){
-		            		sel_action_i = 3; flag_Cursor = false; ObjectC.updateDNA(CursorX, CursorY);
+		            		sel_action_i = 3; flag_Cursor = false; //ObjectC.updateDNA(CursorX, CursorY);
 		            		console_str[CursorI-1] = "C";
 		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 	            		}
@@ -797,7 +796,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	// -- T
 	            	if (curr_alpha_obj3 > 360 - delta/2  ||  curr_alpha_obj3 <= delta/2){
 	            		if(CursorI!=console_length){
-		            		sel_action_i = 1;  flag_Cursor = false; ObjectT.updateDNA(CursorX, CursorY);
+		            		sel_action_i = 1;  flag_Cursor = false;// ObjectT.updateDNA(CursorX, CursorY);
 		            		console_str[CursorI-1] = "T";
 		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 	            		}
@@ -807,7 +806,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 	            	// -- G
 	            	if (curr_alpha_obj4 > 360 - delta/2  ||  curr_alpha_obj4 <= delta/2){
 	            		if(CursorI!=console_length){
-		            		sel_action_i = 2; flag_Cursor = false; ObjectG.updateDNA(CursorX, CursorY);
+		            		sel_action_i = 2; flag_Cursor = false; //ObjectG.updateDNA(CursorX, CursorY);
 		            		console_str[CursorI-1] = "G";
 		            		CursorX=CursorX+CursorX_delta; CursorI=CursorI+1;
 	            		}
@@ -965,7 +964,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	     		consoleBoard = "TA*: zoom out"; 
     	     		EegLauncherFlag = true; DnaConsoleFlag = false; // -- zoom out
     	     		ClearAndHideConsole();
-    	     		if (console_str[2] == "A") {consoleBoard = "TAA: zoom out";
+    	     		/*if (console_str[2] == "A") {consoleBoard = "TAA: zoom out";
     	     				EegLauncherFlag = true; DnaConsoleFlag = false;
     	     			}
     	     		if (console_str[2] == "T") { consoleBoard = "TAT: zoom out";
@@ -975,14 +974,14 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	     			}
     	     		if (console_str[2] == "G") { consoleBoard = "TAA: zoom out";
     	     				EegLauncherFlag = true; DnaConsoleFlag = false;
-    	     			}
+    	     			}*/
     	     		}
     	     	
     			if (console_str[1] == "T")	{
     	     		consoleBoard = "TT*: zoom out"; 
     	     		EegLauncherFlag = true; DnaConsoleFlag = false; // -- zoom out
     	     		ClearAndHideConsole();
-    	     		if (console_str[2] == "A") {consoleBoard = "TTA: zoom out";
+    	     		/*if (console_str[2] == "A") {consoleBoard = "TTA: zoom out";
     	     				EegLauncherFlag = true; DnaConsoleFlag = false;	
     	     			}
     	     		if (console_str[2] == "T") { consoleBoard = "TTT: zoom out";
@@ -992,7 +991,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	     			}
     	     		if (console_str[2] == "G") { consoleBoard = "TTA: zoom out";
     	     				EegLauncherFlag = true; DnaConsoleFlag = false;
-    	     			}
+    	     			}*/
     	     		}
     	     	
     	     	if (console_str[1] == "C")	{ consoleBoard = "TC: clear"; 
@@ -1002,7 +1001,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	     		consoleBoard = "TG*: zoom out"; 
     	     		EegLauncherFlag = true; DnaConsoleFlag = false; // -- zoom out
     	     		ClearAndHideConsole();
-    	     		if (console_str[2] == "A") {consoleBoard = "TGA: zoom out";
+    	     		/*if (console_str[2] == "A") {consoleBoard = "TGA: zoom out";
     	     				EegLauncherFlag = true; DnaConsoleFlag = false;
     	     			}
     	     		if (console_str[2] == "T") { consoleBoard = "TGT: zoom out";
@@ -1012,7 +1011,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	     			}
     	     		if (console_str[2] == "G") { consoleBoard = "TGA: zoom out";
     	     				EegLauncherFlag = true; DnaConsoleFlag = false;
-    	     			}
+    	     			}*/
     	     		}
     			}
         	
@@ -1025,7 +1024,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	     		consoleBoard = "GA*: zoom out"; 
     	     		EegLauncherFlag = true; DnaConsoleFlag = false; // -- zoom out
     	     		ClearAndHideConsole();
-    	     		if (console_str[2] == "A") {consoleBoard = "GAA: zoom out";
+    	     		/*if (console_str[2] == "A") {consoleBoard = "GAA: zoom out";
     	     				EegLauncherFlag = true; DnaConsoleFlag = false;
     	     			}
     	     		if (console_str[2] == "T") { consoleBoard = "GAT: zoom out";
@@ -1035,14 +1034,14 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	     			}
     	     		if (console_str[2] == "G") { consoleBoard = "GAA: zoom out";
     	     				EegLauncherFlag = true; DnaConsoleFlag = false;
-    	     			}
+    	     			}*/
     	     		}
     	     	
     			if (console_str[1] == "T")	{
     	     		consoleBoard = "GT*: zoom out"; 
     	     		EegLauncherFlag = true; DnaConsoleFlag = false; // -- zoom out
     	     		ClearAndHideConsole();
-    	     		if (console_str[2] == "A") {consoleBoard = "GTA: zoom out";
+    	     		/*if (console_str[2] == "A") {consoleBoard = "GTA: zoom out";
     	     				EegLauncherFlag = true; DnaConsoleFlag = false;	
     	     			}
     	     		if (console_str[2] == "T") { consoleBoard = "GTT: zoom out";
@@ -1052,7 +1051,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	     			}
     	     		if (console_str[2] == "G") { consoleBoard = "GTA: zoom out";
     	     				EegLauncherFlag = true; DnaConsoleFlag = false;
-    	     			}
+    	     			}*/
     	     		}
     	     	
     	     	if (console_str[1] == "C")	{ consoleBoard = "GC: clear"; 
@@ -1062,7 +1061,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	     		consoleBoard = "GG*: zoom out"; 
     	     		EegLauncherFlag = true; DnaConsoleFlag = false; // -- zoom out
     	     		ClearAndHideConsole();
-    	     		if (console_str[2] == "A") {consoleBoard = "GGA: zoom out";
+    	     		/*if (console_str[2] == "A") {consoleBoard = "GGA: zoom out";
     	     				EegLauncherFlag = true; DnaConsoleFlag = false;
     	     			}
     	     		if (console_str[2] == "T") { consoleBoard = "GGT: zoom out";
@@ -1072,7 +1071,7 @@ class MusicPlayerView extends SurfaceView implements SurfaceHolder.Callback {
     	     			}
     	     		if (console_str[2] == "G") { consoleBoard = "GGA: zoom out";
     	     				EegLauncherFlag = true; DnaConsoleFlag = false;
-    	     			}
+    	     			}*/
     	     		}
     			}
 
